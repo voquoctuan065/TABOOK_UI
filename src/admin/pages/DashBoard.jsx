@@ -51,23 +51,25 @@ function DashBoard() {
     };
 
     return (
-        <Box sx={{ width: '100%', margin: '0 auto' }} className='container'>
+        <Box sx={{ width: '100%', margin: '0 auto' }} className="container">
             <div className="flex items-center justify-between border-b border-red-500">
-                <div className="ml-4 lg:ml-0">
-                    <div onClick={() => navigate('/')} className="cursor-pointer">
-                        <span className="sr-only">Your Company</span>
-                        <img className="h-8 w-25" src="/images/logo/mainlogo.png" alt="" />
+                <div className='flex items-center'>
+                    <div className="ml-4 lg:ml-0 mr-10">
+                        <div onClick={() => navigate('/')} className="cursor-pointer">
+                            <span className="sr-only">Your Company</span>
+                            <img className="h-8 w-25" src="/images/logo/mainlogo.png" alt="" />
+                        </div>
                     </div>
+                    <Box sx={{ fontSize: '1.4rem' }}>
+                        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                            <Tab label="Item One" {...a11yProps(0)} />
+                            <Tab label="Sách" {...a11yProps(1)} />
+                            <Tab label="Thể loại" {...a11yProps(2)} />
+                            <Tab label="Đơn hàng" {...a11yProps(3)} />
+                            <Tab label="Thanh toán" {...a11yProps(4)} />
+                        </Tabs>
+                    </Box>
                 </div>
-                <Box sx={{ fontSize: '1.4rem'}}>
-                    <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                        <Tab label="Item One" {...a11yProps(0)} />
-                        <Tab label="Sách" {...a11yProps(1)} />
-                        <Tab label="Thể loại" {...a11yProps(2)} />
-                        <Tab label="Đơn hàng" {...a11yProps(3)} />
-                        <Tab label="Thanh toán" {...a11yProps(4)} />
-                    </Tabs>
-                </Box>
 
                 <Stack direction="row" spacing={2}>
                     <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />

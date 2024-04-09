@@ -17,6 +17,8 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
 import AddNewCategory from './AddNewCategory';
+import axios from 'axios';
+import UpdateCategory from './UpdateCategory';
 
 const style = {
     position: 'absolute',
@@ -59,7 +61,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     color: 'inherit',
     width: '100%',
     '& .MuiInputBase-input': {
-        border: '1px solid black',
+        border: '1px solid red',
         padding: theme.spacing(1, 1, 1, 0),
         // vertical padding + font size from searchIcon
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
@@ -75,10 +77,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function ManageCategory() {
     const [category, setCategory] = React.useState([]);
+    const [categories, setCategories] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState(1);
     const [totalPages, setTotalPages] = React.useState(1);
     const [open, setOpen] = React.useState(false);
+    const [updateOpen, setUpdateOpen] = React.useState(false);
+
     const [deleteCategoryId, setDeleteCategoryId] = React.useState(null);
+    const [selectedCategoryId, setSelectedCategoryId] = React.useState(null);
 
     const [error, setError] = React.useState('');
     const [success, setSuccess] = React.useState('');
@@ -86,7 +92,13 @@ export default function ManageCategory() {
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const handleUpdateOpen = (categoryId) => {
+        setSelectedCategoryId(categoryId);
+        setUpdateOpen(true);
+    };
+    const handleUpdateClose = () => setUpdateOpen(false);
 
+    //-------------------------------- Get page category with size 10 -------------------------//
     const fetchCategory = async () => {
         try {
             const response = await fetch(`http://localhost:8686/admin/category?page=${currentPage - 1}&size=10`);
@@ -100,25 +112,37 @@ export default function ManageCategory() {
             console.error('Error fetching data:', error);
         }
     };
+    //-------------------------------- End page category with size 10 -------------------------//
+
+    // eslint-disable-next-line no-unused-vars
+    const getAllCategory = async () => {
+        try {
+            const response = await fetch('http://localhost:8686/admin/category/list-category');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            setCategories(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+    //-------------------------------- End page category with size 10 -------------------------//
 
     React.useEffect(() => {
         fetchCategory();
+        getAllCategory();
     }, [currentPage]);
 
     const handlePageChange = (event, pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
-    const handleDelete = async (typeId) => {
+    //--------------------------------------------------- Delete Category ---------------------------------------------------//
+    const handleDelete = async (categoryId) => {
         try {
-            console.log(typeId);
-            const response = await fetch(`http://localhost:8099/admin/type?typeId=${typeId}`, {
-                method: 'DELETE',
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
-            if (!response.ok) {
+            const response = await axios.delete(`http://localhost:8686/admin/category/delete/${categoryId}`);
+            if (response.status !== 200) {
                 throw new Error('Network response was not ok');
             }
             setSuccess('Xoá thể loại thành công!');
@@ -126,9 +150,11 @@ export default function ManageCategory() {
             setDeleteCategoryId(null);
         } catch (error) {
             console.error('Error deleting book:', error);
-            setError('Đã có lỗi xảy ra!');
+            setError('Xoá thể loại không thành công');
         }
     };
+
+    //--------------------------------------------------- End Delete Category ---------------------------------------------------//
 
     React.useEffect(() => {
         let errorTimeout, successTimeout;
@@ -193,6 +219,7 @@ export default function ManageCategory() {
 
     const handleAddCategorySuccess = () => {
         fetchCategory();
+        getAllCategory();
     };
 
     return (
@@ -213,16 +240,17 @@ export default function ManageCategory() {
                 </form>
                 <Stack spacing={2}>{error && <Alert severity="error">{error}</Alert>}</Stack>
                 <Stack spacing={2}>{success && <Alert severity="success">{success}</Alert>}</Stack>
-                <Button variant="contained" className="mr-3" color="success" onClick={handleOpen}>
+                <Button variant="outlined" className="mr-3" color="error" onClick={handleOpen}>
                     Thêm thể loại
                 </Button>
             </div>
 
+            {/* Table Content Category */}
             {!noResults ? (
                 <>
                     <TableContainer component={Paper}>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                            <TableHead className="bg-indigo-400">
+                            <TableHead className="bg-indigo-400 ">
                                 <TableRow>
                                     <TableCell align="left">Tên thể loại</TableCell>
                                     <TableCell align="left">Level</TableCell>
@@ -233,29 +261,29 @@ export default function ManageCategory() {
                             <TableBody>
                                 {category.map((cate) => (
                                     <TableRow
-                                        key={cate.category_id}
+                                        key={cate.categoryId}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell component="th" scope="row">
-                                            {cate.category_name}
+                                            {cate.categoryName}
                                         </TableCell>
                                         <TableCell align="left">{cate.level}</TableCell>
                                         <TableCell align="left">
-                                            {cate.parentCategory === null ? '' : cate.parentCategory.category_name}
+                                            {cate.parentCategory === null ? '' : cate.parentCategory.categoryName}
                                         </TableCell>
-                                        <TableCell align="left">
+                                        <TableCell align="right">
                                             <Button
-                                                variant="outlined"
+                                                variant="contained"
                                                 color="warning"
-                                                onClick={() => setDeleteCategoryId(cate.category_id)}
+                                                onClick={() => handleUpdateOpen(cate.categoryId)}
                                                 sx={{ marginRight: '10px' }}
                                             >
                                                 Sửa
                                             </Button>
                                             <Button
-                                                variant="outlined"
+                                                variant="contained"
                                                 color="error"
-                                                onClick={() => setDeleteCategoryId(cate.id)}
+                                                onClick={() => setDeleteCategoryId(cate.categoryId)}
                                             >
                                                 Xoá
                                             </Button>
@@ -283,6 +311,8 @@ export default function ManageCategory() {
                     Không tìm thấy kết quả nào
                 </Typography>
             )}
+
+            {/* Modal Thêm mới thể loại */}
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -290,10 +320,34 @@ export default function ManageCategory() {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <AddNewCategory handleClose={handleClose} handleAddCategorySuccess={handleAddCategorySuccess} />
+                    <AddNewCategory
+                        category={categories}
+                        handleClose={handleClose}
+                        handleAddCategorySuccess={handleAddCategorySuccess}
+                    />
                 </Box>
             </Modal>
+            {/* End Modal Thêm mới thể loại */}
 
+            {/* Modal Sửa thể loại */}
+            <Modal
+                open={updateOpen}
+                onClose={handleUpdateClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <UpdateCategory
+                        category={categories}
+                        selectedCategoryId={selectedCategoryId}
+                        handleUpdateClose={handleUpdateClose}
+                        handleAddCategorySuccess={handleAddCategorySuccess}
+                    />
+                </Box>
+            </Modal>
+            {/* End Modal Sửa thể loại */}
+
+            {/* Dialog Confirm Delete */}
             <Dialog
                 open={deleteCategoryId !== null}
                 onClose={() => setDeleteCategoryId(null)}
@@ -315,6 +369,7 @@ export default function ManageCategory() {
                     </Button>
                 </DialogActions>
             </Dialog>
+            {/* End Dialog Confirm */}
         </>
     );
 }

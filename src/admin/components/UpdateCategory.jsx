@@ -11,7 +11,7 @@ import Select from '@mui/material/Select';
 import axios from 'axios';
 
 // eslint-disable-next-line react/prop-types
-export default function AddNewCategory({ handleAddCategorySuccess, handleClose, category }) {
+export default function UpdateCategory({ handleAddCategorySuccess, handleUpdateClose, category, selectedCategoryId }) {
     const [categoryName, setCategoryName] = useState('');
     const [error, setError] = useState('');
     const [parentCategory, setParentCategory] = useState('');
@@ -22,6 +22,13 @@ export default function AddNewCategory({ handleAddCategorySuccess, handleClose, 
     useEffect(() => {
         setCategories(category);
     }, [category]);
+
+    useEffect(() => {
+        const selectedCategory = categories.find((cate) => cate.categoryId === selectedCategoryId);
+        setCategoryName(selectedCategory?.categoryName || '');
+        setLevel(selectedCategory?.level || 1);
+        setParentCategory(selectedCategory?.parentCategory || '');
+    }, [selectedCategoryId, categories]);
 
     //--------------------------------------------------- Form Validate ---------------------------------------------------//
     const handleLevelChange = (event) => {
@@ -55,7 +62,7 @@ export default function AddNewCategory({ handleAddCategorySuccess, handleClose, 
 
     const handleAddSuccessClose = () => {
         setSuccessDialogOpen(false);
-        handleClose();
+        handleUpdateClose();
         handleAddCategorySuccess();
     };
     //--------------------------------------------------- End Validate ---------------------------------------------------//
@@ -80,18 +87,16 @@ export default function AddNewCategory({ handleAddCategorySuccess, handleClose, 
         };
 
         try {
-            const response = await axios.post('http://localhost:8686/admin/category/add-category', inputData);
-            console.log('Response:', response.data);
+            await axios.put(`http://localhost:8686/admin/category/update/${selectedCategoryId}`, inputData);
             setSuccessDialogOpen(true);
         } catch (error) {
             console.error('Error adding category:', error);
         }
-        console.log('inputData?', inputData);
     };
 
     return (
         <form className="space-y-6" onSubmit={handleSubmit}>
-            <h5 className="font-bold text-2xl text-center text-red-700">Thêm thể loại</h5>
+            <h5 className="font-bold text-2xl text-center text-red-700">Cập nhật thể loại</h5>
 
             <Stack sx={{ width: '100%' }} spacing={2}>
                 {error && <Alert severity="error">{error}</Alert>}
@@ -136,7 +141,7 @@ export default function AddNewCategory({ handleAddCategorySuccess, handleClose, 
                             labelId="parentCategoryLabel"
                             id="parentCategory"
                             name="parentCategory"
-                            value={parentCategory}
+                            value={parentCategory?.categoryId || parentCategory}
                             label="Parent Category"
                             onChange={handleParentCategoryChange}
                         >
@@ -144,7 +149,7 @@ export default function AddNewCategory({ handleAddCategorySuccess, handleClose, 
                                 .filter((item) => item.level !== 3)
                                 .map((item) => (
                                     <MenuItem key={item.categoryId} value={item.categoryId}>
-                                        {item.categoryName}
+                                        {item.categoryName} - level {item.level}
                                     </MenuItem>
                                 ))}
                         </Select>
@@ -168,7 +173,7 @@ export default function AddNewCategory({ handleAddCategorySuccess, handleClose, 
             <Dialog open={successDialogOpen} onClose={handleAddSuccessClose}>
                 <DialogTitle>Thành công!</DialogTitle>
                 <DialogContent>
-                    <p>Thể loại đã được thêm thành công.</p>
+                    <p>Thể loại đã được cập nhật thành công.</p>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleAddSuccessClose}>Đóng</Button>
