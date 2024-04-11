@@ -91,7 +91,7 @@ export default function AddNewCategory({ handleAddCategorySuccess, handleClose, 
 
     return (
         <form className="space-y-6" onSubmit={handleSubmit}>
-            <h5 className="font-bold text-2xl text-center text-red-700">Thêm thể loại</h5>
+            <h5 className="font-bold text-2xl text-center text-red-700">Thêm Thể Loại Mới</h5>
 
             <Stack sx={{ width: '100%' }} spacing={2}>
                 {error && <Alert severity="error">{error}</Alert>}

@@ -7,8 +7,8 @@ import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
-import ManageBook from '../components/ManageBook';
-import ManageCategory from '../components/ManageCategory';
+import ManageCategory from '../components/category/ManageCategory';
+import ManageBook from '../components/book/ManageBook';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;

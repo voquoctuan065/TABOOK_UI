@@ -1,4 +1,5 @@
 import * as React from 'react';
+import axios from 'axios';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -16,9 +17,9 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
-import AddNewCategory from './AddNewCategory';
-import axios from 'axios';
-import UpdateCategory from './UpdateCategory';
+
+import AddNewBook from './AddNewBook';
+import UpdateBook from './UpdateBook';
 
 const style = {
     position: 'absolute',
@@ -26,10 +27,12 @@ const style = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 800,
+    height: '100vh',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
+    overflow: 'auto',
 };
 
 const Search = styled('div')(({ theme }) => ({
@@ -67,7 +70,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create('width'),
         [theme.breakpoints.up('sm')]: {
-            width: '12ch',
+            width: '30ch',
             '&:focus': {
                 width: '50ch',
             },
@@ -75,16 +78,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-export default function ManageCategory() {
-    const [category, setCategory] = React.useState([]);
-    const [categories, setCategories] = React.useState([]);
+export default function ManageBook() {
+    const [book, setBook] = React.useState([]);
+    const [books, setBooks] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState(1);
     const [totalPages, setTotalPages] = React.useState(1);
     const [open, setOpen] = React.useState(false);
     const [updateOpen, setUpdateOpen] = React.useState(false);
 
-    const [deleteCategoryId, setDeleteCategoryId] = React.useState(null);
-    const [selectedCategoryId, setSelectedCategoryId] = React.useState(null);
+    const [deleteBookId, setDeleteBookId] = React.useState(null);
+    const [selectedBookId, setSelectedBookId] = React.useState(null);
 
     const [error, setError] = React.useState('');
     const [success, setSuccess] = React.useState('');
@@ -92,37 +95,35 @@ export default function ManageCategory() {
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const handleUpdateOpen = (categoryId) => {
-        setSelectedCategoryId(categoryId);
+    const handleUpdateOpen = (bookId) => {
+        setSelectedBookId(bookId);
         setUpdateOpen(true);
     };
     const handleUpdateClose = () => setUpdateOpen(false);
 
-    //-------------------------------- Get page category with size 10 -------------------------//
-    const fetchCategory = async () => {
+    //-------------------------------- Get page book with size 10 -------------------------//
+    const fetchBook = async () => {
         try {
-            const response = await fetch(`http://localhost:8686/admin/category?page=${currentPage - 1}&size=10`);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            const response = await axios.get(`http://localhost:8686/admin/book?page=${currentPage - 1}&size=10`);
+            if (response.status === 200) {
+                setBook(response.data.booksDtoList);
+                setTotalPages(response.data.totalPage);
             }
-            const data = await response.json();
-            setCategory(data.categoriesDtoList);
-            setTotalPages(data.totalPages);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
-    //-------------------------------- End page category with size 10 -------------------------//
+    //-------------------------------- End page book with size 10 -------------------------//
 
     // eslint-disable-next-line no-unused-vars
-    const getAllCategory = async () => {
+    const getAllBook = async () => {
         try {
             const response = await fetch('http://localhost:8686/admin/category/list-category');
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-            setCategories(data);
+            setBooks(data);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -130,8 +131,8 @@ export default function ManageCategory() {
     //-------------------------------- End page category with size 10 -------------------------//
 
     React.useEffect(() => {
-        fetchCategory();
-        getAllCategory();
+        fetchBook();
+        getAllBook();
     }, [currentPage]);
 
     const handlePageChange = (event, pageNumber) => {
@@ -139,15 +140,15 @@ export default function ManageCategory() {
     };
 
     //--------------------------------------------------- Delete Category ---------------------------------------------------//
-    const handleDelete = async (categoryId) => {
+    const handleDelete = async (bookId) => {
         try {
-            const response = await axios.delete(`http://localhost:8686/admin/category/delete/${categoryId}`);
+            const response = await axios.delete(`http://localhost:8686/admin/category/delete/${bookId}`);
             if (response.status !== 200) {
                 throw new Error('Network response was not ok');
             }
             setSuccess('Xoá thể loại thành công!');
-            fetchCategory();
-            setDeleteCategoryId(null);
+            fetchBook();
+            setDeleteBookId(null);
         } catch (error) {
             console.error('Error deleting book:', error);
             setError('Xoá thể loại không thành công');
@@ -179,47 +180,47 @@ export default function ManageCategory() {
 
     //--------------------------------------------------- Tìm kiếm ---------------------------------------------------//
     const [noResults, setNoResults] = React.useState(false);
-    const searchType = async () => {
+    const searchBook = async () => {
         try {
-            const response = await fetch(
-                `http://localhost:8686/admin/category/search?keyword=${searchKeyword}&page=${currentPage - 1}&size=10`,
+            const response = await axios.get(
+                `http://localhost:8686/admin/book/search?keyword=${searchKeyword}&page=${currentPage - 1}&size=10`,
             );
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            if (response.status === 200) {
+                const data = response.data;
+                if (data.booksDtoList.length === 0) {
+                    setNoResults(true);
+                } else {
+                    setNoResults(false);
+                }
+                setBook(data.booksDtoList);
+                setTotalPages(data.totalPages);
+                console.log('Sach tim kiem duoc', response);
             }
-            const data = await response.json();
-            if (data.categoriesDtoList.length === 0) {
-                setNoResults(true);
-            } else {
-                setNoResults(false);
-            }
-            setCategory(data.categoriesDtoList);
-            setTotalPages(data.totalPages);
         } catch (error) {
-            console.error('Error searching Category:', error);
+            console.error('Error searching Book:', error);
         }
     };
 
     const handleSearchChange = (event) => {
         setSearchKeyword(event.target.value);
         if (event.target.value === '') {
-            fetchCategory();
+            fetchBook();
         } else {
-            searchType();
+            searchBook();
         }
     };
     React.useEffect(() => {
         if (searchKeyword === '') {
-            fetchCategory();
+            fetchBook();
             setNoResults(false); // Reset trạng thái noResults khi trở về trạng thái ban đầu
         }
     }, [searchKeyword]);
 
     //--------------------------------------------------- End Tìm kiếm ---------------------------------------------------//
 
-    const handleAddCategorySuccess = () => {
-        fetchCategory();
-        getAllCategory();
+    const handleAddBookSuccess = () => {
+        fetchBook();
+        getAllBook();
     };
 
     return (
@@ -231,59 +232,90 @@ export default function ManageCategory() {
                             <SearchIcon />
                         </SearchIconWrapper>
                         <StyledInputBase
-                            placeholder="Tìm kiếm tên..."
+                            placeholder="Tìm kiếm tên sách..."
                             inputProps={{ 'aria-label': 'search' }}
                             value={searchKeyword}
-                            onChange={handleSearchChange} // Xử lý sự kiện onChange để cập nhật từ khóa tìm kiếm
+                            onChange={handleSearchChange}
                         />
                     </Search>
                 </form>
                 <Stack spacing={2}>{error && <Alert severity="error">{error}</Alert>}</Stack>
                 <Stack spacing={2}>{success && <Alert severity="success">{success}</Alert>}</Stack>
                 <Button variant="outlined" className="mr-3" color="error" onClick={handleOpen}>
-                    Thêm thể loại
+                    Thêm sách mới
                 </Button>
             </div>
 
-            {/* Table Content Category */}
+            {/* Table Content Book */}
             {!noResults ? (
                 <>
                     <TableContainer component={Paper}>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table">
                             <TableHead className="bg-indigo-400 ">
                                 <TableRow>
-                                    <TableCell align="left">Tên thể loại</TableCell>
-                                    <TableCell align="left">Level</TableCell>
-                                    <TableCell align="left">Thuộc thể loại</TableCell>
+                                    <TableCell align="left">Tên sách</TableCell>
+                                    <TableCell align="left">Giá</TableCell>
+                                    <TableCell align="left">% Giảm giá</TableCell>
+                                    <TableCell align="left">Giá sau khi giảm</TableCell>
+                                    <TableCell align="left">Hình ảnh</TableCell>
+                                    <TableCell align="left">Số lượng trong kho</TableCell>
+                                    <TableCell align="left">Năm xuất bản</TableCell>
                                     <TableCell align="left"></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {category.map((cate) => (
+                                {book.map((item) => (
                                     <TableRow
-                                        key={cate.categoryId}
+                                        key={item.bookId}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
-                                        <TableCell component="th" scope="row">
-                                            {cate.categoryName}
+                                        <TableCell
+                                            component="th"
+                                            scope="row"
+                                            sx={{
+                                                maxWidth: '200px',
+                                                maxHeight: '100px',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                            }}
+                                        >
+                                            {item.bookTitle}
                                         </TableCell>
-                                        <TableCell align="left">{cate.level}</TableCell>
                                         <TableCell align="left">
-                                            {cate.parentCategory === null ? '' : cate.parentCategory.categoryName}
+                                            {item.bookPrice.toLocaleString('vi-VN', {
+                                                style: 'currency',
+                                                currency: 'VND',
+                                            })}
                                         </TableCell>
-                                        <TableCell align="right">
+                                        <TableCell align="left"> - {item.discountPercent} %</TableCell>
+                                        <TableCell align="left">
+                                            {item.discountedPrice.toLocaleString('vi-VN', {
+                                                style: 'currency',
+                                                currency: 'VND',
+                                            })}
+                                        </TableCell>
+                                        <TableCell align="left" sx={{ width: '170px' }}>
+                                            <img
+                                                className="object-fit"
+                                                src={`/images/books/${item.bookImage}`}
+                                                alt=""
+                                            />
+                                        </TableCell>
+                                        <TableCell align="left">{item.stockQuantity}</TableCell>
+                                        <TableCell align="left">{item.yearProduce}</TableCell>
+                                        <TableCell align="right" sx={{ width: '150px' }}>
                                             <Button
                                                 variant="contained"
                                                 color="warning"
-                                                onClick={() => handleUpdateOpen(cate.categoryId)}
-                                                sx={{ marginRight: '10px' }}
+                                                onClick={() => handleUpdateOpen(item.bookId)}
+                                                sx={{ marginBottom: '10px' }}
                                             >
                                                 Sửa
                                             </Button>
                                             <Button
                                                 variant="contained"
                                                 color="error"
-                                                onClick={() => setDeleteCategoryId(cate.categoryId)}
+                                                onClick={() => setDeleteBookId(item.bookId)}
                                             >
                                                 Xoá
                                             </Button>
@@ -312,7 +344,7 @@ export default function ManageCategory() {
                 </Typography>
             )}
 
-            {/* Modal Thêm mới thể loại */}
+            {/* Modal Thêm mới Book */}
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -320,16 +352,12 @@ export default function ManageCategory() {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <AddNewCategory
-                        category={categories}
-                        handleClose={handleClose}
-                        handleAddCategorySuccess={handleAddCategorySuccess}
-                    />
+                    <AddNewBook book={books} handleClose={handleClose} handleAddBookSuccess={handleAddBookSuccess} />
                 </Box>
             </Modal>
-            {/* End Modal Thêm mới thể loại */}
+            {/* End Modal Thêm mới Book */}
 
-            {/* Modal Sửa thể loại */}
+            {/* Modal Sửa Book */}
             <Modal
                 open={updateOpen}
                 onClose={handleUpdateClose}
@@ -337,34 +365,34 @@ export default function ManageCategory() {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <UpdateCategory
-                        category={categories}
-                        selectedCategoryId={selectedCategoryId}
+                    <UpdateBook
+                        book={books}
+                        selectedBookId={selectedBookId}
                         handleUpdateClose={handleUpdateClose}
-                        handleAddCategorySuccess={handleAddCategorySuccess}
+                        handleAddBookSuccess={handleAddBookSuccess}
                     />
                 </Box>
             </Modal>
-            {/* End Modal Sửa thể loại */}
+            {/* End Modal Sửa Book */}
 
             {/* Dialog Confirm Delete */}
             <Dialog
-                open={deleteCategoryId !== null}
-                onClose={() => setDeleteCategoryId(null)}
+                open={deleteBookId !== null}
+                onClose={() => setDeleteBookId(null)}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">Xác nhận xoá</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Bạn chắc chắn muốn xoá thể loại này?
+                        Bạn chắc chắn muốn xoá sách này?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setDeleteCategoryId(null)} color="primary">
+                    <Button onClick={() => setDeleteBookId(null)} color="primary">
                         Huỷ
                     </Button>
-                    <Button onClick={() => handleDelete(deleteCategoryId)} color="primary" autoFocus>
+                    <Button onClick={() => handleDelete(deleteBookId)} color="primary" autoFocus>
                         Xoá
                     </Button>
                 </DialogActions>
