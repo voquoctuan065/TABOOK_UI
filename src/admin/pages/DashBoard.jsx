@@ -53,7 +53,7 @@ function DashBoard() {
     return (
         <Box sx={{ width: '100%', margin: '0 auto' }} className="container">
             <div className="flex items-center justify-between border-b border-red-500">
-                <div className='flex items-center'>
+                <div className="flex items-center">
                     <div className="ml-4 lg:ml-0 mr-10">
                         <div onClick={() => navigate('/')} className="cursor-pointer">
                             <span className="sr-only">Your Company</span>
@@ -77,7 +77,11 @@ function DashBoard() {
             </div>
 
             <CustomTabPanel value={value} index={0}>
-                Item One
+                <img
+                    src="https://drive.google.com/thumbnail?id=1TBPy7wDeGDZncaw2IjnmBX43dydX2vyz"
+                    alt=""
+                    className="w-[100px] h-[100px]"
+                />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
                 <ManageBook />

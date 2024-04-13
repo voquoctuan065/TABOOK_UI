@@ -16,7 +16,7 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
-import { Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
+import {  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
 
 import AddNewBook from './AddNewBook';
 import UpdateBook from './UpdateBook';
@@ -26,7 +26,8 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 800,
+    maxWidth: 1000,
+    width: 'auto',
     height: '100vh',
     bgcolor: 'background.paper',
     border: '2px solid #000',
@@ -80,17 +81,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function ManageBook() {
     const [book, setBook] = React.useState([]);
-    const [books, setBooks] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState(1);
     const [totalPages, setTotalPages] = React.useState(1);
     const [open, setOpen] = React.useState(false);
     const [updateOpen, setUpdateOpen] = React.useState(false);
+    const [successDialogOpen, setSuccessDialogOpen] = React.useState(false);
 
     const [deleteBookId, setDeleteBookId] = React.useState(null);
     const [selectedBookId, setSelectedBookId] = React.useState(null);
-
-    const [error, setError] = React.useState('');
-    const [success, setSuccess] = React.useState('');
     const [searchKeyword, setSearchKeyword] = React.useState('');
 
     const handleOpen = () => setOpen(true);
@@ -115,68 +113,34 @@ export default function ManageBook() {
     };
     //-------------------------------- End page book with size 10 -------------------------//
 
-    // eslint-disable-next-line no-unused-vars
-    const getAllBook = async () => {
-        try {
-            const response = await fetch('http://localhost:8686/admin/category/list-category');
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const data = await response.json();
-            setBooks(data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    };
-    //-------------------------------- End page category with size 10 -------------------------//
-
     React.useEffect(() => {
         fetchBook();
-        getAllBook();
     }, [currentPage]);
 
     const handlePageChange = (event, pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
-    //--------------------------------------------------- Delete Category ---------------------------------------------------//
+    //--------------------------------------------------- Handle Delete Book ---------------------------------------------------//
     const handleDelete = async (bookId) => {
         try {
-            const response = await axios.delete(`http://localhost:8686/admin/category/delete/${bookId}`);
+            const response = await axios.delete(`http://localhost:8686/admin/book/delete/${bookId}`);
             if (response.status !== 200) {
                 throw new Error('Network response was not ok');
             }
-            setSuccess('Xoá thể loại thành công!');
-            fetchBook();
+            console.log(response);
+            setSuccessDialogOpen(true);
             setDeleteBookId(null);
         } catch (error) {
             console.error('Error deleting book:', error);
-            setError('Xoá thể loại không thành công');
         }
     };
 
+    const handleDeleteSuccess = () => {
+        setSuccessDialogOpen(false);
+        fetchBook();
+    };
     //--------------------------------------------------- End Delete Category ---------------------------------------------------//
-
-    React.useEffect(() => {
-        let errorTimeout, successTimeout;
-
-        if (error) {
-            errorTimeout = setTimeout(() => {
-                setError(null);
-            }, 3000);
-        }
-
-        if (success) {
-            successTimeout = setTimeout(() => {
-                setSuccess(null);
-            }, 3000);
-        }
-
-        return () => {
-            clearTimeout(errorTimeout);
-            clearTimeout(successTimeout);
-        };
-    }, [error, success]);
 
     //--------------------------------------------------- Tìm kiếm ---------------------------------------------------//
     const [noResults, setNoResults] = React.useState(false);
@@ -220,7 +184,6 @@ export default function ManageBook() {
 
     const handleAddBookSuccess = () => {
         fetchBook();
-        getAllBook();
     };
 
     return (
@@ -239,8 +202,6 @@ export default function ManageBook() {
                         />
                     </Search>
                 </form>
-                <Stack spacing={2}>{error && <Alert severity="error">{error}</Alert>}</Stack>
-                <Stack spacing={2}>{success && <Alert severity="success">{success}</Alert>}</Stack>
                 <Button variant="outlined" className="mr-3" color="error" onClick={handleOpen}>
                     Thêm sách mới
                 </Button>
@@ -295,11 +256,7 @@ export default function ManageBook() {
                                             })}
                                         </TableCell>
                                         <TableCell align="left" sx={{ width: '170px' }}>
-                                            <img
-                                                className="object-fit"
-                                                src={`/images/books/${item.bookImage}`}
-                                                alt=""
-                                            />
+                                            <img className="object-fit" src={item.bookImage} alt="" />
                                         </TableCell>
                                         <TableCell align="left">{item.stockQuantity}</TableCell>
                                         <TableCell align="left">{item.yearProduce}</TableCell>
@@ -352,7 +309,7 @@ export default function ManageBook() {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <AddNewBook book={books} handleClose={handleClose} handleAddBookSuccess={handleAddBookSuccess} />
+                    <AddNewBook handleClose={handleClose} handleAddBookSuccess={handleAddBookSuccess} />
                 </Box>
             </Modal>
             {/* End Modal Thêm mới Book */}
@@ -366,7 +323,6 @@ export default function ManageBook() {
             >
                 <Box sx={style}>
                     <UpdateBook
-                        book={books}
                         selectedBookId={selectedBookId}
                         handleUpdateClose={handleUpdateClose}
                         handleAddBookSuccess={handleAddBookSuccess}
@@ -398,6 +354,18 @@ export default function ManageBook() {
                 </DialogActions>
             </Dialog>
             {/* End Dialog Confirm */}
+
+            {/* Dialog Delete Success */}
+            <Dialog open={successDialogOpen} onClose={handleDeleteSuccess}>
+                <DialogTitle>Thành công!</DialogTitle>
+                <DialogContent>
+                    <p>Sách đã được xoá thành công.</p>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDeleteSuccess}>Đóng</Button>
+                </DialogActions>
+            </Dialog>
+            {/* End Dialog Delete Success */}
         </>
     );
 }
