@@ -9,6 +9,7 @@ import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import ManageCategory from '../components/category/ManageCategory';
 import ManageBook from '../components/book/ManageBook';
+import ManageNxb from '../components/nxb/ManageNxb';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -65,8 +66,9 @@ function DashBoard() {
                             <Tab label="Item One" {...a11yProps(0)} />
                             <Tab label="Sách" {...a11yProps(1)} />
                             <Tab label="Thể loại" {...a11yProps(2)} />
-                            <Tab label="Đơn hàng" {...a11yProps(3)} />
-                            <Tab label="Thanh toán" {...a11yProps(4)} />
+                            <Tab label="NXB" {...a11yProps(3)} />
+                            <Tab label="Đơn hàng" {...a11yProps(4)} />
+                            <Tab label="Thanh toán" {...a11yProps(5)} />
                         </Tabs>
                     </Box>
                 </div>
@@ -90,9 +92,12 @@ function DashBoard() {
                 <ManageCategory />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={3}>
-                Item Three
+                <ManageNxb />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={4}>
+                Item Three
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={5}>
                 Item Three
             </CustomTabPanel>
         </Box>

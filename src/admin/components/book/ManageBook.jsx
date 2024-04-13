@@ -158,7 +158,6 @@ export default function ManageBook() {
                 }
                 setBook(data.booksDtoList);
                 setTotalPages(data.totalPages);
-                console.log('Sach tim kiem duoc', response);
             }
         } catch (error) {
             console.error('Error searching Book:', error);

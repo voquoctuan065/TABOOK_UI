@@ -111,7 +111,7 @@ function AddNewBook({ handleClose, handleAddBookSuccess }) {
 
     const handleAuthorNameChange = (event) => {
         const authorName = event.target.value;
-        const specialChars = /[!@#$%^&*(),.?":{}|<>]/;
+        const specialChars = /[!@#$%^&*()?":{}|<>]/;
         const containsNumber = /\d/.test(bookTitle);
         if (!authorName || authorName.trim() === '') {
             setError('Tên tác giả không được để trống! Vui lòng nhập tên tác giả.');
@@ -304,7 +304,6 @@ function AddNewBook({ handleClose, handleAddBookSuccess }) {
         } catch (error) {
             console.log(error);
         }
-        console.log(inputData);
     };
 
     const handleAddSuccessClose = () => {

@@ -70,10 +70,6 @@ function UpdateBook({ selectedBookId, handleUpdateClose, handleAddBookSuccess })
             if (bookById.bookDescription) {
                 setBookDescription(bookById.bookDescription);
             }
-            //
-            // const editState = EditorState.createWithContent(descriptionState);
-            // console.log('descriptionState', descriptionState);
-            // setEditorState(editState);
         }
     }, [bookById]);
 
