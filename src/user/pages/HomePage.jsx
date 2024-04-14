@@ -1,6 +1,12 @@
-
+import Navbar from '../components/Navbar/Navbar';
+import Footer from '../components/Footer/Footer';
 function HomePage() {
-  return <div>Đây là homepage</div>;
+    return (
+        <>
+            <Navbar />
+            <Footer />
+        </>
+    );
 }
 
 export default HomePage;
