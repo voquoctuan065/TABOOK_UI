@@ -41,11 +41,15 @@ function UpdateBook({ selectedBookId, handleUpdateClose, handleAddBookSuccess })
     const [discountPercent, setDiscountPercent] = useState(null);
     const [discountedPrice, setDiscountedPrice] = useState(null);
     const [successDialogOpen, setSuccessDialogOpen] = useState(false);
-
+    const jwt = localStorage.getItem('adminJwt');
     useEffect(() => {
         const fetchBookById = async () => {
             try {
-                const response = await axios.get(`http://localhost:8686/admin/book/${selectedBookId}`);
+                const response = await axios.get(`http://localhost:8686/admin/book/${selectedBookId}`, {
+                    headers: {
+                        Authorization: `Bearer ${jwt}`,
+                    },
+                });
                 setBookById(response.data);
             } catch (error) {
                 console.error('Lỗi khi lấy dứ liệu sách: ', error);
@@ -214,7 +218,11 @@ function UpdateBook({ selectedBookId, handleUpdateClose, handleAddBookSuccess })
         try {
             const formData = new FormData();
             formData.append('image', selectedFile);
-            const response = await axios.post('http://localhost:8686/admin/uploadToGoogleDrive', formData);
+            const response = await axios.post('http://localhost:8686/admin/uploadToGoogleDrive', formData, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
             const result = response.data;
             setSuccess(result.message);
             setBookImage(result.url);
@@ -271,7 +279,7 @@ function UpdateBook({ selectedBookId, handleUpdateClose, handleAddBookSuccess })
     // ------------------------------ Xử lý submit form thêm sách mới ----------------------------------//
     const handleSubmit = async (event) => {
         event.preventDefault();
-        
+
         const formData = new FormData(event.currentTarget);
 
         let categoryId = parseInt(formData.get('category'));
@@ -306,7 +314,11 @@ function UpdateBook({ selectedBookId, handleUpdateClose, handleAddBookSuccess })
             bookImage: bookImage,
         };
         try {
-            await axios.put(`http://localhost:8686/admin/book/update/${selectedBookId}`, inputData);
+            await axios.put(`http://localhost:8686/admin/book/update/${selectedBookId}`, inputData, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
             setSuccessDialogOpen(true);
         } catch (error) {
             console.log(error);

@@ -19,6 +19,8 @@ export default function AddNewCategory({ handleAddCategorySuccess, handleClose, 
     const [categories, setCategories] = useState([]);
     const [successDialogOpen, setSuccessDialogOpen] = useState(false);
 
+    const jwt = localStorage.getItem('adminJwt');
+
     useEffect(() => {
         setCategories(category);
     }, [category]);
@@ -80,7 +82,11 @@ export default function AddNewCategory({ handleAddCategorySuccess, handleClose, 
         };
 
         try {
-            const response = await axios.post('http://localhost:8686/admin/category/add-category', inputData);
+            const response = await axios.post('http://localhost:8686/admin/category/add-category', inputData, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
             console.log('Response:', response.data);
             setSuccessDialogOpen(true);
         } catch (error) {

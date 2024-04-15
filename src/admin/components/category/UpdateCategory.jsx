@@ -19,6 +19,7 @@ export default function UpdateCategory({ handleAddCategorySuccess, handleUpdateC
     const [categories, setCategories] = useState([]);
     const [successDialogOpen, setSuccessDialogOpen] = useState(false);
 
+    const jwt = localStorage.getItem('adminJwt');
     useEffect(() => {
         setCategories(category);
     }, [category]);
@@ -87,7 +88,11 @@ export default function UpdateCategory({ handleAddCategorySuccess, handleUpdateC
         };
 
         try {
-            await axios.put(`http://localhost:8686/admin/category/update/${selectedCategoryId}`, inputData);
+            await axios.put(`http://localhost:8686/admin/category/update/${selectedCategoryId}`, inputData, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
             setSuccessDialogOpen(true);
         } catch (error) {
             console.error('Error adding category:', error);

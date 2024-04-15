@@ -19,6 +19,7 @@ import { Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogT
 import AddNewCategory from './AddNewCategory';
 import axios from 'axios';
 import UpdateCategory from './UpdateCategory';
+import { Helmet } from 'react-helmet-async';
 
 const style = {
     position: 'absolute',
@@ -89,6 +90,7 @@ export default function ManageCategory() {
     const [error, setError] = React.useState('');
     const [success, setSuccess] = React.useState('');
     const [searchKeyword, setSearchKeyword] = React.useState('');
+    const jwt = localStorage.getItem('adminJwt');
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -101,7 +103,11 @@ export default function ManageCategory() {
     //-------------------------------- Get page category with size 10 -------------------------//
     const fetchCategory = async () => {
         try {
-            const response = await fetch(`http://localhost:8686/admin/category?page=${currentPage - 1}&size=10`);
+            const response = await fetch(`http://localhost:8686/admin/category?page=${currentPage - 1}&size=10`, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -117,7 +123,11 @@ export default function ManageCategory() {
     // eslint-disable-next-line no-unused-vars
     const getAllCategory = async () => {
         try {
-            const response = await fetch('http://localhost:8686/admin/category/list-category');
+            const response = await fetch('http://localhost:8686/admin/category/list-category', {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -141,7 +151,11 @@ export default function ManageCategory() {
     //--------------------------------------------------- Delete Category ---------------------------------------------------//
     const handleDelete = async (categoryId) => {
         try {
-            const response = await axios.delete(`http://localhost:8686/admin/category/delete/${categoryId}`);
+            const response = await axios.delete(`http://localhost:8686/admin/category/delete/${categoryId}`, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
             if (response.status !== 200) {
                 throw new Error('Network response was not ok');
             }
@@ -183,6 +197,11 @@ export default function ManageCategory() {
         try {
             const response = await fetch(
                 `http://localhost:8686/admin/category/search?keyword=${searchKeyword}&page=${currentPage - 1}&size=10`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${jwt}`,
+                    },
+                }
             );
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -224,6 +243,9 @@ export default function ManageCategory() {
 
     return (
         <>
+        <Helmet>
+                <title>Quản lý thể loại</title>
+            </Helmet>
             <div className="flex justify-between mb-5">
                 <form>
                     <Search>

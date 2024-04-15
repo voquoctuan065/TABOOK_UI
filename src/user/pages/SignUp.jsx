@@ -3,6 +3,8 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextFi
 import { useNavigate } from 'react-router-dom';
 import Footer from '../components/Footer/Footer';
 import axios from 'axios';
+import { Helmet } from 'react-helmet-async';
+
 function SignUp() {
     const navigate = useNavigate();
     const formRef = useRef(null);
@@ -155,6 +157,9 @@ function SignUp() {
     // -------------------------------- End Handle Submit Form ----------------------------------------//
     return (
         <div>
+            <Helmet>
+                <title> Đăng ký </title>
+            </Helmet>
             <header className="relative bg-indigo-500">
                 <nav aria-label="Top" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 items-center md:justify-between sm:justify-between lg:justify-between">

@@ -47,11 +47,15 @@ function UpdateNxb({ selectedNxbId, handleUpdateClose, handleAddNXBSuccess }) {
     const [nxbName, setNxbName] = useState('');
     const [nxbInfo, setNxbInfo] = useState('');
     const [successDialogOpen, setSuccessDialogOpen] = useState(false);
-
+    const jwt = localStorage.getItem('adminJwt');
     useEffect(() => {
         const fetNxbById = async () => {
             try {
-                const response = await axios.get(`http://localhost:8686/admin/nxb/${selectedNxbId}`);
+                const response = await axios.get(`http://localhost:8686/admin/nxb/${selectedNxbId}`, {
+                    headers: {
+                        Authorization: `Bearer ${jwt}`,
+                    },
+                });
                 setNxbById(response.data);
             } catch (error) {
                 console.error('Lỗi khi lấy dứ liệu sách: ', error);
@@ -98,7 +102,11 @@ function UpdateNxb({ selectedNxbId, handleUpdateClose, handleAddNXBSuccess }) {
         };
 
         try {
-            await axios.put(`http://localhost:8686/admin/nxb/update/${selectedNxbId}`, inputData);
+            await axios.put(`http://localhost:8686/admin/nxb/update/${selectedNxbId}`, inputData, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
             setSuccessDialogOpen(true);
         } catch (error) {
             console.log(error);

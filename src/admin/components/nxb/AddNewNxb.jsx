@@ -46,7 +46,7 @@ function AddNewNxb({ handleClose, handleAddNXBSuccess }) {
     const [nxbName, setNxbName] = useState('');
     const [nxbInfo, setNxbInfo] = useState('');
     const [successDialogOpen, setSuccessDialogOpen] = useState(false);
-
+    const jwt = localStorage.getItem('adminJwt')
     const handleNXBSChange = (event) => {
         const nxbString = event.target.value;
         const specialChars = /[!@#$%^&*()?":{}|<>]/;
@@ -74,7 +74,11 @@ function AddNewNxb({ handleClose, handleAddNXBSuccess }) {
         };
 
         try {
-            await axios.post('http://localhost:8686/admin/nxb/add', inputData);
+            await axios.post('http://localhost:8686/admin/nxb/add', inputData, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
             setSuccessDialogOpen(true);
         } catch (error) {
             console.log(error);

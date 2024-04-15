@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Helmet } from 'react-helmet-async';
 
 const validateEmail = (email) => {
     // Regex pattern kiểm tra định dạng email
@@ -68,16 +69,16 @@ function AdminSignIn() {
             password: password,
         };
 
-        // try {
-        //     const response = await axios.post('http://localhost:8686/auth/signin', inputData);
-        //     const data = response.data;
-        //     if (data.jwt) {
-        //         localStorage.setItem('jwt', data.jwt);
-        //     }
-        //     navigate('/');
-        // } catch (error) {
-        //     setSuccessDialogOpen(true);
-        // }
+        try {
+            const response = await axios.post('http://localhost:8686/auth/signin', inputData);
+            const data = response.data;
+            if (data.jwt) {
+                localStorage.setItem('adminJwt', data.jwt);
+            }
+            navigate('/admin');
+        } catch (error) {
+            setSuccessDialogOpen(true);
+        }
     };
 
     const handleLoginFailure = () => {
@@ -86,12 +87,15 @@ function AdminSignIn() {
 
     return (
         <div>
+            <Helmet>
+                <title>Admin đăng nhập </title>
+            </Helmet>
             <header className="relative bg-indigo-500">
                 <nav aria-label="Top" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 items-center md:justify-between sm:justify-between lg:justify-between">
                         {/* Logo */}
-                        <div className="ml-4 flex lg:ml-0 items-center cursor-pointer">
-                            <div onClick={() => navigate('/')}>
+                        <div className="ml-4 flex lg:ml-0 items-center">
+                            <div onClick={() => navigate('/')} className="cursor-pointer">
                                 <span className="sr-only">Your Company</span>
                                 <img className="h-8 w-auto" src="/images/logo/mainlogo.png" alt="" />
                             </div>

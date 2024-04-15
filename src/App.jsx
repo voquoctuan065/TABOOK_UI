@@ -1,10 +1,11 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import HomePage from './user/pages/HomePage';
 import DashBoard from './admin/pages/DashBoard';
 import SignIn from './user/pages/SignIn';
 import SignUp from './user/pages/SignUp';
 import AdminSignIn from './admin/pages/AdminSignIn';
-
+import PageNotFound from './sections/PageNotFound';
+import UnAuthorize from './sections/UnAuthorize';
 const router = createBrowserRouter([
     {
         path: '/',
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
     },
     { path: '/admin/sign-in', element: <AdminSignIn /> },
     { path: '/admin', element: <DashBoard /> },
+
+    { path: '404', element: <PageNotFound /> },
+    { path: '*', element: <Navigate to="/404" replace /> },
+    { path: '/401', element: <UnAuthorize /> },
 ]);
 
 function App() {

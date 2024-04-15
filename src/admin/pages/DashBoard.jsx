@@ -10,6 +10,7 @@ import ManageCategory from '../components/category/ManageCategory';
 import ManageBook from '../components/book/ManageBook';
 import ManageNxb from '../components/nxb/ManageNxb';
 import { Menu, MenuItem } from '@mui/material';
+import axios from 'axios';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -46,15 +47,9 @@ function a11yProps(index) {
 function DashBoard() {
     const [value, setValue] = React.useState(0);
     const navigate = useNavigate();
-    const [user, setUser] = React.useState(null);
+    const [userProfile, setUserProfile] = React.useState(null);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openUserMenu = Boolean(anchorEl);
-
-    // React.useEffect(() => {
-    //     if (!user) {
-    //         navigate('/admin/sign-in');
-    //     }
-    // }, []);
 
     const handleUserClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -68,13 +63,53 @@ function DashBoard() {
         setValue(newValue);
     };
 
+    React.useEffect(() => {
+        if (!localStorage.getItem('adminJwt')) {
+            navigate('/admin/sign-in');
+        }
+    }, []);
+
+    React.useEffect(() => {
+        const jwt = localStorage.getItem('adminJwt');
+        if (jwt) {
+            const getUserProfile = async () => {
+                try {
+                    const response = await axios.get('http://localhost:8686/api/user/profile', {
+                        headers: {
+                            Authorization: `Bearer ${jwt}`,
+                        },
+                    });
+                    setUserProfile(response.data);
+                } catch (error) {
+                    console.error('Error fetching data: ', error);
+                }
+            };
+
+            getUserProfile();
+        }
+    }, []);
+
+    React.useEffect(() => {
+        if (userProfile) {
+            if (userProfile.role === 'USER') {
+                navigate('/401');
+            }
+        }
+    }, [userProfile]);
+
+    const handleLogout = () => {
+        localStorage.removeItem('adminJwt');
+        setUserProfile(null);
+        window.location.reload();
+    };
+
     return (
         <>
             <div className="bg-indigo-500 h-[65px] space-x-8">
                 <div className="flex items-center h-full justify-between container m-auto">
                     <div className="flex items-center">
                         <div className="ml-4 lg:ml-0 mr-10">
-                            <div onClick={() => navigate('/')} className="cursor-pointer">
+                            <div onClick={() => navigate('/admin')} className="cursor-pointer">
                                 <span className="sr-only">Your Company</span>
                                 <img className="h-8 w-25" src="/images/logo/mainlogo.png" alt="" />
                             </div>
@@ -170,44 +205,69 @@ function DashBoard() {
                     </div>
 
                     <div>
-                        <Avatar
-                            className="text-white"
-                            onClick={handleUserClick}
-                            aria-controls={open ? 'basic-menu' : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={open ? 'true' : undefined}
-                            sx={{
-                                bgcolor: 'red',
-                                color: 'white',
-                            }}
-                        >
-                            A
-                        </Avatar>
+                        {userProfile ? (
+                            <div>
+                                <Avatar
+                                    onClick={handleUserClick}
+                                    aria-controls={open ? 'basic-menu' : undefined}
+                                    aria-haspopup="true"
+                                    aria-expanded={open ? 'true' : undefined}
+                                    sx={{
+                                        bgcolor: 'red',
+                                        color: 'white',
+                                    }}
+                                    alt="Avatar"
+                                    src={`/images/${userProfile.userImage}`}
+                                />
 
-                        <Menu
-                            id="basic-menu"
-                            anchorEl={anchorEl}
-                            open={openUserMenu}
-                            onClose={handleCloseUserMenu}
-                            MenuListProps={{
-                                'aria-labelledby': 'basic-button',
-                            }}
-                        >
-                            <MenuItem onClick={handleCloseUserMenu}>Profile</MenuItem>
-                            <MenuItem>My Orders</MenuItem>
-                            <MenuItem onClick={() => console.log('Yes, clicked!')}>Logout</MenuItem>
-                        </Menu>
+                                <Menu
+                                    id="basic-menu"
+                                    anchorEl={anchorEl}
+                                    open={openUserMenu}
+                                    onClose={handleCloseUserMenu}
+                                    MenuListProps={{
+                                        'aria-labelledby': 'basic-button',
+                                    }}
+                                >
+                                    <MenuItem onClick={handleCloseUserMenu}>Profile</MenuItem>
+                                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                                </Menu>
+                            </div>
+                        ) : (
+                            <div>
+                                <Avatar
+                                    onClick={handleUserClick}
+                                    aria-controls={open ? 'basic-menu' : undefined}
+                                    aria-haspopup="true"
+                                    aria-expanded={open ? 'true' : undefined}
+                                    sx={{
+                                        bgcolor: 'red',
+                                        color: 'white',
+                                    }}
+                                    alt="Remy Sharp"
+                                    src="/images/no-image.jpg"
+                                />
+
+                                <Menu
+                                    id="basic-menu"
+                                    anchorEl={anchorEl}
+                                    open={openUserMenu}
+                                    onClose={handleCloseUserMenu}
+                                    MenuListProps={{
+                                        'aria-labelledby': 'basic-button',
+                                    }}
+                                >
+                                    <MenuItem onClick={handleCloseUserMenu}>Profile</MenuItem>
+                                    <MenuItem>My Orders</MenuItem>
+                                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                                </Menu>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
             <Box sx={{ width: '100%', margin: '0 auto' }} className="container">
-                <CustomTabPanel value={value} index={0}>
-                    <img
-                        src="https://drive.google.com/thumbnail?id=1TBPy7wDeGDZncaw2IjnmBX43dydX2vyz"
-                        alt=""
-                        className="w-[100px] h-[100px]"
-                    />
-                </CustomTabPanel>
+                <CustomTabPanel value={value} index={0}></CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
                     <ManageBook />
                 </CustomTabPanel>

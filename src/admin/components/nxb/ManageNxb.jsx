@@ -18,6 +18,7 @@ import { Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogT
 import axios from 'axios';
 import UpdateNxb from './UpdateNxb';
 import AddNewNxb from './AddNewNxb';
+import { Helmet } from 'react-helmet-async';
 
 const style = {
     position: 'absolute',
@@ -86,6 +87,7 @@ export default function ManageNxb() {
     const [selectedNxbId, setSelectedNxbId] = React.useState(null);
 
     const [searchKeyword, setSearchKeyword] = React.useState('');
+    const jwt = localStorage.getItem('adminJwt');
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -98,7 +100,11 @@ export default function ManageNxb() {
     //-------------------------------- Get Nhà Xuất Bản -------------------------//
     const fetchNXB = async () => {
         try {
-            const response = await axios.get('http://localhost:8686/admin/nxb/list-nxb');
+            const response = await axios.get('http://localhost:8686/admin/nxb/list-nxb', {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
             setNXB(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -109,7 +115,11 @@ export default function ManageNxb() {
     //---------------------------------------- Delete NXB ----------------------------------------//
     const handleDelete = async (nxbId) => {
         try {
-            const response = await axios.delete(`http://localhost:8686/admin/nxb/delete/${nxbId}`);
+            const response = await axios.delete(`http://localhost:8686/admin/nxb/delete/${nxbId}`, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
             if (response.status !== 200) {
                 throw new Error('Network response was not ok');
             }
@@ -152,9 +162,11 @@ export default function ManageNxb() {
     const [noResults, setNoResults] = React.useState(false);
     const searchNxb = async () => {
         try {
-            const response = await axios.get(
-                `http://localhost:8686/admin/nxb/search?keyword=${searchKeyword}`,
-            );
+            const response = await axios.get(`http://localhost:8686/admin/nxb/search?keyword=${searchKeyword}`, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
             if (response.status === 200) {
                 const data = response.data;
                 if (data.length === 0) {
@@ -192,6 +204,9 @@ export default function ManageNxb() {
 
     return (
         <>
+            <Helmet>
+                <title>Quản lý nhà xuất bản</title>
+            </Helmet>
             <div className="flex justify-between mb-5">
                 <form>
                     <Search>
@@ -225,14 +240,17 @@ export default function ManageNxb() {
                                     <TableCell align="left"></TableCell>
                                 </TableRow>
                             </TableHead>
-                             <TableBody>
+                            <TableBody>
                                 {nxb.map((item) => (
-                                    <TableRow key={item.nxbId} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                    <TableRow
+                                        key={item.nxbId}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
                                         <TableCell component="th" scope="row">
                                             {item.nxbName}
                                         </TableCell>
                                         <TableCell align="left">{item.nxbInfo}</TableCell>
-                                        
+
                                         <TableCell align="right">
                                             <Button
                                                 variant="contained"
@@ -270,10 +288,7 @@ export default function ManageNxb() {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <AddNewNxb
-                        handleClose={handleClose}
-                        handleAddNXBSuccess={handleAddNXBSuccess}
-                    />
+                    <AddNewNxb handleClose={handleClose} handleAddNXBSuccess={handleAddNXBSuccess} />
                 </Box>
             </Modal>
             {/* End Modal Thêm mới Nhà Xuất Bản */}

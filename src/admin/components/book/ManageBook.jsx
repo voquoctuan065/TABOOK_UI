@@ -16,10 +16,11 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
-import {  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
 
 import AddNewBook from './AddNewBook';
 import UpdateBook from './UpdateBook';
+import { Helmet } from 'react-helmet-async';
 
 const style = {
     position: 'absolute',
@@ -99,10 +100,16 @@ export default function ManageBook() {
     };
     const handleUpdateClose = () => setUpdateOpen(false);
 
+    const jwt = localStorage.getItem('adminJwt');
+
     //-------------------------------- Get page book with size 10 -------------------------//
     const fetchBook = async () => {
         try {
-            const response = await axios.get(`http://localhost:8686/admin/book?page=${currentPage - 1}&size=10`);
+            const response = await axios.get(`http://localhost:8686/admin/book?page=${currentPage - 1}&size=10`, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
             if (response.status === 200) {
                 setBook(response.data.booksDtoList);
                 setTotalPages(response.data.totalPage);
@@ -124,7 +131,11 @@ export default function ManageBook() {
     //--------------------------------------------------- Handle Delete Book ---------------------------------------------------//
     const handleDelete = async (bookId) => {
         try {
-            const response = await axios.delete(`http://localhost:8686/admin/book/delete/${bookId}`);
+            const response = await axios.delete(`http://localhost:8686/admin/book/delete/${bookId}`, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
             if (response.status !== 200) {
                 throw new Error('Network response was not ok');
             }
@@ -148,6 +159,11 @@ export default function ManageBook() {
         try {
             const response = await axios.get(
                 `http://localhost:8686/admin/book/search?keyword=${searchKeyword}&page=${currentPage - 1}&size=10`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${jwt}`,
+                    },
+                }
             );
             if (response.status === 200) {
                 const data = response.data;
@@ -187,6 +203,10 @@ export default function ManageBook() {
 
     return (
         <>
+<Helmet>
+                <title>Quản lý sách</title>
+            </Helmet>
+
             <div className="flex justify-between mb-5">
                 <form>
                     <Search>

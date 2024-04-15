@@ -65,6 +65,7 @@ function AddNewBook({ handleClose, handleAddBookSuccess }) {
     const [discountedPrice, setDiscountedPrice] = useState(null);
     const [successDialogOpen, setSuccessDialogOpen] = useState(false);
 
+    const jwt = localStorage.getItem('adminJwt');
     // ------------------------------ Validate Form ---------------------------------------//
     const handleNXBSChange = (event) => {
         setNxbs(event.target.value);
@@ -220,7 +221,11 @@ function AddNewBook({ handleClose, handleAddBookSuccess }) {
     // ----------------------------------- Get Category & NXBs ---------------------------------------//
     useEffect(() => {
         axios
-            .get('http://localhost:8686/admin/category/list-category')
+            .get('http://localhost:8686/admin/category/list-category', {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            })
             .then((response) => {
                 setListCategory(response.data);
             })
@@ -229,7 +234,11 @@ function AddNewBook({ handleClose, handleAddBookSuccess }) {
             });
 
         axios
-            .get('http://localhost:8686/admin/nxb/list-nxb')
+            .get('http://localhost:8686/admin/nxb/list-nxb', {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            })
             .then((response) => {
                 setListNXBs(response.data);
             })
@@ -299,7 +308,11 @@ function AddNewBook({ handleClose, handleAddBookSuccess }) {
             bookImage: bookImage,
         };
         try {
-            await axios.post('http://localhost:8686/admin/book/add', inputData);
+            await axios.post('http://localhost:8686/admin/book/add', inputData, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
             setSuccessDialogOpen(true);
         } catch (error) {
             console.log(error);
