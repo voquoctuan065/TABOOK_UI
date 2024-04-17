@@ -1,8 +1,9 @@
 import { Fragment, useEffect, useState } from 'react';
-import { Dialog, Popover, Tab, Transition } from '@headlessui/react';
-import { MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Popover, Transition } from '@headlessui/react';
+import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Button, Menu, MenuItem, Typography } from '@mui/material';
+import { Avatar, Button, Menu, MenuItem } from '@mui/material';
+
 import { deepPurple } from '@mui/material/colors';
 import axios from 'axios';
 
@@ -10,67 +11,14 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
 }
 
-const navigationData = {
-    categories: [
-        {
-            id: '1',
-            name: 'Sách',
-            sections: [
-                {
-                    id: '',
-                    name: 'Văn học',
-                    items: [
-                        { name: 'Tiểu thuyết' },
-                        { name: 'Truyện ngắn' },
-                        { name: 'Ngôn tình' },
-                        { name: 'Light Novel' },
-                    ],
-                },
-                {
-                    id: '3',
-                    name: 'Kinh tế',
-                    items: [{ name: 'Nhân vật, bài học kinh doanh' }, { name: 'marketing - bán hàng' }],
-                },
-                {
-                    id: '3',
-                    name: 'Tâm lý - kĩ năng sống',
-                    items: [
-                        { name: 'Kỹ năng sống' },
-                        { name: 'Rèn luyện nhân cách' },
-                        { name: 'tâm lý' },
-                        { name: 'Sách cho tuổi mới lớn' },
-                    ],
-                },
-            ],
-        },
-        {
-            id: '2',
-            name: 'Sách nước ngoài',
-
-            sections: [
-                {
-                    id: 'Fiction',
-                    name: 'Fiction',
-                    items: [{ name: 'romance' }, { name: 'fantasy' }, { name: 'Classics' }],
-                },
-                {
-                    id: 'Bussiness & management',
-                    name: 'Bussiness & management',
-                    items: [{ name: 'Bussiness & management' }, { name: 'Economics' }],
-                },
-            ],
-        },
-    ],
-};
-
 function Navbar() {
     const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
     const [userProfile, setUserProfile] = useState(null);
     const [categories, setCategories] = useState([]);
 
     const [anchorEl, setAnchorEl] = useState(null);
     const openUserMenu = Boolean(anchorEl);
-
     const handleUserClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -79,12 +27,12 @@ function Navbar() {
         setAnchorEl(null);
     };
 
-    const handleCategoryClick = (category, child, secondChild, close) => {
-        // navigate(`/${category.id}/${child.id}/${secondChild.id}`);
-        console.log(category.categoryId);
-        console.log(child.categoryId);
-        console.log(secondChild.categoryId);
-        close();
+    const handleCategoryClick = (category, child, secondChild) => {
+        const categoryPath = category.pathName;
+        const childPath = child?.pathName;
+        const secondChildPath = secondChild?.pathName;
+
+        navigate(`/${categoryPath}/${childPath}/${secondChildPath}.html`);
     };
 
     // 1 -------------------------------- Handle Get User Profile ---------------------------------------- 1//
@@ -131,16 +79,24 @@ function Navbar() {
     }, []);
 
     // 3 -------------------------------- End Handle Get Category ---------------------------------------- 3//
-
     return (
         <div className="bg-white">
             <header className="relative bg-indigo-500">
                 <nav aria-label="Top" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="">
                         <div className="flex h-16 items-center">
+                            <button
+                                type="button"
+                                className="relative rounded-md bg-white p-2 text-gray-400 lg:hidden"
+                                onClick={() => setOpen(true)}
+                            >
+                                <span className="absolute -inset-0.5" />
+                                <span className="sr-only">Open menu</span>
+                                <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+                            </button>
                             {/* Logo */}
-                            <div className="ml-4 flex lg:ml-0">
-                                <div onClick={() => navigate('/')} className="cursor-pointer">
+                            <div className="ml-4 flex lg:ml-0" onClick={() => navigate('/')}>
+                                <div className="cursor-pointer">
                                     <span className="sr-only">Your Company</span>
                                     <img className="h-8 w-auto" src="/images/logo/mainlogo.png" alt="" />
                                 </div>
@@ -212,21 +168,20 @@ function Navbar() {
                                                                                                     }
                                                                                                     className="flex"
                                                                                                 >
-                                                                                                    <p
+                                                                                                    <Popover.Button
                                                                                                         onClick={() =>
                                                                                                             handleCategoryClick(
                                                                                                                 category,
                                                                                                                 child,
                                                                                                                 secondChild,
-                                                                                                                close,
                                                                                                             )
                                                                                                         }
-                                                                                                        className="cursor-pointer hover:text-gray-800"
+                                                                                                        className="text-left cursor-pointer hover:text-red-800"
                                                                                                     >
                                                                                                         {
                                                                                                             secondChild.categoryName
                                                                                                         }
-                                                                                                    </p>
+                                                                                                    </Popover.Button>
                                                                                                 </li>
                                                                                             ),
                                                                                         )}

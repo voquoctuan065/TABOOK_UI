@@ -6,6 +6,7 @@ import SignUp from './user/pages/SignUp';
 import AdminSignIn from './admin/pages/AdminSignIn';
 import PageNotFound from './sections/PageNotFound';
 import UnAuthorize from './sections/UnAuthorize';
+import Product from './user/components/Product/Product';
 const router = createBrowserRouter([
     {
         path: '/',
@@ -19,9 +20,13 @@ const router = createBrowserRouter([
         path: '/sign-up',
         element: <SignUp />,
     },
+    {
+        path: '/:category/:subcategory/*',
+        element: <Product />,
+    },
+    
     { path: '/admin/sign-in', element: <AdminSignIn /> },
     { path: '/admin', element: <DashBoard /> },
-
     { path: '404', element: <PageNotFound /> },
     { path: '*', element: <Navigate to="/404" replace /> },
     { path: '/401', element: <UnAuthorize /> },
