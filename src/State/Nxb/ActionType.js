@@ -1,0 +1,3 @@
+export const GET_NXB_REQUEST = 'GET_NXB_REQUEST';
+export const GET_NXB_SUCCESS = 'GET_NXB_SUCCESS';
+export const GET_NXB_FAILURE = 'GET_NXB_FAILURE';

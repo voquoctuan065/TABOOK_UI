@@ -2,8 +2,9 @@ import { useRef, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../components/Footer/Footer';
-import axios from 'axios';
 import { Helmet } from 'react-helmet-async';
+import { useDispatch } from 'react-redux';
+import { login } from '../../State/Auth/Action';
 
 const validateEmail = (email) => {
     // Regex pattern kiểm tra định dạng email
@@ -13,6 +14,7 @@ const validateEmail = (email) => {
 
 function SignIn() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [error, setError] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -71,11 +73,7 @@ function SignIn() {
         };
 
         try {
-            const response = await axios.post('http://localhost:8686/auth/signin', inputData);
-            const data = response.data;
-            if (data.jwt) {
-                localStorage.setItem('jwt', data.jwt);
-            }
+            dispatch(login(inputData));
             navigate('/');
         } catch (error) {
             setSuccessDialogOpen(true);

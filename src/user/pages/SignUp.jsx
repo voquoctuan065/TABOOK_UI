@@ -2,11 +2,13 @@ import { useRef, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../components/Footer/Footer';
-import axios from 'axios';
 import { Helmet } from 'react-helmet-async';
+import { register } from '../../State/Auth/Action';
+import { useDispatch } from 'react-redux';
 
 function SignUp() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const formRef = useRef(null);
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
@@ -132,11 +134,7 @@ function SignUp() {
             return;
         }
         try {
-            const response = await axios.post(`http://localhost:8686/auth/signup`, inputData);
-            const user = response.data;
-            if (user.jwt) {
-                localStorage.setItem('jwt', user.jwt);
-            }
+            dispatch(register(inputData));
             setSuccessDialogOpen(true);
         } catch (error) {
             setIsExistEmail(true);
@@ -153,7 +151,7 @@ function SignUp() {
 
     const handleExistEmail = () => {
         setIsExistEmail(false);
-    }
+    };
     // -------------------------------- End Handle Submit Form ----------------------------------------//
     return (
         <div>

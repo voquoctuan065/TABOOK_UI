@@ -52,7 +52,7 @@ function ProductCard({ product }) {
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
                     <Typography variant="subtitle1" gutterBottom component="div" className="text-red-500">
                         {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
-                            product.bookPrice,
+                            product.discountedPrice,
                         )}
                     </Typography>
                     <Typography variant="subtitle2" gutterBottom component="div">
@@ -60,6 +60,9 @@ function ProductCard({ product }) {
                         {product.numRating}
                     </Typography>
                 </Stack>
+                <Typography variant="subtitle1" gutterBottom component="div" className="text-gray-700 line-through">
+                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.bookPrice)}
+                </Typography>
                 <Typography variant="body2" gutterBottom component="div">
                     Số lượng còn lại: {`${product.stockQuantity}`}
                 </Typography>

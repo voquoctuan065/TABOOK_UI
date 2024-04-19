@@ -5,7 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { Avatar, Button, Menu, MenuItem } from '@mui/material';
 
 import { deepPurple } from '@mui/material/colors';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUser, logout } from '../../../State/Auth/Action';
+import { getCategory } from '../../../State/Categories/Action';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
@@ -13,9 +15,12 @@ function classNames(...classes) {
 
 function Navbar() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const [userProfile, setUserProfile] = useState(null);
     const [categories, setCategories] = useState([]);
+    const jwt = localStorage.getItem('jwt');
+    const { auth, category } = useSelector((store) => store);
 
     const [anchorEl, setAnchorEl] = useState(null);
     const openUserMenu = Boolean(anchorEl);
@@ -37,28 +42,21 @@ function Navbar() {
 
     // 1 -------------------------------- Handle Get User Profile ---------------------------------------- 1//
     useEffect(() => {
-        const jwt = localStorage.getItem('jwt');
         if (jwt) {
-            const getUserProfile = async () => {
-                try {
-                    const response = await axios.get('http://localhost:8686/api/user/profile', {
-                        headers: {
-                            Authorization: `Bearer ${jwt}`,
-                        },
-                    });
-                    setUserProfile(response.data);
-                } catch (error) {
-                    console.error('Error fetching data: ', error);
-                }
-            };
-
-            getUserProfile();
+            dispatch(getUser(jwt));
         }
-    }, []);
+    }, [jwt, auth.jwt]);
+
+    useEffect(() => {
+        if (auth.user) {
+            setUserProfile(auth.user);
+        }
+    }, [auth.user]);
     // 1 -------------------------------- End Handle Get User Profile ------------------------------------ 1//
 
     // 2 -------------------------------- Handle Logout ---------------------------------------- 2//
     const handleLogout = () => {
+        dispatch(logout());
         localStorage.removeItem('jwt');
         setUserProfile(null);
     };
@@ -67,16 +65,14 @@ function Navbar() {
     // 3 -------------------------------- Handle Get Category -------------------------------------------- 3//
 
     useEffect(() => {
-        const getCategory = async () => {
-            try {
-                const response = await axios.get('http://localhost:8686/public/category/level1');
-                setCategories(response.data);
-            } catch (error) {
-                console.error('Error: ', error);
-            }
-        };
-        getCategory();
+        dispatch(getCategory());
     }, []);
+
+    useEffect(() => {
+        if (category.categoryList) {
+            setCategories(category.categoryList);
+        }
+    }, [category.categoryList]);
 
     // 3 -------------------------------- End Handle Get Category ---------------------------------------- 3//
     return (
