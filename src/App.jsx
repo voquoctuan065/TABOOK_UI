@@ -7,6 +7,7 @@ import AdminSignIn from './admin/pages/AdminSignIn';
 import PageNotFound from './sections/PageNotFound';
 import UnAuthorize from './sections/UnAuthorize';
 import Product from './user/components/Product/Product';
+import ProductDetail from './user/components/ProductDetail/ProductDetail';
 const router = createBrowserRouter([
     {
         path: '/',
@@ -24,7 +25,10 @@ const router = createBrowserRouter([
         path: '/:category/:subcategory/:item',
         element: <Product />,
     },
-    
+    {
+        path: '/book/:bookRequestId',
+        element: <ProductDetail />,
+    },
     { path: '/admin/sign-in', element: <AdminSignIn /> },
     { path: '/admin', element: <DashBoard /> },
     { path: '404', element: <PageNotFound /> },

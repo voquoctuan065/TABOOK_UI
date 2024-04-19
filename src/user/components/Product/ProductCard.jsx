@@ -13,7 +13,7 @@ function ProductCard({ product }) {
     };
     return (
         <Card
-            onClick={() => navigate(`/product-detail/${product.bookId}`)}
+            onClick={() => navigate(`/book/${product.bookId}`)}
             sx={{
                 cursor: 'pointer',
                 display: 'flex',

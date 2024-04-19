@@ -6,6 +6,9 @@ import {
     GET_BOOK_BY_CATEGORY_FAILURE,
     GET_BOOK_BY_CATEGORY_REQUEST,
     GET_BOOK_BY_CATEGORY_SUCCESS,
+    GET_BOOK_BY_ID_FAILURE,
+    GET_BOOK_BY_ID_REQUEST,
+    GET_BOOK_BY_ID_SUCCESS,
 } from './ActionType';
 import { API_BASE_URL } from '../apiConfig';
 
@@ -32,5 +35,16 @@ export const filterBook = (reqData) => async (dispatch) => {
         dispatch({ type: FILTER_BOOK_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: FILTER_BOOK_FAILURE, payload: error });
+    }
+};
+
+export const getBookById = (bookRequestId) => async (dispatch) => {
+    dispatch({ type: GET_BOOK_BY_ID_REQUEST });
+    try {
+        const response = await axios.get(`${API_BASE_URL}/public/book/${bookRequestId}`);
+        const data = response.data;
+        dispatch({ type: GET_BOOK_BY_ID_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({ type: GET_BOOK_BY_ID_FAILURE, payload: error });
     }
 };

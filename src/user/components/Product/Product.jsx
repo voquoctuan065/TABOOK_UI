@@ -20,6 +20,7 @@ import { filterBook, getBookByCategory } from '../../../State/Books/Action';
 import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
 import ProductCard from './ProductCard';
+import { Helmet } from 'react-helmet-async';
 
 const sortOptions = [
     { name: 'Price: Low to High', value: 'price_low' },
@@ -166,6 +167,9 @@ export default function Product() {
 
     return (
         <>
+            <Helmet>
+                <title> Trang chủ </title>
+            </Helmet>
             <Navbar />
             <div className="bg-white">
                 <div>
