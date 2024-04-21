@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import { Popover, Transition } from '@headlessui/react';
-import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Button, Menu, MenuItem } from '@mui/material';
 
@@ -8,6 +8,8 @@ import { deepPurple } from '@mui/material/colors';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser, logout } from '../../../State/Auth/Action';
 import { getCategory } from '../../../State/Categories/Action';
+import Search from '../Search/Search';
+import routes from '../../../config/routes';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
@@ -91,7 +93,7 @@ function Navbar() {
                                 <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                             </button>
                             {/* Logo */}
-                            <div className="ml-4 flex lg:ml-0" onClick={() => navigate('/')}>
+                            <div className="ml-4 flex lg:ml-0" onClick={() => navigate(routes.home)}>
                                 <div className="cursor-pointer">
                                     <span className="sr-only">Your Company</span>
                                     <img className="h-8 w-auto" src="/images/logo/mainlogo.png" alt="" />
@@ -206,6 +208,23 @@ function Navbar() {
         ))} */}
                                 </div>
                             </Popover.Group>
+
+                            <Search />
+
+                            {/* Cart */}
+                            <div className="ml-4 flow-root lg:ml-6">
+                                <Button onClick={() => navigate('/cart')} className="group -m-2 flex items-center p-2">
+                                    <ShoppingBagIcon
+                                        className="h-6 w-6 flex-shrink-0 text-white group-hover:text-red-500"
+                                        aria-hidden="true"
+                                    />
+                                    <span className="ml-2 text-sm font-medium text-white group-hover:text-red-500">
+                                        0
+                                    </span>
+                                    <span className="sr-only">items in cart, view bag</span>
+                                </Button>
+                            </div>
+
                             {/* End Flyout menu */}
                             <div className="ml-auto flex items-center">
                                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
@@ -243,45 +262,20 @@ function Navbar() {
                                     ) : (
                                         <>
                                             <span
-                                                onClick={() => navigate('/sign-in')}
+                                                onClick={() => navigate(routes.signIn)}
                                                 className="cursor-pointer text-sm font-medium text-white hover:text-red-500"
                                             >
                                                 Đăng nhập
                                             </span>
                                             <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
                                             <span
-                                                onClick={() => navigate('/sign-up')}
+                                                onClick={() => navigate(routes.signUp)}
                                                 className="cursor-pointer text-sm font-medium text-white hover:text-red-500"
                                             >
                                                 Tạo tài khoản
                                             </span>
                                         </>
                                     )}
-                                </div>
-
-                                {/* Search */}
-                                <div className="flex lg:ml-6">
-                                    <a href="/search" className="p-2 text-white hover:text-red-500">
-                                        <span className="sr-only">Search</span>
-                                        <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
-                                    </a>
-                                </div>
-
-                                {/* Cart */}
-                                <div className="ml-4 flow-root lg:ml-6">
-                                    <Button
-                                        onClick={() => navigate('/cart')}
-                                        className="group -m-2 flex items-center p-2"
-                                    >
-                                        <ShoppingBagIcon
-                                            className="h-6 w-6 flex-shrink-0 text-white group-hover:text-red-500"
-                                            aria-hidden="true"
-                                        />
-                                        <span className="ml-2 text-sm font-medium text-white group-hover:text-red-500">
-                                            0
-                                        </span>
-                                        <span className="sr-only">items in cart, view bag</span>
-                                    </Button>
                                 </div>
                             </div>
                         </div>

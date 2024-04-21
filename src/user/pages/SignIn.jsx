@@ -5,6 +5,7 @@ import Footer from '../components/Footer/Footer';
 import { Helmet } from 'react-helmet-async';
 import { useDispatch } from 'react-redux';
 import { login } from '../../State/Auth/Action';
+import routes from '../../config/routes';
 
 const validateEmail = (email) => {
     // Regex pattern kiểm tra định dạng email
@@ -74,7 +75,7 @@ function SignIn() {
 
         try {
             dispatch(login(inputData));
-            navigate('/');
+            navigate(routes.home);
         } catch (error) {
             setSuccessDialogOpen(true);
         }
@@ -95,7 +96,7 @@ function SignIn() {
                     <div className="flex h-16 items-center md:justify-between sm:justify-between lg:justify-between">
                         {/* Logo */}
                         <div className="ml-4 flex lg:ml-0 items-center cursor-pointer">
-                            <div onClick={() => navigate('/')}>
+                            <div onClick={() => navigate(routes.home)}>
                                 <span className="sr-only">Your Company</span>
                                 <img className="h-8 w-auto" src="/images/logo/mainlogo.png" alt="" />
                             </div>
@@ -176,7 +177,7 @@ function SignIn() {
                         <p className="mt-10 text-center text-sm text-gray-500">
                             Chưa có tài khoản?
                             <span
-                                onClick={() => navigate('/sign-up')}
+                                onClick={() => navigate(routes.signUp)}
                                 className="cursor-pointer font-semibold leading-6 text-indigo-600 hover:text-indigo-500 ml-2"
                             >
                                 Tạo tài khoản

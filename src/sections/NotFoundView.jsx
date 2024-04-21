@@ -3,12 +3,13 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
+import routes from '../config/routes';
 
 function NotFoundView() {
     const navigate = useNavigate();
     const renderHeader = (
         <Box
-            onClick={() => navigate('/')}
+            onClick={() => navigate(routes.home)}
             component="header"
             sx={{
                 top: 0,
@@ -61,7 +62,7 @@ function NotFoundView() {
                         }}
                     />
 
-                    <Button onClick={() => navigate('/')} size="large" variant="contained">
+                    <Button onClick={() => navigate(routes.home)} size="large" variant="contained">
                         Về trang chủ
                     </Button>
                 </Box>

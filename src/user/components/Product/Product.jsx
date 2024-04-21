@@ -16,7 +16,7 @@ import {
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getNxb } from '../../../State/Nxb/Action';
-import { filterBook, getBookByCategory } from '../../../State/Books/Action';
+import { filterBook, findBookByName, getBookByCategory } from '../../../State/Books/Action';
 import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
 import ProductCard from './ProductCard';
@@ -40,8 +40,8 @@ export default function Product() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    const { item } = useParams();
-    const cleanItem = item.replace('.html', '');
+    const { item, searchValue } = useParams();
+    const cleanItem = item?.replace('.html', '');
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
     useEffect(() => {
@@ -57,6 +57,16 @@ export default function Product() {
             setTotalPages(book.books.totalPage);
         }
     }, [book.books]);
+
+    useEffect(() => {
+        if (searchValue) {
+            const data = {
+                keyword: searchValue,
+                page: currentPage - 1,
+            };
+            dispatch(findBookByName(data));
+        }
+    }, [searchValue, currentPage]);
 
     const handlePageChange = (event, pageNumber) => {
         setCurrentPage(pageNumber);

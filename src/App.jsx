@@ -8,32 +8,37 @@ import PageNotFound from './sections/PageNotFound';
 import UnAuthorize from './sections/UnAuthorize';
 import Product from './user/components/Product/Product';
 import ProductDetail from './user/components/ProductDetail/ProductDetail';
+import routes from './config/routes';
 const router = createBrowserRouter([
     {
-        path: '/',
+        path: routes.home,
         element: <HomePage />,
     },
     {
-        path: '/sign-in',
+        path: routes.signIn,
         element: <SignIn />,
     },
     {
-        path: '/sign-up',
+        path: routes.signUp,
         element: <SignUp />,
     },
     {
-        path: '/:category/:subcategory/:item',
+        path: routes.categoryLevel,
         element: <Product />,
     },
     {
-        path: '/book/:bookRequestId',
+        path: routes.searchBook,
+        element: <Product />,
+    },
+    {
+        path: routes.bookDetail,
         element: <ProductDetail />,
     },
-    { path: '/admin/sign-in', element: <AdminSignIn /> },
-    { path: '/admin', element: <DashBoard /> },
-    { path: '404', element: <PageNotFound /> },
-    { path: '*', element: <Navigate to="/404" replace /> },
-    { path: '/401', element: <UnAuthorize /> },
+    { path: routes.adminSighIn, element: <AdminSignIn /> },
+    { path: routes.admin, element: <DashBoard /> },
+    { path: routes.pageNotFound, element: <PageNotFound /> },
+    { path: routes.any, element: <Navigate to="/404" replace /> },
+    { path: routes.unAuthorize, element: <UnAuthorize /> },
 ]);
 
 function App() {

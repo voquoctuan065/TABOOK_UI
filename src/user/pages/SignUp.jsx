@@ -5,6 +5,7 @@ import Footer from '../components/Footer/Footer';
 import { Helmet } from 'react-helmet-async';
 import { register } from '../../State/Auth/Action';
 import { useDispatch } from 'react-redux';
+import routes from '../../config/routes';
 
 function SignUp() {
     const navigate = useNavigate();
@@ -146,7 +147,7 @@ function SignUp() {
 
     const handleRegisSuccess = () => {
         setSuccessDialogOpen(false);
-        navigate('/');
+        navigate(routes.home);
     };
 
     const handleExistEmail = () => {
@@ -163,7 +164,7 @@ function SignUp() {
                     <div className="flex h-16 items-center md:justify-between sm:justify-between lg:justify-between">
                         {/* Logo */}
                         <div className="ml-4 flex lg:ml-0 items-center cursor-pointer">
-                            <div onClick={() => navigate('/')}>
+                            <div onClick={() => navigate(routes.home)}>
                                 <span className="sr-only">Your Company</span>
                                 <img className="h-8 w-auto" src="/images/logo/mainlogo.png" alt="" />
                             </div>
@@ -274,7 +275,7 @@ function SignUp() {
                         <p className="mt-10 text-center text-sm text-gray-500">
                             Đã có tài khoản?
                             <span
-                                onClick={() => navigate('/sign-in')}
+                                onClick={() => navigate(routes.signIn)}
                                 className="cursor-pointer font-semibold leading-6 text-indigo-600 hover:text-indigo-500 ml-2"
                             >
                                 Đăng nhập

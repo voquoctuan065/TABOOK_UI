@@ -3,6 +3,9 @@ import {
     FILTER_BOOK_FAILURE,
     FILTER_BOOK_REQUEST,
     FILTER_BOOK_SUCCESS,
+    FIND_BOOK_BY_NAME_FAILURE,
+    FIND_BOOK_BY_NAME_REQUEST,
+    FIND_BOOK_BY_NAME_SUCCESS,
     GET_BOOK_BY_CATEGORY_FAILURE,
     GET_BOOK_BY_CATEGORY_REQUEST,
     GET_BOOK_BY_CATEGORY_SUCCESS,
@@ -46,5 +49,22 @@ export const getBookById = (bookRequestId) => async (dispatch) => {
         dispatch({ type: GET_BOOK_BY_ID_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: GET_BOOK_BY_ID_FAILURE, payload: error });
+    }
+};
+
+export const findBookByName = (reqData) => async (dispatch) => {
+    dispatch({ type: FIND_BOOK_BY_NAME_REQUEST });
+    const { keyword, page } = reqData;
+    try {
+        if (keyword) {
+            const { data } = await axios.get(
+                `${API_BASE_URL}/public/book/search?keyword=${encodeURIComponent(keyword)}&page=${page}&size=24`,
+            );
+            dispatch({ type: FIND_BOOK_BY_NAME_SUCCESS, payload: data });
+        } else {
+            dispatch({ type: FIND_BOOK_BY_NAME_SUCCESS, payload: { booksDtoList: [], totalPage: 0 } });
+        }
+    } catch (error) {
+        dispatch({ type: FIND_BOOK_BY_NAME_FAILURE, payload: error });
     }
 };

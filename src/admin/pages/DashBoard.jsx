@@ -11,6 +11,7 @@ import ManageBook from '../components/book/ManageBook';
 import ManageNxb from '../components/nxb/ManageNxb';
 import { Menu, MenuItem } from '@mui/material';
 import axios from 'axios';
+import routes from '../../config/routes';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -65,7 +66,7 @@ function DashBoard() {
 
     React.useEffect(() => {
         if (!localStorage.getItem('adminJwt')) {
-            navigate('/admin/sign-in');
+            navigate(routes.adminSighIn);
         }
     }, []);
 

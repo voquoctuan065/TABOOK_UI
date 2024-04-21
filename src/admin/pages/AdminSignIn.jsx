@@ -3,6 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextFi
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Helmet } from 'react-helmet-async';
+import routes from '../../config/routes';
 
 const validateEmail = (email) => {
     // Regex pattern kiểm tra định dạng email
@@ -75,7 +76,7 @@ function AdminSignIn() {
             if (data.jwt) {
                 localStorage.setItem('adminJwt', data.jwt);
             }
-            navigate('/admin');
+            navigate(routes.admin);
         } catch (error) {
             setSuccessDialogOpen(true);
         }
@@ -95,7 +96,7 @@ function AdminSignIn() {
                     <div className="flex h-16 items-center md:justify-between sm:justify-between lg:justify-between">
                         {/* Logo */}
                         <div className="ml-4 flex lg:ml-0 items-center">
-                            <div onClick={() => navigate('/')} className="cursor-pointer">
+                            <div onClick={() => navigate(routes.home)} className="cursor-pointer">
                                 <span className="sr-only">Your Company</span>
                                 <img className="h-8 w-auto" src="/images/logo/mainlogo.png" alt="" />
                             </div>

@@ -4,12 +4,13 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
+import routes from '../config/routes';
 
 function UnAuthorize() {
     const navigate = useNavigate();
     const renderHeader = (
         <Box
-            onClick={() => navigate('/')}
+            onClick={() => navigate(routes.home)}
             component="header"
             sx={{
                 top: 0,
@@ -26,7 +27,7 @@ function UnAuthorize() {
     );
 
     const handleUnAuthorize = () => {
-        navigate('/');
+        navigate(routes.home);
         localStorage.removeItem('adminJwt');
     };
 

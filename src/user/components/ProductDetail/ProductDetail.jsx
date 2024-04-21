@@ -8,19 +8,43 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
-import { getBookById } from '../../../State/Books/Action';
+import { useEffect, useState } from 'react';
+import { getBookByCategory, getBookById } from '../../../State/Books/Action';
 import ProductReviewCard from './ProductReviewCard';
+import ProductCard from '../Product/ProductCard';
 
 export default function ProductDetail() {
     const dispatch = useDispatch();
     const { book } = useSelector((store) => store);
+    const [relateBook, setRelateBook] = useState([]);
     const { bookRequestId } = useParams();
+    const [pathName, setPathName] = useState('');
 
     useEffect(() => {
         dispatch(getBookById(bookRequestId));
-        console.log(book.book);
     }, [bookRequestId]);
+
+    useEffect(() => {
+        if (book.book) {
+            setPathName(book.book.category.pathName);
+        }
+    }, [book.book, bookRequestId]);
+
+    useEffect(() => {
+        const data = {
+            cleanItem: pathName,
+            currentPage: 0,
+        };
+
+        dispatch(getBookByCategory(data));
+    }, [pathName, bookRequestId]);
+
+    useEffect(() => {
+        if (book.books) {
+            const data = book.books.booksDtoList.filter((item) => item.bookId !== book.book?.bookId);
+            setRelateBook(data);
+        }
+    }, [book.books]);
 
     return (
         <>
@@ -30,7 +54,7 @@ export default function ProductDetail() {
             <Navbar />
             <div className="bg-gray-200">
                 <div className="container mx-auto px-4">
-                    <div className="py-10">
+                    <div className="pt-5">
                         <Grid container className="bg-white rounded p-5">
                             <Grid item xs={5} className="p-4">
                                 <div className="mb-4 p-5">
@@ -223,18 +247,90 @@ export default function ProductDetail() {
                         </Grid>
                     </div>
 
-                    <div className="">
-                        {book.book?.bookDescription}
+                    <div className="p-[15px] rounded-lg bg-white mt-[15px]">
+                        <div className="font-bold text-lg">Thông tin sản phẩm</div>
+                        <div className="overflow-hidden max-h-[600px]">
+                            <div style={{ borderBottom: '1px solid #c1c1c1' }}>
+                                <table className="border-0 shadow-none w-[100%]">
+                                    <colgroup>
+                                        <col className="w-[25%]" />
+                                        <col />
+                                    </colgroup>
+                                    <tbody>
+                                        <tr>
+                                            <th
+                                                className="border-0 p-[4px] text-left"
+                                                style={{ fontSize: '1em', fontWeight: 'normal', color: '#777' }}
+                                            >
+                                                Tác giả{' '}
+                                            </th>
+                                            <td className="border-0 p-[4px] " style={{ fontSize: '1em' }}>
+                                                {book.book?.authorName}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th
+                                                className="border-0 p-[4px] text-left"
+                                                style={{ fontSize: '1em', fontWeight: 'normal', color: '#777' }}
+                                            >
+                                                NXB{' '}
+                                            </th>
+                                            <td className="border-0 p-[4px]" style={{ fontSize: '1em' }}>
+                                                {book.book?.nxb.nxbName}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th
+                                                className="border-0 p-[4px] text-left"
+                                                style={{ fontSize: '1em', fontWeight: 'normal', color: '#777' }}
+                                            >
+                                                Năm XB{' '}
+                                            </th>
+                                            <td className="border-0 p-[4px]" style={{ fontSize: '1em' }}>
+                                                {book.book?.yearProduce}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colSpan={2} className="p-[0px]">
+                                                <div>
+                                                    Giá sản phẩm trên Fahasa.com đã bao gồm thuế theo luật hiện hành.
+                                                    Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng
+                                                    mà có thể phát sinh thêm chi phí khác như Phụ phí đóng gói, phí vận
+                                                    chuyển, phụ phí hàng cồng kềnh,...
+                                                </div>
+                                                <div style={{ color: '#C92127' }}>
+                                                    Chính sách khuyến mãi trên Tabook.com không áp dụng cho Hệ thống Nhà
+                                                    sách TABOOK trên toàn quốc
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div dangerouslySetInnerHTML={{ __html: book.book?.bookDescription }} />
                     </div>
 
+                    {/* Similar product */}
+                    <section className="pt-10">
+                        <h1 className="py-5 text-xl font-bold">Sản phẩm liên quan</h1>
+                        <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-6">
+                            <div className="grid grid-cols-4 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-6">
+                                {relateBook.map((item) => (
+                                    <ProductCard key={item.bookId} product={item} />
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
                     {/* Rating and Reviews */}
-                    <section>
+                    <section className="mt-[15px] p-[15px] rounded-lg bg-white">
                         <h1 className="font-semibold text-lg pb-4">Recent Review & Rating</h1>
                         <div className="border p-5">
                             <Grid container spacing={7}>
                                 <Grid item xs={7}>
                                     <div className="space-y-5">
-                                        {[1, 1, 1].map((item) => (
+                                        {[1, 2, 3].map((item) => (
                                             <ProductReviewCard key={item} />
                                         ))}
                                     </div>
