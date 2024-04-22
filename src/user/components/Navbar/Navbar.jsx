@@ -22,7 +22,11 @@ function Navbar() {
     const [userProfile, setUserProfile] = useState(null);
     const [categories, setCategories] = useState([]);
     const jwt = localStorage.getItem('jwt');
-    const { auth, category } = useSelector((store) => store);
+    const { auth, category, cartItems } = useSelector((store) => ({
+        auth: store.auth,
+        category: store.category,
+        cartItems: store.cart.cartItems,
+    }));
 
     const [anchorEl, setAnchorEl] = useState(null);
     const openUserMenu = Boolean(anchorEl);
@@ -213,13 +217,16 @@ function Navbar() {
 
                             {/* Cart */}
                             <div className="ml-4 flow-root lg:ml-6">
-                                <Button onClick={() => navigate('/cart')} className="group -m-2 flex items-center p-2">
+                                <Button
+                                    onClick={() => navigate(routes.cart)}
+                                    className="group -m-2 flex items-center p-2"
+                                >
                                     <ShoppingBagIcon
                                         className="h-6 w-6 flex-shrink-0 text-white group-hover:text-red-500"
                                         aria-hidden="true"
                                     />
                                     <span className="ml-2 text-sm font-medium text-white group-hover:text-red-500">
-                                        0
+                                        {cartItems ? cartItems.length : 0}
                                     </span>
                                     <span className="sr-only">items in cart, view bag</span>
                                 </Button>

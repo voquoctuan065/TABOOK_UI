@@ -1,7 +1,19 @@
 import { Helmet } from 'react-helmet-async';
 import Footer from '../Footer/Footer';
 import Navbar from '../Navbar/Navbar';
-import { Box, Button, Grid, LinearProgress, Rating, Stack, TextField } from '@mui/material';
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    LinearProgress,
+    Rating,
+    Stack,
+    TextField,
+} from '@mui/material';
 import { Star } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -13,12 +25,17 @@ import { getBookByCategory, getBookById } from '../../../State/Books/Action';
 import ProductReviewCard from './ProductReviewCard';
 import ProductCard from '../Product/ProductCard';
 
+import { addToCart } from '../../../State/Cart/cartSlice';
+import { toast } from 'react-toastify';
+
 export default function ProductDetail() {
     const dispatch = useDispatch();
     const { book } = useSelector((store) => store);
     const [relateBook, setRelateBook] = useState([]);
     const { bookRequestId } = useParams();
     const [pathName, setPathName] = useState('');
+    const [quantity, setQuantity] = useState(1);
+    const [successDialogOpen, setSuccessDialogOpen] = useState(false);
 
     useEffect(() => {
         dispatch(getBookById(bookRequestId));
@@ -46,6 +63,34 @@ export default function ProductDetail() {
         }
     }, [book.books]);
 
+    const handleMinusQuantityClick = () => {
+        if (quantity > 1) {
+            setQuantity(quantity - 1);
+        }
+    };
+
+    const handleAddQuantityClick = () => {
+        setQuantity(quantity + 1);
+    };
+
+    const handleAddToCart = () => {
+        dispatch(
+            addToCart({
+                id: book.book?.bookId,
+                title: book.book?.bookTitle,
+                price: book.book?.bookPrice,
+                discountedPrice: book.book?.discountedPrice,
+                discountPercent: book.book?.discountPercent,
+                bookImage: book.book?.bookImage,
+                quantity: quantity,
+            }),
+        );
+        toast.success('Sách đã được thêm vào giỏ hàng!');
+    };
+
+    const handleAddToCartSuccess = () => {
+        setSuccessDialogOpen(false);
+    };
     return (
         <>
             <Helmet>
@@ -57,8 +102,8 @@ export default function ProductDetail() {
                     <div className="pt-5">
                         <Grid container className="bg-white rounded p-5">
                             <Grid item xs={5} className="p-4">
-                                <div className="mb-4 p-5">
-                                    <img src={`${book.book?.bookImage}`} />
+                                <div className="mb-4 p-5 h-[100%]">
+                                    <img src={`${book.book?.bookImage}`} className="h-[100%]" />
                                 </div>
                             </Grid>
                             <Grid item xs={7} className="p-4">
@@ -178,6 +223,7 @@ export default function ProductDetail() {
                                                             border: 'none',
                                                         },
                                                     }}
+                                                    onClick={handleMinusQuantityClick}
                                                 />
                                                 <Stack
                                                     component="form"
@@ -190,8 +236,9 @@ export default function ProductDetail() {
                                                     autoComplete="off"
                                                 >
                                                     <TextField
+                                                        onChange={(e) => setQuantity(e.target.value)}
                                                         hiddenLabel
-                                                        defaultValue={1}
+                                                        value={quantity}
                                                         variant="outlined"
                                                         size="small"
                                                         sx={{
@@ -220,12 +267,13 @@ export default function ProductDetail() {
                                                             border: 'none',
                                                         },
                                                     }}
+                                                    onClick={handleAddQuantityClick}
                                                 />
                                             </div>
                                         </div>
 
                                         <div className="mt-5" style={{ minWidth: '300px', maxWidth: '400px' }}>
-                                            <Button variant="contained" color="error">
+                                            <Button variant="contained" color="error" onClick={handleAddToCart}>
                                                 <AddShoppingCartIcon />
                                                 <span className="ml-2">Thêm vào giỏ hàng</span>
                                             </Button>
@@ -316,7 +364,7 @@ export default function ProductDetail() {
                         <h1 className="py-5 text-xl font-bold">Sản phẩm liên quan</h1>
                         <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-6">
                             <div className="grid grid-cols-4 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-6">
-                                {relateBook.map((item) => (
+                                {relateBook.slice(0, 8).map((item) => (
                                     <ProductCard key={item.bookId} product={item} />
                                 ))}
                             </div>
@@ -391,6 +439,16 @@ export default function ProductDetail() {
                 </div>
             </div>
             <Footer />
+
+            <Dialog open={successDialogOpen} onClose={handleAddToCartSuccess}>
+                <DialogTitle>Thành công!</DialogTitle>
+                <DialogContent>
+                    <p>Sách đã được thêm vào giỏ hàng thành công.</p>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleAddToCartSuccess}>Đóng</Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 }

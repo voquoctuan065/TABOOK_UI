@@ -9,10 +9,15 @@ import UnAuthorize from './sections/UnAuthorize';
 import Product from './user/components/Product/Product';
 import ProductDetail from './user/components/ProductDetail/ProductDetail';
 import routes from './config/routes';
+import Cart from './user/components/Cart/Cart';
 const router = createBrowserRouter([
     {
         path: routes.home,
         element: <HomePage />,
+    },
+    {
+        path: routes.cart,
+        element: <Cart />,
     },
     {
         path: routes.signIn,
@@ -42,7 +47,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-    return <RouterProvider router={router} />;
+    return (
+        <>
+            <RouterProvider router={router} />
+        </>
+    );
 }
 
 export default App;
