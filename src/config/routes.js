@@ -1,6 +1,7 @@
 const routes = {
     home: '/',
     cart: '/cart',
+    checkout: '/checkout',
     signIn: '/sign-in',
     signUp: '/sign-up',
     categoryLevel: '/:category/:subcategory/:item',

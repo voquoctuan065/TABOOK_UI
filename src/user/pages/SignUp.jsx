@@ -202,8 +202,8 @@ function SignUp() {
                                         name="fullName"
                                         label="Họ tên"
                                         fullWidth
-                                        error={fullNameHelperText && true}
                                         autoComplete="Họ và tên"
+                                        error={fullNameHelperText && true}
                                         helperText={fullNameHelperText}
                                         onChange={handleFullNameChange}
                                         onBlur={handleFullNameBlur}

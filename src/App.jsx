@@ -10,6 +10,7 @@ import Product from './user/components/Product/Product';
 import ProductDetail from './user/components/ProductDetail/ProductDetail';
 import routes from './config/routes';
 import Cart from './user/components/Cart/Cart';
+import Checkout from './user/components/Checkout/Checkout';
 const router = createBrowserRouter([
     {
         path: routes.home,
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
     {
         path: routes.cart,
         element: <Cart />,
+    },
+    {
+        path: routes.checkout,
+        element: <Checkout />,
     },
     {
         path: routes.signIn,

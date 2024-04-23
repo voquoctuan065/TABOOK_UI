@@ -236,7 +236,7 @@ function Navbar() {
                             <div className="ml-auto flex items-center">
                                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                                     {userProfile ? (
-                                        <div>
+                                        <div className='flex items-center'>
                                             <Avatar
                                                 className="text-white"
                                                 onClick={handleUserClick}
@@ -250,6 +250,8 @@ function Navbar() {
                                             >
                                                 {userProfile.fullName[0]}
                                             </Avatar>
+
+                                                {userProfile.fullName}
 
                                             <Menu
                                                 id="basic-menu"

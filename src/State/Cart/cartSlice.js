@@ -1,6 +1,49 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
+// Hàm này sẽ gọi sau 20 phút để xóa cartState khỏi localStorage
+const clearCartState = () => {
+    localStorage.removeItem('cartState');
+};
+
+const loadState = () => {
+    try {
+        const serializedState = localStorage.getItem('cartState');
+        if (serializedState === null) {
+            return undefined;
+        }
+        const parsedState = JSON.parse(serializedState);
+        // Kiểm tra nếu cartTotalAmount là một giá trị không hợp lệ (ví dụ: âm hoặc không phải số)
+        if (
+            typeof parsedState.cartTotalAmount !== 'number' ||
+            isNaN(parsedState.cartTotalAmount) ||
+            parsedState.cartTotalAmount < 0
+        ) {
+            // Trả về một initialState mới nếu giá trị không hợp lệ
+            return {
+                cartItems: [],
+                cartTotalQuantity: 0,
+                cartTotalAmount: 0,
+            };
+        }
+        return parsedState;
+    } catch (error) {
+        console.error('Error loading state from localStorage:', error);
+        return undefined;
+    }
+};
+
+const saveState = (state) => {
+    try {
+        const serializedState = JSON.stringify(state);
+        localStorage.setItem('cartState', serializedState);
+
+        setTimeout(clearCartState, 5 * 60 * 1000);
+    } catch (error) {
+        console.error('Error saving state to localStorage:', error);
+    }
+};
+
+const initialState = loadState() || {
     cartItems: [],
     cartTotalQuantity: 0,
     cartTotalAmount: 0,
@@ -75,6 +118,14 @@ const cartSlice = createSlice({
     },
 });
 
-export const { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } = cartSlice.actions;
+const { actions, reducer } = cartSlice;
+const { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } = actions;
 
-export default cartSlice.reducer;
+const cartReducer = (state, action) => {
+    const newState = reducer(state, action);
+    saveState(newState);
+    return newState;
+};
+
+export { addToCart, removeFromCart, increaseQuantity, decreaseQuantity };
+export default cartReducer;
