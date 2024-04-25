@@ -1,25 +1,60 @@
-import { Box, Button, Grid } from '@mui/material';
+import { Box, Button, Grid, Modal } from '@mui/material';
 import AddressCard from '../AddressCard/AddressCard';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getOrderById } from '../../../State/Order/Action';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { createPaymentLink, shipCodAction } from '../../../State/Payment/Action';
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    maxWidth: 1000,
+    width: 'auto',
+    height: 'auto',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+    overflow: 'auto',
+};
 
 export default function OrderSummary() {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
-    const { order } = useSelector((store) => ({ order: store.order.order }));
+    const { order, user, } = useSelector((store) => ({ order: store.order.order, user: store.auth.user }));
 
     const searchParams = new URLSearchParams(location.search);
 
-    const deliveryCharge = order.orderItem.length > 0 ? 20000 : 0;
+    const deliveryCharge = order?.orderItem?.length > 0 ? 20000 : 0;
 
     const orderId = searchParams.get('order_id');
     useEffect(() => {
         dispatch(getOrderById(orderId));
     }, [orderId]);
     console.log(order);
+
+    const handleOnlineCheckout = () => {
+        const reqData = { orderId: orderId, totalAmount: order.totalPrice + deliveryCharge };
+        console.log(reqData);
+        if (order && order.orderItem && user) {
+            dispatch(createPaymentLink(reqData));
+        }
+    };
+
+    const handleShipCOD = () => {
+        const reqData = { orderId: orderId, totalAmount: order.totalPrice + deliveryCharge, navigate };
+        if (order && order.orderItem && user) {
+            dispatch(shipCodAction(reqData));
+        }
+    };
     return (
         <>
             <div className="p-5 rounded-lg bg-white mb-2">
@@ -105,9 +140,9 @@ export default function OrderSummary() {
                                 <span className="font-semibold text-sm">Đơn giá</span>
                                 <span className="text-m">
                                     {new Intl.NumberFormat('vi-VN', {
-                                                style: 'currency',
-                                                currency: 'VND',
-                                            }).format(order.totalPrice)}
+                                        style: 'currency',
+                                        currency: 'VND',
+                                    }).format(order.totalPrice)}
                                 </span>
                             </div>
 
@@ -115,43 +150,78 @@ export default function OrderSummary() {
                                 <span className="font-semibold text-sm">Phí Ship</span>
                                 <span className="text-green-600">
                                     {new Intl.NumberFormat('vi-VN', {
-                                                style: 'currency',
-                                                currency: 'VND',
-                                            }).format(deliveryCharge)}
-                                                                  </span>
+                                        style: 'currency',
+                                        currency: 'VND',
+                                    }).format(deliveryCharge)}
+                                </span>
                             </div>
                             <div className="flex justify-between pt-3 text-black">
                                 <span className="font-semibold text-sm">Tổng tiền</span>
                                 <span className="text-green-600 font-semibold">
                                     {new Intl.NumberFormat('vi-VN', {
-                                                style: 'currency',
-                                                currency: 'VND',
-                                            }).format(order.totalPrice + deliveryCharge)}
+                                        style: 'currency',
+                                        currency: 'VND',
+                                    }).format(order.totalPrice + deliveryCharge)}
                                 </span>
                             </div>
 
                             <Button
-                                // onClick={handleCheckout}
+                                onClick={handleOpen}
                                 variant="outlined"
-                                color='warning'
+                                color="warning"
                                 className="w-full"
                                 sx={{ px: '1.5rem', py: '.7rem' }}
                             >
                                 Thanh toán khi nhận hàng
                             </Button>
                             <Button
-                                // onClick={handleCheckout}
+                                onClick={handleOnlineCheckout}
                                 variant="outlined"
-                                color='secondary'
+                                color="secondary"
                                 className="w-full"
                                 sx={{ px: '1.5rem', py: '.7rem' }}
                             >
-                                Thanh toán qua thẻ
+                                Thanh toán online
                             </Button>
                         </div>
                     </div>
                 </Grid>
             </Grid>
+
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style} className="flex items-center flex-col">
+                    <span>Bạn chắc chắn đặt đơn hàng này?</span>
+                    <div className="mt-4">
+                        <Button
+                            sx={{
+                                marginRight: '15px',
+                                fontWeight: '600',
+                            }}
+                            variant="outlined"
+                            color="warning"
+                            onClick={handleClose}
+                        >
+                            Huỷ
+                        </Button>
+                        <Button
+                            onClick={handleShipCOD}
+                            sx={{
+                                marginLeft: '15px',
+                                fontWeight: '600',
+                            }}
+                            variant="outlined"
+                            color="success"
+                        >
+                            Đồng ý
+                        </Button>
+                    </div>
+                </Box>
+            </Modal>
         </>
     );
 }

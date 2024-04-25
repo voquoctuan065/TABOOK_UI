@@ -6,7 +6,7 @@ export default function AddressCard({ address }) {
             <p className="font-semibold cursor-text">Họ tên: {address && address.fullName}</p>
             <p className="cursor-text">
                 <p className="font-semibold cursor-text">Địa chỉ: </p>
-                {address && address.streetAddress}, {address && address.ward}, {address && address.province},{' '}
+                {address && address.streetAddress}, {address && address.ward}, {address && address.district},{address && address.province},{' '}
                 {address && address.zipCode}
             </p>
             <div className="space-y-1 flex items-center">

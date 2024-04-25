@@ -19,7 +19,7 @@ export const createOrder = (reqData) => async (dispatch) => {
             },
         });
         if (data.orderId) {
-            reqData.navigate({ search: `step=2&order_id=${data.orderId}` });
+            reqData.navigate({ search: `step=1&order_id=${data.orderId}` });
         }
         console.log('create order - ', data);
         dispatch({

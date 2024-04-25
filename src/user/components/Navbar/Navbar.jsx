@@ -200,16 +200,6 @@ function Navbar() {
                                             )}
                                         </Popover>
                                     ))}
-
-                                    {/* {navigationData.pages.map((page) => (
-            <a
-                key={page.name}
-                href={page.href}
-                className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
-            >
-                {page.name}
-            </a>
-        ))} */}
                                 </div>
                             </Popover.Group>
 
@@ -236,7 +226,7 @@ function Navbar() {
                             <div className="ml-auto flex items-center">
                                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                                     {userProfile ? (
-                                        <div className='flex items-center'>
+                                        <div className="flex items-center">
                                             <Avatar
                                                 className="text-white"
                                                 onClick={handleUserClick}
@@ -251,7 +241,7 @@ function Navbar() {
                                                 {userProfile.fullName[0]}
                                             </Avatar>
 
-                                                {userProfile.fullName}
+                                            {userProfile.fullName}
 
                                             <Menu
                                                 id="basic-menu"
@@ -263,9 +253,8 @@ function Navbar() {
                                                 }}
                                             >
                                                 <MenuItem onClick={handleCloseUserMenu}>Profile</MenuItem>
-
-                                                <MenuItem>My Orders</MenuItem>
-                                                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                                                <MenuItem onClick={() => navigate(routes.orders)}>Lịch sử mua</MenuItem>
+                                                <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
                                             </Menu>
                                         </div>
                                     ) : (

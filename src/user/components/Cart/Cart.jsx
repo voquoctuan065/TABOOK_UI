@@ -20,7 +20,7 @@ export default function Cart() {
 
     const deliveryCharge = cartItems.length > 0 ? 20000 : 0;
     const totalAmount = deliveryCharge + cart.cartTotalAmount;
-    const handleCheckout = () => {
+    const handleCheckout = async () => {
         if (!auth.user) {
             navigate(routes.signIn);
             toast.warning('Vui lòng đăng nhập!');
@@ -30,9 +30,6 @@ export default function Cart() {
             navigate(`${routes.checkout}?step=0`);
         }
     };
-
-    console.log(cartItems);
-    console.log(cart);
 
     return (
         <>

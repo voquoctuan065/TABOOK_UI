@@ -230,6 +230,29 @@ export default function DeliveryForm() {
         }
     };
 
+    const handleSubmitAddress = () => {
+        const data = {
+            shippingAddress: {
+                fullName: user?.address[0].fullName,
+                streetAddress: user?.address[0].streetAddress,
+                ward: user?.address[0].ward,
+                district: user?.address[0].district,
+                province: user?.address[0].province,
+                zipCode: user?.address[0].zipCode,
+                phoneNumber: user?.address[0].phoneNumber,
+            },
+            cartItems: cartItems,
+            cartTotalQuantity: cart.cartTotalQuantity,
+            cartTotalAmount: cart.cartTotalAmount,
+        };
+
+        const reqData = { data, navigate };
+
+        if (cartItems.length > 0) {
+            dispatch(createOrder(reqData));
+        }
+    };
+
     return (
         <div className="mx-auto max-w-7xl pb-5">
             <Grid container>
@@ -237,6 +260,7 @@ export default function DeliveryForm() {
                     <div className="px-5 py-7 border-b cursor-pointer">
                         <AddressCard address={user?.address[0]} />
                         <Button
+                            onClick={handleSubmitAddress}
                             sx={{
                                 fontWeight: 500,
                                 marginTop: '10px',

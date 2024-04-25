@@ -32,9 +32,10 @@ export default function Checkout() {
         const querySearch = new URLSearchParams(location.search);
         const step = querySearch.get('step');
         if (step) {
-            setActiveStep(parseInt(step));
+            const parsedStep = parseInt(step);
+            setActiveStep(parsedStep);
         }
-    }, []);
+    }, [location.search]);
 
     return (
         <>
@@ -74,7 +75,10 @@ export default function Checkout() {
                                         Trở lại
                                     </Button>
                                 </Box>
-                                <div className="mt-10">{activeStep === 0 ? <DeliveryForm /> : <OrderSummary />}</div>
+                                <div className="mt-10">
+                                    {' '}
+                                    {activeStep === 0 ? <DeliveryForm /> : activeStep === 1 ? <OrderSummary /> : null}
+                                </div>
                             </React.Fragment>
                         )}
                     </Box>

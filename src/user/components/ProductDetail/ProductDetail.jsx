@@ -4,10 +4,6 @@ import Navbar from '../Navbar/Navbar';
 import {
     Box,
     Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
     Grid,
     LinearProgress,
     Rating,
@@ -19,7 +15,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getBookByCategory, getBookById } from '../../../State/Books/Action';
 import ProductReviewCard from './ProductReviewCard';
@@ -27,15 +23,16 @@ import ProductCard from '../Product/ProductCard';
 
 import { addToCart } from '../../../State/Cart/cartSlice';
 import { toast } from 'react-toastify';
+import routes from '../../../config/routes';
 
 export default function ProductDetail() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { book } = useSelector((store) => store);
     const [relateBook, setRelateBook] = useState([]);
     const { bookRequestId } = useParams();
     const [pathName, setPathName] = useState('');
     const [quantity, setQuantity] = useState(1);
-    const [successDialogOpen, setSuccessDialogOpen] = useState(false);
 
     useEffect(() => {
         dispatch(getBookById(bookRequestId));
@@ -88,8 +85,19 @@ export default function ProductDetail() {
         toast.success('Sách đã được thêm vào giỏ hàng!');
     };
 
-    const handleAddToCartSuccess = () => {
-        setSuccessDialogOpen(false);
+    const handleBuyNow = () => {
+        dispatch(
+            addToCart({
+                id: book.book?.bookId,
+                title: book.book?.bookTitle,
+                price: book.book?.bookPrice,
+                discountedPrice: book.book?.discountedPrice,
+                discountPercent: book.book?.discountPercent,
+                bookImage: book.book?.bookImage,
+                quantity: quantity,
+            }),
+        );
+        navigate(routes.cart);
     };
     return (
         <>
@@ -278,6 +286,7 @@ export default function ProductDetail() {
                                                 <span className="ml-2">Thêm vào giỏ hàng</span>
                                             </Button>
                                             <Button
+                                                onClick={handleBuyNow}
                                                 style={{
                                                     border: '2px solid',
                                                     fontWeight: 700,
@@ -439,16 +448,6 @@ export default function ProductDetail() {
                 </div>
             </div>
             <Footer />
-
-            <Dialog open={successDialogOpen} onClose={handleAddToCartSuccess}>
-                <DialogTitle>Thành công!</DialogTitle>
-                <DialogContent>
-                    <p>Sách đã được thêm vào giỏ hàng thành công.</p>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleAddToCartSuccess}>Đóng</Button>
-                </DialogActions>
-            </Dialog>
         </>
     );
 }

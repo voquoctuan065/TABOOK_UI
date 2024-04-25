@@ -6,6 +6,7 @@ import { nxbReducer } from './Nxb/Reducer';
 import { bookReducer } from './Books/Reducer';
 import cartReducer from './Cart/cartSlice';
 import { orderReducer } from './Order/Reducer';
+import paymentReducer from './Payment/Reducer';
 
 const rootReducers = combineReducers({
     auth: authReducer,
@@ -13,7 +14,8 @@ const rootReducers = combineReducers({
     nxb: nxbReducer,
     book: bookReducer,
     cart: cartReducer,
-    order: orderReducer
+    order: orderReducer,
+    payment: paymentReducer
 });
 
 export const store = legacy_createStore(rootReducers, applyMiddleware(thunk));
