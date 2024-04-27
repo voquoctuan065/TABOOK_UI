@@ -1,13 +1,14 @@
 import { Avatar, Grid, Box, Rating } from '@mui/material';
+import { format } from 'date-fns';
 
-export default function ProductReviewCard() {
+export default function ProductReviewCard({review}) {
     return (
         <div>
             <Grid container spacing={2} gap={3}>
                 <Grid item xs={1}>
                     <Box>
                         <Avatar className="text-white" sx={{ width: 56, height: 56, bgcolor: '#9155fd' }}>
-                            R
+                            {review?.user.fullName[0]}
                         </Avatar>
                     </Box>
                 </Grid>
@@ -15,14 +16,13 @@ export default function ProductReviewCard() {
                 <Grid item xs={9}>
                     <div className="space-y-2">
                         <div>
-                            <p className="font-semibold text-lg">Tuan</p>
-                            <p className="opacity-70">March 02, 2024</p>
+                            <p className="font-semibold text-lg">{review?.user.fullName}</p>
+                            <p className="opacity-70">{format(new Date(review?.createdAt), 'dd/MM/yyyy HH:mm:ss')}</p>
                         </div>
                     </div>
-                    <Rating value={4.5} name="half-rating" readOnly precision={0.5} />
+                    <Rating value={review?.rating} name="half-rating" readOnly precision={0.5} />
                     <p>
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Architecto, dolor mollitia nesciunt
-                        inventore praesentium perferndis cumque explicabo sit commodi, amet
+                        {review?.comment}
                     </p>
                 </Grid>
             </Grid>

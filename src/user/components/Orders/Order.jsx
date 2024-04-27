@@ -24,7 +24,7 @@ export default function Order() {
         } else {
             dispatch(getUserOrderHistory());
         }
-    }, [dispatch, jwt, navigate]);
+    }, [jwt]);
 
     const handleOrderDetail = (orderId) => {
         navigate(`/orderDetail/${orderId}`);

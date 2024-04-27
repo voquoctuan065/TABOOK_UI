@@ -8,6 +8,7 @@ import {
     DialogContentText,
     DialogTitle,
     Grid,
+    Modal,
     styled,
 } from '@mui/material';
 
@@ -23,12 +24,30 @@ import HeadlessTippy from '@tippyjs/react/headless';
 import ClearIcon from '@mui/icons-material/Clear';
 import { toast } from 'react-toastify';
 import routes from '../../../config/routes';
+import BooksRate from './BooksRate';
+
 const BoxFramer = styled(motion.div)`
     background: #282c34;
     color: white;
     padding: 5px 10px;
     border-radius: 4px;
 `;
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    maxWidth: 1000,
+    width: 'auto',
+    height: 'auto',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+    overflow: 'auto',
+};
+
 export default function OrderDetail() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -37,6 +56,13 @@ export default function OrderDetail() {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    const [rateOpen, setRateOpen] = useState(false);
+
+    const handleRateOpen = () => {
+        setRateOpen(true);
+    };
+    const handleRateClose = () => setRateOpen(false);
 
     const { order } = useSelector((store) => ({
         order: store.order.order,
@@ -171,7 +197,7 @@ export default function OrderDetail() {
                                             <span>Huỷ đơn hàng</span>
                                         </Button>
                                     )}
-                                    <Button variant="contained" color="secondary">
+                                    <Button variant="contained" color="secondary" onClick={handleRateOpen}>
                                         <StarBorderIcon
                                             sx={{ fontSize: '2rem', fontWeight: 600 }}
                                             className="px-2 text-xl"
@@ -184,6 +210,17 @@ export default function OrderDetail() {
                     </Grid>
                 </Grid>
             </div>
+
+            <Modal
+                open={rateOpen}
+                onClose={handleRateClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <BooksRate />
+                </Box>
+            </Modal>
 
             <Dialog
                 open={open}

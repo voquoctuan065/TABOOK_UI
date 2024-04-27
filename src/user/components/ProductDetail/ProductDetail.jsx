@@ -1,15 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import Footer from '../Footer/Footer';
 import Navbar from '../Navbar/Navbar';
-import {
-    Box,
-    Button,
-    Grid,
-    LinearProgress,
-    Rating,
-    Stack,
-    TextField,
-} from '@mui/material';
+import { Box, Button, Grid, LinearProgress, Rating, Stack, TextField } from '@mui/material';
 import { Star } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -99,6 +91,26 @@ export default function ProductDetail() {
         );
         navigate(routes.cart);
     };
+
+    const averageRating =
+        ((book.book?.reviews?.reduce((total, review) => total + review.rating, 0) / book.book?.reviews?.length) || 0);
+
+    const excellentPercentage =
+        (((book.book?.reviews?.filter((review) => review.rating >= 4).length / book.book?.reviews?.length) * 100)|| 0);
+    const goodPercentage =
+        (((book.book?.reviews?.filter((review) => review.rating >= 3 && review.rating < 4).length /
+        book.book?.reviews?.length) *
+    100) || 0);
+    const averagePercentage =
+        (((book.book?.reviews?.filter((review) => review.rating >= 2 && review.rating < 3).length /
+        book.book?.reviews?.length) *
+    100) || 0);
+    const poorPercentage =
+        (((book.book?.reviews?.filter((review) => review.rating >= 1 && review.rating < 2).length /
+        book.book?.reviews?.length) *
+    100) || 0);
+    const terriblePercentage =
+        (((book.book?.reviews?.filter((review) => review.rating < 1).length / book.book?.reviews?.length) * 100) || 0);
     return (
         <>
             <Helmet>
@@ -382,61 +394,89 @@ export default function ProductDetail() {
 
                     {/* Rating and Reviews */}
                     <section className="mt-[15px] p-[15px] rounded-lg bg-white">
-                        <h1 className="font-semibold text-lg pb-4">Recent Review & Rating</h1>
+                        <h1 className="font-semibold text-lg pb-4">Đánh giá sản phẩm gần đây</h1>
                         <div className="border p-5">
                             <Grid container spacing={7}>
                                 <Grid item xs={7}>
                                     <div className="space-y-5">
-                                        {[1, 2, 3].map((item) => (
-                                            <ProductReviewCard key={item} />
+                                        {book.book?.reviews?.map((item) => (
+                                            <ProductReviewCard key={item.rateId} review={item} />
                                         ))}
                                     </div>
                                 </Grid>
                                 <Grid item xs={5}>
-                                    <h1 className="text-xl font-semibold pb-1">Product Ratings</h1>
+                                    <h1 className="text-xl font-semibold pb-1">Đánh giá sản phẩm</h1>
                                     <div className="flex items-center space-x-3">
-                                        <Rating value={4.6} precision={0.5} readOnly />
-                                        <p className="opacity-60">54 Ratings</p>
+                                        <Rating value={averageRating} precision={0.5} readOnly />
+                                        <p className="opacity-60">{book.book.reviews && book.book.reviews.length}</p>
                                     </div>
                                     <Box className="mt-5">
                                         <Grid container alignItems="center" gap={2}>
-                                            <Grid item xs={2}>
-                                                <p>Excellent</p>
+                                            <Grid item xs={3}>
+                                                <p>Rất tốt</p>
                                             </Grid>
                                             <Grid item xs={7}>
                                                 <LinearProgress
                                                     sx={{ bgcolor: '#d0d0d0', borderRadius: 4, height: 7 }}
                                                     variant="determinate"
-                                                    value={40}
+                                                    value={excellentPercentage}
                                                     color="success"
                                                 />
                                             </Grid>
                                         </Grid>
 
                                         <Grid container alignItems="center" gap={2}>
-                                            <Grid item xs={2}>
-                                                <p>Very Good</p>
+                                            <Grid item xs={3}>
+                                                <p>Tốt</p>
                                             </Grid>
                                             <Grid item xs={7}>
                                                 <LinearProgress
                                                     sx={{ bgcolor: '#d0d0d0', borderRadius: 4, height: 7 }}
                                                     variant="determinate"
-                                                    value={30}
-                                                    color="success"
+                                                    value={goodPercentage}
+                                                    color="secondary"
                                                 />
                                             </Grid>
                                         </Grid>
 
                                         <Grid container alignItems="center" gap={2}>
-                                            <Grid item xs={2}>
-                                                <p>Good</p>
+                                            <Grid item xs={3}>
+                                                <p>Trung bình</p>
                                             </Grid>
                                             <Grid item xs={7}>
                                                 <LinearProgress
                                                     sx={{ bgcolor: '#d0d0d0', borderRadius: 4, height: 7 }}
                                                     variant="determinate"
-                                                    value={40}
-                                                    color="success"
+                                                    value={averagePercentage}
+                                                    color="primary"
+                                                />
+                                            </Grid>
+                                        </Grid>
+
+                                        <Grid container alignItems="center" gap={2}>
+                                            <Grid item xs={3}>
+                                                <p>Kém</p>
+                                            </Grid>
+                                            <Grid item xs={7}>
+                                                <LinearProgress
+                                                    sx={{ bgcolor: '#d0d0d0', borderRadius: 4, height: 7 }}
+                                                    variant="determinate"
+                                                    value={poorPercentage}
+                                                    color="warning"
+                                                />
+                                            </Grid>
+                                        </Grid>
+
+                                        <Grid container alignItems="center" gap={2}>
+                                            <Grid item xs={3}>
+                                                <p>Rất tệ</p>
+                                            </Grid>
+                                            <Grid item xs={7}>
+                                                <LinearProgress
+                                                    sx={{ bgcolor: '#d0d0d0', borderRadius: 4, height: 7 }}
+                                                    variant="determinate"
+                                                    value={terriblePercentage}
+                                                    color="error"
                                                 />
                                             </Grid>
                                         </Grid>
