@@ -7,6 +7,7 @@ const routes = {
     searchBook: '/book/search/:searchValue',
     cart: '/cart',
     orders: 'orders',
+    orderDetail: '/orderDetail/:orderId',
     checkout: '/checkout',
     checkoutSuccess: '/payment/success',
     checkoutFailure: '/payment/failure',

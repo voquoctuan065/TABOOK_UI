@@ -5,18 +5,24 @@ import {
     GET_ORDER_BY_ID_FAILURE,
     GET_ORDER_BY_ID_REQUEST,
     GET_ORDER_BY_ID_SUCCESS,
+    GET_USER_ORDER_HISTORY_FAILURE,
+    GET_USER_ORDER_HISTORY_REQUEST,
+    GET_USER_ORDER_HISTORY_SUCCESS,
 } from './ActionType';
 
 const initialState = {
     orders: [],
     order: null,
     error: null,
+    success: false,
     loading: false,
 };
 
 export const orderReducer = (state = initialState, action) => {
     switch (action.type) {
         case CREATE_ORDER_REQUEST:
+        case GET_ORDER_BY_ID_REQUEST:
+        case GET_USER_ORDER_HISTORY_REQUEST:
             return {
                 ...state,
                 loading: true,
@@ -30,14 +36,7 @@ export const orderReducer = (state = initialState, action) => {
                 success: true,
                 order: action.payload,
             };
-        case CREATE_ORDER_FAILURE:
-            return {
-                ...state,
-                loading: false,
-                error: action.payload,
-            };
-        case GET_ORDER_BY_ID_REQUEST:
-            return { ...state, error: null, loading: true };
+
         case GET_ORDER_BY_ID_SUCCESS:
             return {
                 ...state,
@@ -45,7 +44,16 @@ export const orderReducer = (state = initialState, action) => {
                 error: null,
                 order: action.payload,
             };
+        case GET_USER_ORDER_HISTORY_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                orders: action.payload,
+            };
+        case CREATE_ORDER_FAILURE:
         case GET_ORDER_BY_ID_FAILURE:
+        case GET_USER_ORDER_HISTORY_FAILURE:
             return {
                 ...state,
                 loading: false,

@@ -1,48 +1,213 @@
 import AddressCard from '../AddressCard/AddressCard';
-import OrderTracker from './OrderTracker';
-import { Box, Grid } from '@mui/material';
-import { deepPurple } from '@mui/material/colors';
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Grid,
+    styled,
+} from '@mui/material';
+
 import StarBorderIcon from '@mui/icons-material/StarBorder';
+import Navbar from '../Navbar/Navbar';
+import Footer from '../Footer/Footer';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { cancelUserOrder, getOrderById } from '../../../State/Order/Action';
+import { useNavigate, useParams } from 'react-router-dom';
+import { motion, useSpring } from 'framer-motion';
+import HeadlessTippy from '@tippyjs/react/headless';
+import ClearIcon from '@mui/icons-material/Clear';
+import { toast } from 'react-toastify';
+import routes from '../../../config/routes';
+const BoxFramer = styled(motion.div)`
+    background: #282c34;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+`;
 export default function OrderDetail() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { orderId } = useParams();
+
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    const { order } = useSelector((store) => ({
+        order: store.order.order,
+    }));
+
+    const initialScale = 0.5;
+    const springConfig = { damping: 15, stiffness: 300 };
+    const opacity = useSpring(0, springConfig);
+    const scale = useSpring(initialScale, springConfig);
+
+    function onMount() {
+        scale.set(1);
+        opacity.set(1);
+    }
+
+    function onHide({ unmount }) {
+        const cleanup = scale.on('change', (value) => {
+            if (value <= initialScale) {
+                cleanup();
+                unmount();
+            }
+        });
+
+        scale.set(initialScale);
+        opacity.set(0);
+    }
+
+    useEffect(() => {
+        dispatch(getOrderById(orderId));
+    }, [dispatch, orderId]);
+
+    const handleCancelOrder = () => {
+        dispatch(cancelUserOrder(orderId));
+        handleClose();
+        toast.success('Bạn đã huỷ đơn hàng thành công!');
+        navigate(routes.order);
+    };
+    console.log(orderId);
+    console.log('ORder', order);
     return (
-        <div className="px-5 lg:px-20">
-            <div>
-                <h1 className="font-bold text-xl py-7">Delivery Address</h1>
-                <AddressCard />
-            </div>
-            <div className="py-10">
-                <OrderTracker activeStep={3} />
-            </div>
-
-            <Grid className="space-y-5" container>
-                {[1, 1, 1, 1].map((item) => (
-                    <Grid
-                        key={item}
-                        item
-                        container
-                        className="shadow-xl rounded-md p-5 border"
-                        sx={{ alignItems: 'center', justifyContent: 'space-between' }}
-                    >
-                        <Grid item xs={6}>
-                            <div className="flex items-center space-x-4">
-                                <img className="w-[5rem] h-[5rem] object-cover object-top" src="" alt="" />
-                                <div className="space-y-2 ml-5">
-                                    <p className="font-semibold">Men Slim</p>
-                                    <p>Seller: Linaria</p>
-                                    <p>$19</p>
-                                </div>
-                            </div>
-                        </Grid>
-
-                        <Grid item>
-                            <Box sx={{ color: deepPurple[500] }}>
-                                <StarBorderIcon sx={{ fontSize: '2rem' }} className="px-2 text-5xl" />
-                                <span>Rate & Review Product</span>
-                            </Box>
-                        </Grid>
+        <>
+            <Navbar />
+            <div className="px-5 lg:pl-20  bg-gray-200 justify-center pt-5 pb-5">
+                <Grid className="space-x-3" container>
+                    <Grid item xs={3}>
+                        <div className="bg-white rounded-lg p-5 w-full">
+                            <AddressCard address={order?.shippingAddress} />
+                        </div>
                     </Grid>
-                ))}
-            </Grid>
-        </div>
+                    <Grid item xs={8.4} className="w-full w-[860px]">
+                        {order?.orderItem?.map((item) => (
+                            <Grid
+                                key={item.orderItemId}
+                                container
+                                className="bg-white shadow-xl rounded-md p-5 border w-full"
+                                sx={{ alignItems: 'center', justifyContent: 'space-between' }}
+                            >
+                                <Grid item xs={8} className="flex items-center">
+                                    <div className="w-[4rem] lg:w-[4rem] lg:h-[6rem] overflow-hidden rounded ml-3 py-[5px]">
+                                        <img
+                                            className="w-full h-full object-cover object-top transition-transform duration-300 transform hover:scale-90"
+                                            src={item.books.bookImage}
+                                            alt=""
+                                        />
+                                    </div>
+
+                                    <div className="space-y-1 max-w-[350px] w-full ml-4">
+                                        <div className="overflow-hidden text-wrap whitespace-nowrap block w-full">
+                                            <HeadlessTippy
+                                                render={(attrs) => (
+                                                    <BoxFramer tabIndex="-1" style={{ scale, opacity }} {...attrs}>
+                                                        <span>{item.books.bookTitle}</span>
+                                                    </BoxFramer>
+                                                )}
+                                                animation={true}
+                                                onMount={onMount}
+                                                onHide={onHide}
+                                                arrow={true}
+                                            >
+                                                <span className="block overflow-hidden whitespace-nowrap text-ellipsis">
+                                                    {item.books.bookTitle}
+                                                </span>
+                                            </HeadlessTippy>
+                                        </div>
+
+                                        <div className="flex items-center text-gray-900">
+                                            <p className="font-semibold mr-3">
+                                                {new Intl.NumberFormat('vi-VN', {
+                                                    style: 'currency',
+                                                    currency: 'VND',
+                                                }).format(item.books.discountedPrice)}
+                                            </p>
+                                            <p className="mr-3 opacity-50 line-through">
+                                                {new Intl.NumberFormat('vi-VN', {
+                                                    style: 'currency',
+                                                    currency: 'VND',
+                                                }).format(item.books.bookPrice)}
+                                            </p>
+                                            <Box
+                                                sx={{
+                                                    width: '50px',
+                                                    color: 'white',
+                                                    padding: '2px 4px',
+                                                    borderRadius: '5px',
+                                                    backgroundColor: '#FC427B',
+                                                }}
+                                            >
+                                                -{item.books.discountPercent}%
+                                            </Box>
+                                        </div>
+                                    </div>
+                                </Grid>
+
+                                <Grid item xs={3.5}>
+                                    {order?.orderStatus === 'CANCELLED' && (
+                                        <span className="flex mb-[12px]">
+                                            Trạng thái: <p className="font-semibold  text-red-900 ml-[10px]">Đã huỷ</p>
+                                        </span>
+                                    )}
+                                    {order?.orderStatus === 'PENDING' && (
+                                        <Button
+                                            onClick={handleOpen}
+                                            className="flex items-center"
+                                            variant="contained"
+                                            color="error"
+                                            sx={{ marginBottom: '5px' }}
+                                        >
+                                            <ClearIcon
+                                                sx={{ fontSize: '2rem', fontWeight: 600 }}
+                                                className="px-2 text-xl"
+                                            />
+                                            <span>Huỷ đơn hàng</span>
+                                        </Button>
+                                    )}
+                                    <Button variant="contained" color="secondary">
+                                        <StarBorderIcon
+                                            sx={{ fontSize: '2rem', fontWeight: 600 }}
+                                            className="px-2 text-xl"
+                                        />
+                                        <span>Đánh giá sản phẩm</span>
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Grid>
+            </div>
+
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">Xác nhận huỷ đơn hàng</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Bạn chắc chắn muốn huỷ đơn hàng này?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                        Huỷ bỏ
+                    </Button>
+                    <Button onClick={handleCancelOrder} color="primary" autoFocus>
+                        Đồng ý
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Footer />
+        </>
     );
 }

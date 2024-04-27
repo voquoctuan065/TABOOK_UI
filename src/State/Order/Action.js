@@ -1,10 +1,16 @@
 import axios from 'axios';
 import {
+    CANCEL_USER_ORDER_FAILURE,
+    CANCEL_USER_ORDER_REQUEST,
+    CANCEL_USER_ORDER_SUCCESS,
     CREATE_ORDER_FAILURE,
     CREATE_ORDER_REQUEST,
     CREATE_ORDER_SUCCESS,
     GET_ORDER_BY_ID_FAILURE,
     GET_ORDER_BY_ID_SUCCESS,
+    GET_USER_ORDER_HISTORY_FAILURE,
+    GET_USER_ORDER_HISTORY_REQUEST,
+    GET_USER_ORDER_HISTORY_SUCCESS,
 } from './ActionType';
 import { API_BASE_URL } from '../apiConfig';
 
@@ -50,5 +56,33 @@ export const getOrderById = (orderId) => async (dispatch) => {
             type: GET_ORDER_BY_ID_FAILURE,
             payload: error.message,
         });
+    }
+};
+
+export const getUserOrderHistory = () => async (dispatch) => {
+    dispatch({ type: GET_USER_ORDER_HISTORY_REQUEST });
+    try {
+        const { data } = await axios.get(`${API_BASE_URL}/public/order/user`, {
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+            },
+        });
+        dispatch({ type: GET_USER_ORDER_HISTORY_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({ type: GET_USER_ORDER_HISTORY_FAILURE, payload: error });
+    }
+};
+
+export const cancelUserOrder = (orderId) => async (dispatch) => {
+    dispatch({ type: CANCEL_USER_ORDER_REQUEST });
+    try {
+        const { data } = await axios.post(`${API_BASE_URL}/public/order/cancel/${orderId}`, null, {
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+            },
+        });
+        dispatch({ type: CANCEL_USER_ORDER_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({ type: CANCEL_USER_ORDER_FAILURE, payload: error });
     }
 };
