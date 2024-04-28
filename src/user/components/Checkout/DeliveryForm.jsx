@@ -241,7 +241,7 @@ export default function DeliveryForm() {
                 zipCode: user?.address[0].zipCode,
                 phoneNumber: user?.address[0].phoneNumber,
             },
-            cartItems: cartItems,
+            cartItem: cartItems,
             cartTotalQuantity: cart.cartTotalQuantity,
             cartTotalAmount: cart.cartTotalAmount,
         };
@@ -252,6 +252,8 @@ export default function DeliveryForm() {
             dispatch(createOrder(reqData));
         }
     };
+
+    console.log(cartItems);
 
     return (
         <div className="mx-auto max-w-7xl pb-5">
@@ -391,7 +393,7 @@ export default function DeliveryForm() {
                                     />
                                 </Grid>
 
-                                <Grid item xs={12} sm={6}>
+                                <Grid item xs={12} sm={12} className="flex justify-end">
                                     <Button
                                         type="submit"
                                         sx={{

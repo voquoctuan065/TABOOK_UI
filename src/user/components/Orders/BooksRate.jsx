@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Button, styled } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useDispatch } from 'react-redux';
@@ -55,6 +55,7 @@ function BooksRate({ bookId, handleRateClose }) {
         toast.success('Đánh giá sản phẩm thành công!');
         handleRateClose();
     };
+
     return (
         <>
             <div
@@ -120,7 +121,7 @@ function BooksRate({ bookId, handleRateClose }) {
                                     </span>
                                     <input
                                         value="1"
-                                        className="text-left outline-0 m-0 absolute opacity-0 h-[1px] w-[1px] overflow-hidden"
+                                        className={`text-left outline-0 m-0 absolute opacity-0 h-[1px] w-[1px] overflow-hidden`}
                                         style={{
                                             clip: 'rect(1px, 1px, 1px, 1px)',
                                         }}
@@ -128,7 +129,7 @@ function BooksRate({ bookId, handleRateClose }) {
                                     <label
                                         onClick={() => handleInputClick(1)}
                                         className={`bg-white items-center justify-center flex w-[40px] h-[40px] ${
-                                            highlightedInput === 1 ? 'bg-fuchsia-400' : ''
+                                            highlightedInput === 1 ? 'bg-red-300' : ''
                                         }`}
                                         style={{
                                             color: '#000',
@@ -156,7 +157,7 @@ function BooksRate({ bookId, handleRateClose }) {
                                         <label
                                             onClick={() => handleInputClick(value)}
                                             className={`bg-white items-center justify-center flex w-[40px] h-[40px] ${
-                                                highlightedInput === value ? 'bg-fuchsia-400' : ''
+                                                highlightedInput === value ? 'bg-red-300' : ''
                                             }`}
                                             style={{
                                                 color: '#000',
@@ -196,7 +197,7 @@ function BooksRate({ bookId, handleRateClose }) {
                                     <label
                                         onClick={() => handleInputClick(5)}
                                         className={`bg-white items-center justify-center flex w-[40px] h-[40px] ${
-                                            highlightedInput === 5 ? 'bg-fuchsia-400 ' : ''
+                                            highlightedInput === 5 ? 'bg-red-300 ' : ''
                                         } `}
                                         style={{
                                             color: '#000',

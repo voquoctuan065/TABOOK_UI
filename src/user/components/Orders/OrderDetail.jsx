@@ -52,6 +52,7 @@ export default function OrderDetail() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { orderId } = useParams();
+    const [selectedBookId, setSelectedBookId] = useState(null);
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -59,7 +60,8 @@ export default function OrderDetail() {
 
     const [rateOpen, setRateOpen] = useState(false);
 
-    const handleRateOpen = () => {
+    const handleRateOpen = (bookId) => {
+        setSelectedBookId(bookId);
         setRateOpen(true);
     };
     const handleRateClose = () => setRateOpen(false);
@@ -113,7 +115,7 @@ export default function OrderDetail() {
                         </div>
                     </Grid>
                     <Grid item xs={8.4} className="w-full w-[860px]">
-                        {order?.orderItem?.map((item) => (
+                        {order?.orderItemDto?.map((item) => (
                             <Grid
                                 key={item.orderItemId}
                                 container
@@ -124,7 +126,7 @@ export default function OrderDetail() {
                                     <div className="w-[4rem] lg:w-[4rem] lg:h-[6rem] overflow-hidden rounded ml-3 py-[5px]">
                                         <img
                                             className="w-full h-full object-cover object-top transition-transform duration-300 transform hover:scale-90"
-                                            src={item.books.bookImage}
+                                            src={item.bookOrderDto.bookImage}
                                             alt=""
                                         />
                                     </div>
@@ -134,7 +136,7 @@ export default function OrderDetail() {
                                             <HeadlessTippy
                                                 render={(attrs) => (
                                                     <BoxFramer tabIndex="-1" style={{ scale, opacity }} {...attrs}>
-                                                        <span>{item.books.bookTitle}</span>
+                                                        <span>{item.bookOrderDto.bookTitle}</span>
                                                     </BoxFramer>
                                                 )}
                                                 animation={true}
@@ -143,7 +145,7 @@ export default function OrderDetail() {
                                                 arrow={true}
                                             >
                                                 <span className="block overflow-hidden whitespace-nowrap text-ellipsis">
-                                                    {item.books.bookTitle}
+                                                    {item.bookOrderDto.bookTitle}
                                                 </span>
                                             </HeadlessTippy>
                                         </div>
@@ -153,13 +155,13 @@ export default function OrderDetail() {
                                                 {new Intl.NumberFormat('vi-VN', {
                                                     style: 'currency',
                                                     currency: 'VND',
-                                                }).format(item.books.discountedPrice)}
+                                                }).format(item.bookOrderDto.discountedPrice)}
                                             </p>
                                             <p className="mr-3 opacity-50 line-through">
                                                 {new Intl.NumberFormat('vi-VN', {
                                                     style: 'currency',
                                                     currency: 'VND',
-                                                }).format(item.books.bookPrice)}
+                                                }).format(item.bookOrderDto.bookPrice)}
                                             </p>
                                             <Box
                                                 sx={{
@@ -170,7 +172,7 @@ export default function OrderDetail() {
                                                     backgroundColor: '#FC427B',
                                                 }}
                                             >
-                                                -{item.books.discountPercent}%
+                                                -{item.bookOrderDto.discountPercent}%
                                             </Box>
                                         </div>
                                     </div>
@@ -182,22 +184,12 @@ export default function OrderDetail() {
                                             Trạng thái: <p className="font-semibold  text-red-900 ml-[10px]">Đã huỷ</p>
                                         </span>
                                     )}
-                                    {order?.orderStatus === 'PENDING' && (
-                                        <Button
-                                            onClick={handleOpen}
-                                            className="flex items-center"
-                                            variant="contained"
-                                            color="error"
-                                            sx={{ marginBottom: '5px' }}
-                                        >
-                                            <ClearIcon
-                                                sx={{ fontSize: '2rem', fontWeight: 600 }}
-                                                className="px-2 text-xl"
-                                            />
-                                            <span>Huỷ đơn hàng</span>
-                                        </Button>
-                                    )}
-                                    <Button variant="contained" color="secondary" onClick={handleRateOpen}>
+
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={() => handleRateOpen(item.bookOrderDto.bookId)}
+                                    >
                                         <StarBorderIcon
                                             sx={{ fontSize: '2rem', fontWeight: 600 }}
                                             className="px-2 text-xl"
@@ -207,6 +199,18 @@ export default function OrderDetail() {
                                 </Grid>
                             </Grid>
                         ))}
+                        {order?.orderStatus === 'PENDING' && (
+                            <Button
+                                onClick={handleOpen}
+                                className="flex items-center justify-end"
+                                variant="contained"
+                                color="error"
+                                sx={{ marginBottom: '5px', marginTop: '15px', float: 'right' }}
+                            >
+                                <ClearIcon sx={{ fontSize: '2rem', fontWeight: 600 }} className="px-2 text-xl" />
+                                <span>Huỷ đơn hàng</span>
+                            </Button>
+                        )}
                     </Grid>
                 </Grid>
             </div>
@@ -218,7 +222,7 @@ export default function OrderDetail() {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <BooksRate handleRateClose={handleRateClose} bookId={order && order.orderItem && order?.orderItem?.map((item) => item.books.bookId)} />
+                    <BooksRate handleRateClose={handleRateClose} bookId={selectedBookId} />
                 </Box>
             </Modal>
 

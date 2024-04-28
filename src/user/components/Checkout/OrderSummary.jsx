@@ -33,25 +33,24 @@ export default function OrderSummary() {
 
     const searchParams = new URLSearchParams(location.search);
 
-    const deliveryCharge = order?.orderItem?.length > 0 ? 20000 : 0;
+    const deliveryCharge = order?.orderItemDto?.length > 0 ? 20000 : 0;
 
     const orderId = searchParams.get('order_id');
     useEffect(() => {
         dispatch(getOrderById(orderId));
     }, [orderId]);
-    console.log(order);
 
     const handleOnlineCheckout = () => {
         const reqData = { orderId: orderId, totalAmount: order.totalPrice + deliveryCharge };
         console.log(reqData);
-        if (order && order.orderItem && user) {
+        if (order && order.orderItemDto && user) {
             dispatch(createPaymentLink(reqData));
         }
     };
 
     const handleShipCOD = () => {
         const reqData = { orderId: orderId, totalAmount: order.totalPrice + deliveryCharge, navigate };
-        if (order && order.orderItem && user) {
+        if (order && order.orderItemDto && user) {
             dispatch(shipCodAction(reqData));
         }
     };
@@ -66,19 +65,19 @@ export default function OrderSummary() {
                 <Grid item xs={9} sx={{}}>
                     <div className="bg-white rounded-lg pb-3">
                         <div className="font-bold text-lg p-3">Thông tin sản phẩm</div>
-                        {order.orderItem &&
-                            order.orderItem.map((item) => (
+                        {order.orderItemDto &&
+                            order.orderItemDto.map((item) => (
                                 <div key={item.orderId} className="border m-2 px-2 rounded-lg">
                                     <div className="flex items-center justify-between w-full">
                                         <div className="w-[5rem] h-[7rem] lg:w-[5rem] lg:h-[7rem] overflow-hidden rounded ml-3 py-[5px]">
                                             <img
                                                 className="w-full h-full object-cover object-top transition-transform duration-300 transform hover:scale-90"
-                                                src={item.books.bookImage}
+                                                src={item.bookOrderDto.bookImage}
                                                 alt=""
                                             />
                                         </div>
                                         <span className="max-w-[200px] inline-block overflow-hidden whitespace-nowrap text-ellipsis">
-                                            {item.books.bookTitle}
+                                            {item.bookOrderDto.bookTitle}
                                         </span>
 
                                         <div className="flex space-x-5 items-center text-gray-900">
@@ -86,13 +85,13 @@ export default function OrderSummary() {
                                                 {new Intl.NumberFormat('vi-VN', {
                                                     style: 'currency',
                                                     currency: 'VND',
-                                                }).format(item.books.discountedPrice)}
+                                                }).format(item.bookOrderDto.discountedPrice)}
                                             </p>
                                             <p className="opacity-50 line-through">
                                                 {new Intl.NumberFormat('vi-VN', {
                                                     style: 'currency',
                                                     currency: 'VND',
-                                                }).format(item.books.bookPrice)}
+                                                }).format(item.bookOrderDto.bookPrice)}
                                             </p>
                                             <Box
                                                 sx={{
@@ -103,7 +102,7 @@ export default function OrderSummary() {
                                                     backgroundColor: '#FC427B',
                                                 }}
                                             >
-                                                -{item.books.discountPercent}%
+                                                -{item.bookOrderDto.discountPercent}%
                                             </Box>
                                         </div>
                                         <div className="">

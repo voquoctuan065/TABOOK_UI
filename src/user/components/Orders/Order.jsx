@@ -51,11 +51,11 @@ export default function Order() {
                                         sx={{ justifyContent: 'space-between', alignItems: 'center' }}
                                     >
                                         <Grid item xs={5}>
-                                            {item.orderItem.map((child) => (
+                                            {item.orderItemDto?.map((child) => (
                                                 <div key={child.orderItemId} className="flex items-center">
-                                                    <img src={child.books.bookImage} alt="" className="w-[3.5rem]" />
+                                                    <img src={child.bookOrderDto.bookImage} alt="" className="w-[3.5rem]" />
                                                     <span className="ml-3 overflow-hidden text-ellipsis whitespace-nowrap inline-block max-w-[20rem]">
-                                                        {child.books.bookTitle}
+                                                        {child.bookOrderDto.bookTitle}
                                                     </span>
                                                 </div>
                                             ))}
