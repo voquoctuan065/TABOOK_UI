@@ -93,24 +93,24 @@ export default function ProductDetail() {
     };
 
     const averageRating =
-        ((book.book?.reviews?.reduce((total, review) => total + review.rating, 0) / book.book?.reviews?.length) || 0);
+        ((book.book && book.book?.reviews?.reduce((total, review) => total + review.rating, 0) / book.book?.reviews?.length) || 0);
 
     const excellentPercentage =
-        (((book.book?.reviews?.filter((review) => review.rating >= 4).length / book.book?.reviews?.length) * 100)|| 0);
+        ((( book.book && book.book?.reviews?.filter((review) => review.rating >= 4).length / book.book?.reviews?.length) * 100)|| 0);
     const goodPercentage =
-        (((book.book?.reviews?.filter((review) => review.rating >= 3 && review.rating < 4).length /
+        (((book.book && book.book?.reviews?.filter((review) => review.rating >= 3 && review.rating < 4).length /
         book.book?.reviews?.length) *
     100) || 0);
     const averagePercentage =
-        (((book.book?.reviews?.filter((review) => review.rating >= 2 && review.rating < 3).length /
+        (((book.book && book.book?.reviews?.filter((review) => review.rating >= 2 && review.rating < 3).length /
         book.book?.reviews?.length) *
     100) || 0);
     const poorPercentage =
-        (((book.book?.reviews?.filter((review) => review.rating >= 1 && review.rating < 2).length /
+        (((book.book && book.book?.reviews?.filter((review) => review.rating >= 1 && review.rating < 2).length /
         book.book?.reviews?.length) *
     100) || 0);
     const terriblePercentage =
-        (((book.book?.reviews?.filter((review) => review.rating < 1).length / book.book?.reviews?.length) * 100) || 0);
+        (((book.book && book.book?.reviews?.filter((review) => review.rating < 1).length / book.book?.reviews?.length) * 100) || 0);
     return (
         <>
             <Helmet>
@@ -408,7 +408,8 @@ export default function ProductDetail() {
                                     <h1 className="text-xl font-semibold pb-1">Đánh giá sản phẩm</h1>
                                     <div className="flex items-center space-x-3">
                                         <Rating value={averageRating} precision={0.5} readOnly />
-                                        <p className="opacity-60">{book.book.reviews && book.book.reviews.length}</p>
+                                        
+                                        <p className="opacity-60">{book.book && book.book.reviews && book.book.reviews.length}</p>
                                     </div>
                                     <Box className="mt-5">
                                         <Grid container alignItems="center" gap={2}>

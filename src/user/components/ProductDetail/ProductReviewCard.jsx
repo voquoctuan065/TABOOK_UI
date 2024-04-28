@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Avatar, Grid, Box, Rating } from '@mui/material';
 import { format } from 'date-fns';
 
@@ -21,9 +22,7 @@ export default function ProductReviewCard({review}) {
                         </div>
                     </div>
                     <Rating value={review?.rating} name="half-rating" readOnly precision={0.5} />
-                    <p>
-                        {review?.comment}
-                    </p>
+                    <div dangerouslySetInnerHTML={{ __html: review?.comment }} />
                 </Grid>
             </Grid>
         </div>

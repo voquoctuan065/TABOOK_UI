@@ -30,6 +30,8 @@ export default function Order() {
         navigate(`/orderDetail/${orderId}`);
     };
 
+    console.log(orders);
+
     return (
         <>
             <Helmet>

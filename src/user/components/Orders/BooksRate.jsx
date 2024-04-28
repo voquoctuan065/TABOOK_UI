@@ -1,6 +1,11 @@
-import { Button } from '@mui/material';
+/* eslint-disable react/prop-types */
+import { Button, styled } from '@mui/material';
+import { useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import { createRating } from '../../../State/BooksRate/Action';
 
 const modules = {
     toolbar: [
@@ -26,7 +31,30 @@ const formats = [
     'image',
 ];
 
-function BooksRate() {
+function BooksRate({ bookId, handleRateClose }) {
+    const dispatch = useDispatch();
+    const [highlightedInput, setHighlightedInput] = useState(null);
+    const [comment, setComment] = useState('');
+
+    const handleInputClick = (value) => {
+        setHighlightedInput(value);
+    };
+
+    const handleSubmit = () => {
+        if (!highlightedInput || !comment || !bookId) {
+            toast.warning('Vui lòng để lại đánh giá và nhận xét trước khi gửi');
+            return;
+        }
+
+        const reqData = {
+            rating: highlightedInput,
+            comment: comment,
+        };
+
+        dispatch(createRating(bookId, reqData));
+        toast.success('Đánh giá sản phẩm thành công!');
+        handleRateClose();
+    };
     return (
         <>
             <div
@@ -98,13 +126,16 @@ function BooksRate() {
                                         }}
                                     />
                                     <label
-                                        className="bg-white items-center justify-center flex w-[40px] h-[40px] "
+                                        onClick={() => handleInputClick(1)}
+                                        className={`bg-white items-center justify-center flex w-[40px] h-[40px] ${
+                                            highlightedInput === 1 ? 'bg-fuchsia-400' : ''
+                                        }`}
                                         style={{
-                                            color: '#8894ab',
+                                            color: '#000',
                                             border: '1px solid',
                                             fontSize: '0.75em',
                                             borderRadius: '50%',
-                                            fontWeight: '500',
+                                            fontWeight: '600',
                                             flexShrink: 0,
                                             padding: 0,
                                         }}
@@ -112,75 +143,36 @@ function BooksRate() {
                                         1
                                     </label>
                                 </div>
-                                <div className="mr-[24px] flex items-center justify-end flex-col-reverse relative w-[40px]">
-                                    <input
-                                        value="2"
-                                        className="text-left outline-0 m-0 absolute opacity-0 h-[1px] w-[1px] overflow-hidden"
-                                        style={{
-                                            clip: 'rect(1px, 1px, 1px, 1px)',
-                                        }}
-                                    />
-                                    <label
-                                        className="bg-white items-center justify-center flex w-[40px] h-[40px] "
-                                        style={{
-                                            color: '#8894ab',
-                                            border: '1px solid',
-                                            fontSize: '0.75em',
-                                            borderRadius: '50%',
-                                            fontWeight: '500',
-                                            flexShrink: 0,
-                                            padding: 0,
-                                        }}
+                                {[2, 3, 4].map((value) => (
+                                    <div
+                                        key={value}
+                                        className="mr-[24px] flex items-center justify-end flex-col-reverse relative w-[40px]"
                                     >
-                                        2
-                                    </label>
-                                </div>
-                                <div className="mr-[24px] flex items-center justify-end flex-col-reverse relative w-[40px]">
-                                    <input
-                                        value="3"
-                                        className="text-left outline-0 m-0 absolute opacity-0 h-[1px] w-[1px] overflow-hidden"
-                                        style={{
-                                            clip: 'rect(1px, 1px, 1px, 1px)',
-                                        }}
-                                    />
-                                    <label
-                                        className="bg-white items-center justify-center flex w-[40px] h-[40px] "
-                                        style={{
-                                            color: '#8894ab',
-                                            border: '1px solid',
-                                            fontSize: '0.75em',
-                                            borderRadius: '50%',
-                                            fontWeight: '500',
-                                            flexShrink: 0,
-                                            padding: 0,
-                                        }}
-                                    >
-                                        3
-                                    </label>
-                                </div>
-                                <div className="mr-[24px] flex items-center justify-end flex-col-reverse relative w-[40px]">
-                                    <input
-                                        value="4"
-                                        className="text-left outline-0 m-0 absolute opacity-0 h-[1px] w-[1px] overflow-hidden"
-                                        style={{
-                                            clip: 'rect(1px, 1px, 1px, 1px)',
-                                        }}
-                                    />
-                                    <label
-                                        className="bg-white items-center justify-center flex w-[40px] h-[40px] "
-                                        style={{
-                                            color: '#8894ab',
-                                            border: '1px solid',
-                                            fontSize: '0.75em',
-                                            borderRadius: '50%',
-                                            fontWeight: '500',
-                                            flexShrink: 0,
-                                            padding: 0,
-                                        }}
-                                    >
-                                        4
-                                    </label>
-                                </div>
+                                        <input
+                                            value={value}
+                                            className={`text-left outline-0 m-0 absolute opacity-0 h-[1px] w-[1px] overflow-hidden `}
+                                            style={{ clip: 'rect(1px, 1px, 1px, 1px)' }}
+                                        />
+                                        <label
+                                            onClick={() => handleInputClick(value)}
+                                            className={`bg-white items-center justify-center flex w-[40px] h-[40px] ${
+                                                highlightedInput === value ? 'bg-fuchsia-400' : ''
+                                            }`}
+                                            style={{
+                                                color: '#000',
+                                                border: '1px solid',
+                                                fontSize: '0.75em',
+                                                borderRadius: '50%',
+                                                fontWeight: '600',
+                                                flexShrink: 0,
+                                                padding: 0,
+                                            }}
+                                        >
+                                            {value}
+                                        </label>
+                                    </div>
+                                ))}
+
                                 <div className="mr-[24px] flex items-center justify-end flex-col-reverse relative w-[40px]">
                                     <span
                                         className="text-left self-start cursor-text whitespace-normal w-[100px] relative"
@@ -202,13 +194,16 @@ function BooksRate() {
                                         }}
                                     />
                                     <label
-                                        className="bg-white items-center justify-center flex w-[40px] h-[40px] "
+                                        onClick={() => handleInputClick(5)}
+                                        className={`bg-white items-center justify-center flex w-[40px] h-[40px] ${
+                                            highlightedInput === 5 ? 'bg-fuchsia-400 ' : ''
+                                        } `}
                                         style={{
-                                            color: '#8894ab',
+                                            color: '#000',
                                             border: '1px solid',
                                             fontSize: '0.75em',
                                             borderRadius: '50%',
-                                            fontWeight: '500',
+                                            fontWeight: '600',
                                             flexShrink: 0,
                                             padding: 0,
                                         }}
@@ -247,8 +242,8 @@ function BooksRate() {
             <div className="mt-5 border-t pt-5 h-[10rem]">
                 <ReactQuill
                     theme="snow"
-                    value
-                    onChange
+                    value={comment}
+                    onChange={setComment}
                     modules={modules}
                     formats={formats}
                     style={{ height: '100%' }}
@@ -257,6 +252,7 @@ function BooksRate() {
             </div>
             <div>
                 <Button
+                    onClick={handleSubmit}
                     className="bg-[#9155FD] w-full"
                     type="submit"
                     variant="contained"

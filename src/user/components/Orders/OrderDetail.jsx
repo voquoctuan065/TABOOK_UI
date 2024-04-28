@@ -218,7 +218,7 @@ export default function OrderDetail() {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <BooksRate />
+                    <BooksRate handleRateClose={handleRateClose} bookId={order && order.orderItem && order?.orderItem?.map((item) => item.books.bookId)} />
                 </Box>
             </Modal>
 
