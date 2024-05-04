@@ -12,6 +12,15 @@ import {
     GET_BOOK_BY_ID_FAILURE,
     GET_BOOK_BY_ID_REQUEST,
     GET_BOOK_BY_ID_SUCCESS,
+    GET_FAVORITE_BOOK_FAILURE,
+    GET_FAVORITE_BOOK_REQUEST,
+    GET_FAVORITE_BOOK_SUCCESS,
+    GET_HOT_BOOK_FAILURE,
+    GET_HOT_BOOK_REQUEST,
+    GET_HOT_BOOK_SUCCESS,
+    GET_LATEST_BOOK_FAILURE,
+    GET_LATEST_BOOK_REQUEST,
+    GET_LATEST_BOOK_SUCCESS,
 } from './ActionType';
 import { API_BASE_URL } from '../apiConfig';
 
@@ -66,5 +75,35 @@ export const findBookByName = (reqData) => async (dispatch) => {
         }
     } catch (error) {
         dispatch({ type: FIND_BOOK_BY_NAME_FAILURE, payload: error });
+    }
+};
+
+export const getLatestBook = () => async (dispatch) => {
+    dispatch({ type: GET_LATEST_BOOK_REQUEST });
+    try {
+        const { data } = await axios.get(`${API_BASE_URL}/public/book/latest`);
+        dispatch({ type: GET_LATEST_BOOK_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({ type: GET_LATEST_BOOK_FAILURE, payload: error });
+    }
+};
+
+export const getHotBook = () => async (dispatch) => {
+    dispatch({ type: GET_HOT_BOOK_REQUEST });
+    try {
+        const { data } = await axios.get(`${API_BASE_URL}/public/book/hot`);
+        dispatch({ type: GET_HOT_BOOK_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({ type: GET_HOT_BOOK_FAILURE, payload: error });
+    }
+};
+
+export const getFavoriteBook = () => async (dispatch) => {
+    dispatch({ type: GET_FAVORITE_BOOK_REQUEST });
+    try {
+        const { data } = await axios.get(`${API_BASE_URL}/public/book/favorite`);
+        dispatch({ type: GET_FAVORITE_BOOK_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({ type: GET_FAVORITE_BOOK_FAILURE, payload: error });
     }
 };
