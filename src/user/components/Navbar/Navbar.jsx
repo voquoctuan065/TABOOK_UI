@@ -82,6 +82,7 @@ function Navbar() {
     }, [category.categoryList]);
 
     // 3 -------------------------------- End Handle Get Category ---------------------------------------- 3//
+
     return (
         <div className="bg-white">
             <header className="relative bg-indigo-500">
@@ -239,10 +240,10 @@ function Navbar() {
                                                     color: 'white',
                                                 }}
                                             >
-                                                {userProfile.fullName[0]}
+                                                {userProfile.userImage ? <img src={userProfile.userImage } alt='user image' /> : <img alt='default image' src='/images/user_image.png'/>}
                                             </Avatar>
 
-                                            {userProfile.fullName}
+                                            <div className='capitalize text-white font-semibold text-sm ml-5'>{userProfile.fullName}</div>
 
                                             <Menu
                                                 id="basic-menu"

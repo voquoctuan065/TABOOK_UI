@@ -14,6 +14,7 @@ import {
 } from './ActionType';
 
 import { toast } from 'react-toastify';
+import routes from '../../config/routes';
 
 const registerRequest = () => ({
     type: REGISTER_REQUEST,
@@ -65,7 +66,7 @@ const loginFailure = (error) => ({
     type: LOGIN_FAILURE,
     payload: error,
 });
-export const login = (userData) => async (dispatch) => {
+export const login = (userData, navigate) => async (dispatch) => {
     dispatch(loginRequest());
     try {
         const response = await axios.post(`${API_BASE_URL}/auth/signin`, userData);
@@ -84,8 +85,11 @@ export const login = (userData) => async (dispatch) => {
 
         dispatch(loginSuccess(user.jwt));
         toast.success('Đăng nhập thành công!');
+        navigate(routes.home);
     } catch (error) {
         dispatch(loginFailure(error.message));
+        toast.error('Mật khẩu hoặc email không đúng!');
+        return;
     }
 };
 

@@ -71,11 +71,12 @@ function SignIn() {
         const inputData = {
             email: email,
             password: password,
+            
         };
 
         try {
-            dispatch(login(inputData));
-            navigate(routes.home);
+            dispatch(login(inputData, navigate));
+           
         } catch (error) {
             setSuccessDialogOpen(true);
         }
