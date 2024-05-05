@@ -54,8 +54,8 @@ export const getBookById = (bookRequestId) => async (dispatch) => {
     dispatch({ type: GET_BOOK_BY_ID_REQUEST });
     try {
         const response = await axios.get(`${API_BASE_URL}/public/book/${bookRequestId}`);
-        const data = response.data;
-        dispatch({ type: GET_BOOK_BY_ID_SUCCESS, payload: data });
+        console.log('Book from action', response);
+        dispatch({ type: GET_BOOK_BY_ID_SUCCESS, payload: response.data });
     } catch (error) {
         dispatch({ type: GET_BOOK_BY_ID_FAILURE, payload: error });
     }

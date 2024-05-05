@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Helmet } from 'react-helmet-async';
 import Footer from '../Footer/Footer';
 import Navbar from '../Navbar/Navbar';
@@ -20,22 +21,30 @@ import routes from '../../../config/routes';
 export default function ProductDetail() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { book } = useSelector((store) => store);
+    const { book, books } = useSelector((store) => ({
+        book: store.book.book,
+        books: store.book.books,
+    }));
     const [relateBook, setRelateBook] = useState([]);
     const { bookRequestId } = useParams();
     const [pathName, setPathName] = useState('');
     const [quantity, setQuantity] = useState(1);
 
     useEffect(() => {
-        dispatch(getBookById(bookRequestId));
+        if (bookRequestId) {
+            dispatch(getBookById(bookRequestId));
+        }
     }, [bookRequestId]);
 
-    useEffect(() => {
-        if (book.book) {
-            setPathName(book.book.category.pathName);
-        }
-    }, [book.book, bookRequestId]);
+    console.log('Book', book);
 
+    useEffect(() => {
+        if (book) {
+            setPathName(book.category.pathName);
+        }
+    }, [book, bookRequestId]);
+
+    console.log('Path Name: ', pathName);
     useEffect(() => {
         const data = {
             cleanItem: pathName,
@@ -43,14 +52,17 @@ export default function ProductDetail() {
         };
 
         dispatch(getBookByCategory(data));
-    }, [pathName, bookRequestId]);
+    }, [pathName]);
 
     useEffect(() => {
-        if (book.books) {
-            const data = book.books.booksDtoList.filter((item) => item.bookId !== book.book?.bookId);
+        if (books && books.booksDtoList && bookRequestId) {
+            const requestId = parseInt(bookRequestId);
+            const data = books.booksDtoList.filter((item) => item.bookId !== requestId);
             setRelateBook(data);
         }
-    }, [book.books]);
+    }, [books, bookRequestId]);
+
+    console.log(relateBook);
 
     const handleMinusQuantityClick = () => {
         if (quantity > 1) {
@@ -65,12 +77,12 @@ export default function ProductDetail() {
     const handleAddToCart = () => {
         dispatch(
             addToCart({
-                id: book.book?.bookId,
-                title: book.book?.bookTitle,
-                price: book.book?.bookPrice,
-                discountedPrice: book.book?.discountedPrice,
-                discountPercent: book.book?.discountPercent,
-                bookImage: book.book?.bookImage,
+                id: book?.bookId,
+                title: book?.bookTitle,
+                price: book?.bookPrice,
+                discountedPrice: book?.discountedPrice,
+                discountPercent: book?.discountPercent,
+                bookImage: book?.bookImage,
                 quantity: quantity,
             }),
         );
@@ -80,12 +92,12 @@ export default function ProductDetail() {
     const handleBuyNow = () => {
         dispatch(
             addToCart({
-                id: book.book?.bookId,
-                title: book.book?.bookTitle,
-                price: book.book?.bookPrice,
-                discountedPrice: book.book?.discountedPrice,
-                discountPercent: book.book?.discountPercent,
-                bookImage: book.book?.bookImage,
+                id: book?.bookId,
+                title: book?.bookTitle,
+                price: book?.bookPrice,
+                discountedPrice: book?.discountedPrice,
+                discountPercent: book?.discountPercent,
+                bookImage: book?.bookImage,
                 quantity: quantity,
             }),
         );
@@ -93,24 +105,25 @@ export default function ProductDetail() {
     };
 
     const averageRating =
-        ((book.book && book.book?.reviews?.reduce((total, review) => total + review.rating, 0) / book.book?.reviews?.length) || 0);
+        (book && book?.reviews?.reduce((total, review) => total + review.rating, 0) / book?.reviews?.length) || 0;
 
     const excellentPercentage =
-        ((( book.book && book.book?.reviews?.filter((review) => review.rating >= 4).length / book.book?.reviews?.length) * 100)|| 0);
+        (book && book?.reviews?.filter((review) => review.rating >= 4).length / book?.reviews?.length) * 100 || 0;
     const goodPercentage =
-        (((book.book && book.book?.reviews?.filter((review) => review.rating >= 3 && review.rating < 4).length /
-        book.book?.reviews?.length) *
-    100) || 0);
+        (book &&
+            book?.reviews?.filter((review) => review.rating >= 3 && review.rating < 4).length / book?.reviews?.length) *
+            100 || 0;
     const averagePercentage =
-        (((book.book && book.book?.reviews?.filter((review) => review.rating >= 2 && review.rating < 3).length /
-        book.book?.reviews?.length) *
-    100) || 0);
+        (book &&
+            book?.reviews?.filter((review) => review.rating >= 2 && review.rating < 3).length / book?.reviews?.length) *
+            100 || 0;
     const poorPercentage =
-        (((book.book && book.book?.reviews?.filter((review) => review.rating >= 1 && review.rating < 2).length /
-        book.book?.reviews?.length) *
-    100) || 0);
+        (book &&
+            book?.reviews?.filter((review) => review.rating >= 1 && review.rating < 2).length / book?.reviews?.length) *
+            100 || 0;
     const terriblePercentage =
-        (((book.book && book.book?.reviews?.filter((review) => review.rating < 1).length / book.book?.reviews?.length) * 100) || 0);
+        (book && book?.reviews?.filter((review) => review.rating < 1).length / book?.reviews?.length) * 100 || 0;
+
     return (
         <>
             <Helmet>
@@ -123,53 +136,52 @@ export default function ProductDetail() {
                         <Grid container className="bg-white rounded p-5">
                             <Grid item xs={5} className="p-4">
                                 <div className="mb-4 p-5 h-[100%]">
-                                    <img src={`${book.book?.bookImage}`} className="h-[100%]" />
+                                    <img src={`${book?.bookImage}`} className="h-[100%]" />
                                 </div>
                             </Grid>
                             <Grid item xs={7} className="p-4">
                                 <div className="ml-5">
                                     <h1
                                         className="font-semibold text-2xl overflow-hidden
-                                        text-wrap
-                                        whitespace-nowrap
-                                        inline-block w-[100%]"
+                            text-wrap
+                            whitespace-nowrap
+                            inline-block w-[100%]"
                                     >
-                                        {book.book?.bookTitle}
+                                        {book?.bookTitle}
                                     </h1>
                                     <div className="mt-5">
                                         <div
                                             className="
-                                        overflow-hidden
-                                        text-ellipsis
-                                        whitespace-nowrap
-                                        inline-block w-[60%] pr-[15px] "
-                                            style={{}}
+                            overflow-hidden
+                            text-ellipsis
+                            whitespace-nowrap
+                            inline-block w-[60%] pr-[15px] "
                                         >
                                             <span className="pr-[5px]">Nhà xuất bản:</span>
-                                            <span className="font-semibold">{book.book?.nxb.nxbName}</span>
+                                            <span className="font-semibold">{book?.nxb.nxbName}</span>
                                         </div>
                                         <div className="inline-block whitespace-nowrap overflow-hidden pl-[15px] text-ellipsis w-[39%]">
                                             <span className="pr-[5px]">Tác giả:</span>
-                                            <span className="font-semibold">{book.book?.authorName}</span>
+                                            <span className="font-semibold">{book?.authorName}</span>
                                         </div>
                                     </div>
                                     <div className="mt-2">
                                         <div>
                                             <Star sx={{ mr: 0.5 }} fontSize="inherit" className="text-yellow-500" />(
-                                            {book.book?.numRating} đánh giá)
+                                            {book?.numRating} đánh giá)
                                         </div>
                                         <div className="mt-8 flex items-center">
                                             <h1 className="text-2xl text-red-700 font-bold mr-5">
                                                 {new Intl.NumberFormat('vi-VN', {
                                                     style: 'currency',
                                                     currency: 'VND',
-                                                }).format(book.book?.discountedPrice)}
+                                                }).format(book?.discountedPrice)}
                                             </h1>
                                             <span className="mr-5 line-through">
                                                 {new Intl.NumberFormat('vi-VN', {
                                                     style: 'currency',
                                                     currency: 'VND',
-                                                }).format(book.book?.bookPrice)}
+                                                }).format(book?.bookPrice)}
                                             </span>
                                             <Box
                                                 sx={{
@@ -180,7 +192,7 @@ export default function ProductDetail() {
                                                 }}
                                                 className="bg-red-700"
                                             >
-                                                -{book.book?.discountPercent}%
+                                                -{book?.discountPercent}%
                                             </Box>
                                         </div>
 
@@ -197,16 +209,16 @@ export default function ProductDetail() {
                                                 <div className="flex">
                                                     <div
                                                         className="cursor-tex select-text whitespace-nowrap
-                                                    overflow-hidden text-ellipsis
-                                                    "
+                                        overflow-hidden text-ellipsis
+                                        "
                                                         style={{ maxWidth: 'calc(100%-100px)' }}
                                                     >
                                                         Đổi trả sản phẩm trong&nbsp;30&nbsp;ngày
                                                     </div>
                                                     <div
                                                         className="cursor-pointer w-[80px] text-indigo-500 font-semibold
-                                                    pl-[10px] whitespace-nowrap
-                                                    "
+                                        pl-[10px] whitespace-nowrap
+                                        "
                                                     >
                                                         Xem thêm
                                                     </div>
@@ -334,7 +346,7 @@ export default function ProductDetail() {
                                                 Tác giả{' '}
                                             </th>
                                             <td className="border-0 p-[4px] " style={{ fontSize: '1em' }}>
-                                                {book.book?.authorName}
+                                                {book?.authorName}
                                             </td>
                                         </tr>
                                         <tr>
@@ -345,7 +357,7 @@ export default function ProductDetail() {
                                                 NXB{' '}
                                             </th>
                                             <td className="border-0 p-[4px]" style={{ fontSize: '1em' }}>
-                                                {book.book?.nxb.nxbName}
+                                                {book?.nxb.nxbName}
                                             </td>
                                         </tr>
                                         <tr>
@@ -356,7 +368,7 @@ export default function ProductDetail() {
                                                 Năm XB{' '}
                                             </th>
                                             <td className="border-0 p-[4px]" style={{ fontSize: '1em' }}>
-                                                {book.book?.yearProduce}
+                                                {book?.yearProduce}
                                             </td>
                                         </tr>
                                         <tr>
@@ -377,7 +389,7 @@ export default function ProductDetail() {
                                 </table>
                             </div>
                         </div>
-                        <div dangerouslySetInnerHTML={{ __html: book.book?.bookDescription }} />
+                        <div dangerouslySetInnerHTML={{ __html: book?.bookDescription }} />
                     </div>
 
                     {/* Similar product */}
@@ -399,7 +411,7 @@ export default function ProductDetail() {
                             <Grid container spacing={7}>
                                 <Grid item xs={7}>
                                     <div className="space-y-5">
-                                        {book.book?.reviews?.map((item) => (
+                                        {book?.reviews?.map((item) => (
                                             <ProductReviewCard key={item.rateId} review={item} />
                                         ))}
                                     </div>
@@ -408,8 +420,8 @@ export default function ProductDetail() {
                                     <h1 className="text-xl font-semibold pb-1">Đánh giá sản phẩm</h1>
                                     <div className="flex items-center space-x-3">
                                         <Rating value={averageRating} precision={0.5} readOnly />
-                                        
-                                        <p className="opacity-60">{book.book && book.book.reviews && book.book.reviews.length}</p>
+
+                                        <p className="opacity-60">{book && book.reviews && book.reviews.length}</p>
                                     </div>
                                     <Box className="mt-5">
                                         <Grid container alignItems="center" gap={2}>

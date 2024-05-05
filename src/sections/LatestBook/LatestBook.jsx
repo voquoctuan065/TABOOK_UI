@@ -28,8 +28,6 @@ function LatestBook() {
         dispatch(getLatestBook());
     }, []);
 
-    console.log(books);
-
     return (
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-[30px] mb-[30px] ">
             <div className="border border-red-600 p-3 rounded-lg bg-white">

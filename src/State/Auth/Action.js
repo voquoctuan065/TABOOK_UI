@@ -13,6 +13,8 @@ import {
     REGISTER_SUCCESS,
 } from './ActionType';
 
+import { toast } from 'react-toastify';
+
 const registerRequest = () => ({
     type: REGISTER_REQUEST,
 });
@@ -36,7 +38,13 @@ export const register = (userData) => async (dispatch) => {
         if (user.jwt) {
             localStorage.setItem('jwt', user.jwt);
         }
-        console.log(user);
+
+        const expirationTime = 24 * 60 * 60 * 1000;
+
+        setTimeout(() => {
+            localStorage.removeItem('jwt');
+            dispatch({ type: LOGOUT, payload: null });
+        }, expirationTime);
 
         dispatch(registerSuccess(user.jwt));
     } catch (error) {
@@ -66,7 +74,16 @@ export const login = (userData) => async (dispatch) => {
         if (user.jwt) {
             localStorage.setItem('jwt', user.jwt);
         }
+
+        const expirationTime = 24 * 60 * 60 * 1000;
+
+        setTimeout(() => {
+            localStorage.removeItem('jwt');
+            dispatch({ type: LOGOUT, payload: null });
+        }, expirationTime);
+
         dispatch(loginSuccess(user.jwt));
+        toast.success('Đăng nhập thành công!');
     } catch (error) {
         dispatch(loginFailure(error.message));
     }
@@ -103,4 +120,5 @@ export const getUser = (jwt) => async (dispatch) => {
 
 export const logout = () => (dispatch) => {
     dispatch({ type: LOGOUT, payload: null });
+    toast.success('Đã đăng xuất!');
 };

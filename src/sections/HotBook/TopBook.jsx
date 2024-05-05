@@ -13,8 +13,6 @@ function TopBook() {
         dispatch(getHotBook());
     }, []);
 
-    console.log(books);
-
     const shortenTitle = (title) => {
         if (title.length > 30) {
             return title.substring(0, 30) + '...';

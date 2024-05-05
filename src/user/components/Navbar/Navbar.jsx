@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Fragment, useEffect, useState } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { Bars3Icon, ShoppingBagIcon } from '@heroicons/react/24/outline';
@@ -22,8 +23,8 @@ function Navbar() {
     const [userProfile, setUserProfile] = useState(null);
     const [categories, setCategories] = useState([]);
     const jwt = localStorage.getItem('jwt');
-    const { auth, category, cartItems } = useSelector((store) => ({
-        auth: store.auth,
+    const { user, category, cartItems } = useSelector((store) => ({
+        user: store.auth.user,
         category: store.category,
         cartItems: store.cart.cartItems,
     }));
@@ -51,13 +52,13 @@ function Navbar() {
         if (jwt) {
             dispatch(getUser(jwt));
         }
-    }, [jwt, auth.jwt]);
+    }, [jwt]);
 
     useEffect(() => {
-        if (auth.user) {
-            setUserProfile(auth.user);
+        if (user) {
+            setUserProfile(user);
         }
-    }, [auth.user]);
+    }, [user]);
     // 1 -------------------------------- End Handle Get User Profile ------------------------------------ 1//
 
     // 2 -------------------------------- Handle Logout ---------------------------------------- 2//

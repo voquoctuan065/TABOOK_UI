@@ -23,8 +23,6 @@ function FavoriteBook() {
     useEffect(() => {
         dispatch(getFavoriteBook());
     }, []);
-
-    console.log('favorite book', books);
     return (
         <div className="grid grid-cols-4 gap-4 ">
             {Array.isArray(books) &&
