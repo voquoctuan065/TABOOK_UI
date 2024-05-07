@@ -29,29 +29,30 @@ export default function OrderSummary() {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const { order, user, } = useSelector((store) => ({ order: store.order.order, user: store.auth.user }));
+    const { order, user } = useSelector((store) => ({ order: store.order.order, user: store.auth.user }));
 
     const searchParams = new URLSearchParams(location.search);
 
     const deliveryCharge = order?.orderItemDto?.length > 0 ? 20000 : 0;
 
     const orderId = searchParams.get('order_id');
+    const jwt = localStorage.getItem('jwt');
     useEffect(() => {
-        dispatch(getOrderById(orderId));
+        dispatch(getOrderById(orderId, jwt));
     }, [orderId]);
 
     const handleOnlineCheckout = () => {
         const reqData = { orderId: orderId, totalAmount: order.totalPrice + deliveryCharge };
         console.log(reqData);
         if (order && order.orderItemDto && user) {
-            dispatch(createPaymentLink(reqData));
+            dispatch(createPaymentLink(reqData, jwt));
         }
     };
 
     const handleShipCOD = () => {
         const reqData = { orderId: orderId, totalAmount: order.totalPrice + deliveryCharge, navigate };
         if (order && order.orderItemDto && user) {
-            dispatch(shipCodAction(reqData));
+            dispatch(shipCodAction(reqData, jwt));
         }
     };
     return (

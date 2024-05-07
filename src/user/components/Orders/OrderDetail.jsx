@@ -92,12 +92,14 @@ export default function OrderDetail() {
         opacity.set(0);
     }
 
+    const jwt = localStorage.getItem('jwt');
+
     useEffect(() => {
-        dispatch(getOrderById(orderId));
-    }, [dispatch, orderId]);
+        dispatch(getOrderById(orderId, jwt));
+    }, [dispatch, orderId, jwt]);
 
     const handleCancelOrder = () => {
-        dispatch(cancelUserOrder(orderId));
+        dispatch(cancelUserOrder(orderId, jwt));
         handleClose();
         toast.success('Bạn đã huỷ đơn hàng thành công!');
         navigate(routes.order);

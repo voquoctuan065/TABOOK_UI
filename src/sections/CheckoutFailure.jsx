@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import React from 'react'
 import { useNavigate } from 'react-router-dom';
 
 function CheckoutFailure() {
@@ -22,18 +21,15 @@ function CheckoutFailure() {
     const handleSuccess = () => {
         navigate('/');
     };
-  return (
-    <>
-    {renderHeader}
-    <div className="bg-gray-100">
+    return (
+        <>
+            {renderHeader}
+            <div className="bg-gray-100">
                 <div className="bg-white p-6  md:mx-auto">
-
-                    <img src='/images/logo/cancel-icon.png' alt='' className='w-16 h-16 mx-auto my-6'/>
+                    <img src="/images/logo/cancel-icon.png" alt="" className="w-16 h-16 mx-auto my-6" />
                     <div className="text-center">
                         <h3 className="md:text-2xl text-base text-gray-900 font-semibold text-center">Thất bại!</h3>
-                        <p className="text-gray-600 my-2">
-                            Đơn thanh toán đã bị huỷ bởi người mua.
-                        </p>
+                        <p className="text-gray-600 my-2">Đơn thanh toán đã bị huỷ bởi người mua.</p>
                         <p> Chúc bạn mua hàng vui vẻ! </p>
                         <div className="py-10 text-center">
                             <button
@@ -46,8 +42,8 @@ function CheckoutFailure() {
                     </div>
                 </div>
             </div>
-    </>
-  )
+        </>
+    );
 }
 
-export default CheckoutFailure
+export default CheckoutFailure;

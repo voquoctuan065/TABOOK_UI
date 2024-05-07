@@ -14,9 +14,7 @@ import {
 } from './ActionType';
 import { API_BASE_URL } from '../apiConfig';
 
-const jwt = localStorage.getItem('jwt');
-
-export const createOrder = (reqData) => async (dispatch) => {
+export const createOrder = (reqData, jwt) => async (dispatch) => {
     dispatch({ type: CREATE_ORDER_REQUEST });
     try {
         const { data } = await axios.post(`${API_BASE_URL}/public/order/create`, reqData.data, {
@@ -40,7 +38,7 @@ export const createOrder = (reqData) => async (dispatch) => {
     }
 };
 
-export const getOrderById = (orderId) => async (dispatch) => {
+export const getOrderById = (orderId, jwt) => async (dispatch) => {
     try {
         const { data } = await axios.get(`${API_BASE_URL}/public/order/${orderId}`, {
             headers: {
@@ -59,7 +57,7 @@ export const getOrderById = (orderId) => async (dispatch) => {
     }
 };
 
-export const getUserOrderHistory = () => async (dispatch) => {
+export const getUserOrderHistory = (jwt) => async (dispatch) => {
     dispatch({ type: GET_USER_ORDER_HISTORY_REQUEST });
     try {
         const { data } = await axios.get(`${API_BASE_URL}/public/order/user`, {
@@ -67,13 +65,14 @@ export const getUserOrderHistory = () => async (dispatch) => {
                 Authorization: `Bearer ${jwt}`,
             },
         });
+        console.log('Order from getUserOrderHistory', data);
         dispatch({ type: GET_USER_ORDER_HISTORY_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: GET_USER_ORDER_HISTORY_FAILURE, payload: error });
     }
 };
 
-export const cancelUserOrder = (orderId) => async (dispatch) => {
+export const cancelUserOrder = (orderId,  jwt) => async (dispatch) => {
     dispatch({ type: CANCEL_USER_ORDER_REQUEST });
     try {
         const { data } = await axios.post(`${API_BASE_URL}/public/order/cancel/${orderId}`, null, {

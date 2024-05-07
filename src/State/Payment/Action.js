@@ -12,9 +12,7 @@ import {
 import { toast } from 'react-toastify';
 import { clearCart } from '../Cart/cartSlice';
 
-const jwt = localStorage.getItem('jwt');
-
-export const createPaymentLink = (reqData) => async (dispatch) => {
+export const createPaymentLink = (reqData, jwt) => async (dispatch) => {
     dispatch({ type: CREATE_ORDER_REQUEST });
     try {
         const { data } = await axios.post(
@@ -36,7 +34,7 @@ export const createPaymentLink = (reqData) => async (dispatch) => {
     }
 };
 
-export const paymentSuccessAction = (reqData) => async (dispatch) => {
+export const paymentSuccessAction = (reqData, jwt) => async (dispatch) => {
     dispatch({ type: PAYMENT_SUCCESS_REQUEST });
     try {
         const { data } = await axios.post(
@@ -57,7 +55,7 @@ export const paymentSuccessAction = (reqData) => async (dispatch) => {
     }
 };
 
-export const shipCodAction = (reqData) => async (dispatch) => {
+export const shipCodAction = (reqData, jwt) => async (dispatch) => {
     dispatch({ type: PAYMENT_COD_REQUEST });
     try {
         const { data } = await axios.post(

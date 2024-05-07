@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { paymentSuccessAction } from '../State/Payment/Action';
 
@@ -28,12 +28,13 @@ function CheckoutSuccess() {
         </Box>
     );
     const handleSuccess = () => {
+        const jwt = localStorage.getItem('jwt');
         const reqData = {
             orderId: orderId,
             totalAmount: totalAmount,
             navigate,
         };
-        dispatch(paymentSuccessAction(reqData));
+        dispatch(paymentSuccessAction(reqData, jwt));
     };
     return (
         <>
@@ -49,7 +50,8 @@ function CheckoutSuccess() {
                     <div className="text-center">
                         <h3 className="md:text-2xl text-base text-gray-900 font-semibold text-center">Thành công!</h3>
                         <p className="text-gray-600 my-2">
-                            Bạn đã thanh toán thành công. Đơn hàng của bạn đang chờ nhân viên xác nhận, đóng gói và gửi tới bạn.
+                            Bạn đã thanh toán thành công. Đơn hàng của bạn đang chờ nhân viên xác nhận, đóng gói và gửi
+                            tới bạn.
                         </p>
                         <p> Chúc bạn mua hàng vui vẻ! </p>
                         <div className="py-10 text-center">

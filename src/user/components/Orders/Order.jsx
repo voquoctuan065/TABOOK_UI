@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Button, Grid } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import Navbar from '../Navbar/Navbar';
@@ -22,7 +23,7 @@ export default function Order() {
         if (!jwt) {
             navigate(routes.signIn);
         } else {
-            dispatch(getUserOrderHistory());
+            dispatch(getUserOrderHistory(jwt));
         }
     }, [jwt]);
 
@@ -53,7 +54,11 @@ export default function Order() {
                                         <Grid item xs={5}>
                                             {item.orderItemDto?.map((child) => (
                                                 <div key={child.orderItemId} className="flex items-center">
-                                                    <img src={child.bookOrderDto.bookImage} alt="" className="w-[3.5rem]" />
+                                                    <img
+                                                        src={child.bookOrderDto.bookImage}
+                                                        alt=""
+                                                        className="w-[3.5rem]"
+                                                    />
                                                     <span className="ml-3 overflow-hidden text-ellipsis whitespace-nowrap inline-block max-w-[20rem]">
                                                         {child.bookOrderDto.bookTitle}
                                                     </span>

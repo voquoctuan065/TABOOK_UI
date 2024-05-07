@@ -14,10 +14,10 @@ class KommunicateChat extends Component {
                 appId: 'fb7f7439f6702da9b5d0e46b4bffc911',
                 popupWidget: true,
                 automaticChatOpenOnNavigation: true,
-                // userDetails: {
-                //     name: user.fullName,
-                //     email: user.email,
-                // },
+                userDetails: {
+                    name: user?.fullName,
+                    email: user?.email,
+                },
             };
             var s = document.createElement('script');
             s.type = 'text/javascript';

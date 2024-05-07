@@ -206,7 +206,7 @@ export default function DeliveryForm() {
                 zipCode: zipCode,
                 phoneNumber: phoneNumber,
             },
-            cartItems: cartItems,
+            cartItem: cartItems,
             cartTotalQuantity: cart.cartTotalQuantity,
             cartTotalAmount: cart.cartTotalAmount,
         };
@@ -224,9 +224,10 @@ export default function DeliveryForm() {
         }
 
         const reqData = { data, navigate };
+        const jwt = localStorage.getItem('jwt');
 
         if (cartItems.length > 0) {
-            dispatch(createOrder(reqData));
+            dispatch(createOrder(reqData, jwt));
         }
     };
 
