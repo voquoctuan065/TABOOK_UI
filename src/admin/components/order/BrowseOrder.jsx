@@ -23,7 +23,7 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { format, parse } from 'date-fns';
+import { format } from 'date-fns';
 import { cancelUserOrder, confirmedOrder, getPendingOrder } from '../../../State/Order/Action';
 import useDebounce from '../../../hooks/useDebounce';
 
@@ -111,7 +111,6 @@ function BrowseOrder() {
     }, [jwt, currentPage]);
 
     const handleAcceptOrder = (orderId) => {
-        console.log(orderId);
         dispatch(confirmedOrder(orderId, jwt)).then(() => {
             dispatch(getPendingOrder(inputData, jwt));
         });
@@ -158,8 +157,6 @@ function BrowseOrder() {
     const handlePageChange = (event, pageNumber) => {
         setCurrentPage(pageNumber);
     };
-
-    console.log(orders.content);
 
     return (
         <>
