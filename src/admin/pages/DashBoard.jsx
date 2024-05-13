@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
@@ -9,6 +10,7 @@ import Avatar from '@mui/material/Avatar';
 import ManageCategory from '../components/category/ManageCategory';
 import ManageBook from '../components/book/ManageBook';
 import ManageNxb from '../components/nxb/ManageNxb';
+import Order from '../components/order/Order';
 import { Menu, MenuItem } from '@mui/material';
 import axios from 'axios';
 import routes from '../../config/routes';
@@ -107,7 +109,7 @@ function DashBoard() {
     return (
         <>
             <div className="bg-indigo-500 h-[65px] space-x-8">
-                <div className="flex items-center h-full justify-between container m-auto">
+                <div className="flex items-center h-full justify-between mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center">
                         <div className="ml-4 lg:ml-0 mr-10">
                             <div onClick={() => navigate('/admin')} className="cursor-pointer">
@@ -279,7 +281,7 @@ function DashBoard() {
                     <ManageNxb />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={4}>
-                    Item Three
+                    <Order />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={5}>
                     Item Three

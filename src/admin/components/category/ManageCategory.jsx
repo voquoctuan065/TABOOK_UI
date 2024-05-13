@@ -201,7 +201,7 @@ export default function ManageCategory() {
                     headers: {
                         Authorization: `Bearer ${jwt}`,
                     },
-                }
+                },
             );
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -243,7 +243,7 @@ export default function ManageCategory() {
 
     return (
         <>
-        <Helmet>
+            <Helmet>
                 <title>Quản lý thể loại</title>
             </Helmet>
             <div className="flex justify-between mb-5">

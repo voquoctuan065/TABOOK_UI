@@ -76,15 +76,12 @@ function AddNewBook({ handleClose, handleAddBookSuccess }) {
     const handleBookTitleChange = (event) => {
         const bookTitle = event.target.value;
         const specialChars = /[!@#$%^&*(),.?":{}|<>]/;
-        const containsNumber = /\d/.test(bookTitle);
         if (!bookTitle || bookTitle.trim() === '') {
             setError('Tên sách không được để trống! Vui lòng nhập tên sách.');
         } else if (bookTitle.length > 255) {
             setError('Tên sách không được vượt quá 255 ký tự! Vui lòng nhập lại.');
         } else if (specialChars.test(bookTitle)) {
             setError('Tên sách không được chứa các ký tự đặc biệt! Vui lòng nhập lại.');
-        } else if (containsNumber) {
-            setError('Tên sách không được chứa số! Vui lòng nhập lại!');
         } else {
             setError('');
         }
@@ -113,15 +110,12 @@ function AddNewBook({ handleClose, handleAddBookSuccess }) {
     const handleAuthorNameChange = (event) => {
         const authorName = event.target.value;
         const specialChars = /[!@#$%^&*()?":{}|<>]/;
-        const containsNumber = /\d/.test(bookTitle);
         if (!authorName || authorName.trim() === '') {
             setError('Tên tác giả không được để trống! Vui lòng nhập tên tác giả.');
         } else if (authorName.length > 255) {
             setError('Tên tác giả không được vượt quá 255 ký tự! Vui lòng nhập lại.');
         } else if (specialChars.test(authorName)) {
             setError('Tên tác giả không được chứa các ký tự đặc biệt! Vui lòng nhập lại.');
-        } else if (containsNumber) {
-            setError('Tên không được chứa số! Vui lòng nhập lại!');
         } else {
             setError('');
         }
@@ -207,7 +201,11 @@ function AddNewBook({ handleClose, handleAddBookSuccess }) {
         try {
             const formData = new FormData();
             formData.append('image', selectedFile);
-            const response = await axios.post('http://localhost:8686/admin/uploadToGoogleDrive', formData);
+            const response = await axios.post('http://localhost:8686/admin/uploadToGoogleDrive', formData, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
             const result = response.data;
             setSuccess(result.message);
             setBookImage(result.url);
@@ -276,20 +274,8 @@ function AddNewBook({ handleClose, handleAddBookSuccess }) {
         const formData = new FormData(event.currentTarget);
 
         let categoryId = parseInt(formData.get('category'));
-        let formattedCategory = null;
-        if (!isNaN(categoryId)) {
-            formattedCategory = {
-                categoryId: categoryId,
-            };
-        }
-
         let nxbId = parseInt(formData.get('nxb'));
-        let formattedNxb = null;
-        if (!isNaN(nxbId)) {
-            formattedNxb = {
-                nxbId: nxbId,
-            };
-        }
+
         if (!bookImage) {
             setError('Không được để trống hình ảnh!');
             return;
@@ -302,8 +288,8 @@ function AddNewBook({ handleClose, handleAddBookSuccess }) {
             stockQuantity: formData.get('stockQuantity'),
             yearProduce: formData.get('yearProduce'),
             authorName: formData.get('authorName'),
-            category: formattedCategory,
-            nxb: formattedNxb,
+            categoryId: categoryId,
+            nxbId: nxbId,
             bookDescription: bookDescription,
             bookImage: bookImage,
         };

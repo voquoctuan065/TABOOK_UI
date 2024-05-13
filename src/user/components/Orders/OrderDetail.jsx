@@ -121,8 +121,13 @@ export default function OrderDetail() {
                             <Grid
                                 key={item.orderItemId}
                                 container
-                                className="bg-white shadow-xl rounded-md p-5 border w-full"
-                                sx={{ alignItems: 'center', justifyContent: 'space-between' }}
+                                className="bg-white shadow-xl rounded-md p-5 border w-full mb-4"
+                                sx={{
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    boxShadow:
+                                        'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px',
+                                }}
                             >
                                 <Grid item xs={8} className="flex items-center">
                                     <div className="w-[4rem] lg:w-[4rem] lg:h-[6rem] overflow-hidden rounded ml-3 py-[5px]">

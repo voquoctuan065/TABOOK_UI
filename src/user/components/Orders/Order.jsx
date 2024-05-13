@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Button, Grid } from '@mui/material';
+import { Button } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
@@ -41,92 +41,74 @@ export default function Order() {
             <Navbar />
             <div className="bg-gray-200 pt-5 pb-5">
                 <div className="px-5 lg:px-20">
-                    <Grid container>
-                        <Grid item xs={12}>
-                            <div className="space-y-5 p-5 shadow-lg hover:shadow-2xl bg-white rounded-lg">
-                                {orders?.map((item) => (
-                                    <Grid
-                                        key={item.orderId}
-                                        container
-                                        spacing={2}
-                                        sx={{ justifyContent: 'space-between', alignItems: 'center' }}
-                                    >
-                                        <Grid item xs={5}>
-                                            {item.orderItemDto?.map((child) => (
-                                                <div key={child.orderItemId} className="flex items-center">
-                                                    <img
-                                                        src={child.bookOrderDto.bookImage}
-                                                        alt=""
-                                                        className="w-[3.5rem]"
-                                                    />
-                                                    <span className="ml-3 overflow-hidden text-ellipsis whitespace-nowrap inline-block max-w-[20rem]">
-                                                        {child.bookOrderDto.bookTitle}
-                                                    </span>
-                                                </div>
-                                            ))}
-                                        </Grid>
-
-                                        <Grid item xs={2}>
-                                            <div className="flex">
-                                                <span className="mr-[5px] font-semibold">Tổng tiền: </span>
-                                                <span>
-                                                    {new Intl.NumberFormat('vi-VN', {
-                                                        style: 'currency',
-                                                        currency: 'VND',
-                                                    }).format(item.totalPrice)}
-                                                </span>
-                                            </div>
-
-                                            <div className="flex">
-                                                <span className="mr-[5px] font-semibold">Tổng số lượng: </span>
-                                                <span>{item.totalItem}</span>
-                                            </div>
-                                        </Grid>
-
-                                        <Grid item xs={5} className="flex items-center justify-between">
-                                            <div className="flex flex-col">
-                                                <div>
-                                                    <span className="font-semibold">Trạng thái: </span>
-                                                    <span>
-                                                        {item.orderStatus === 'PENDING'
-                                                            ? 'Chờ xác nhận'
-                                                            : item.orderStatus === 'CANCELLED'
-                                                            ? 'Đã huỷ'
-                                                            : item.orderStatus === 'DELIVERED'
-                                                            ? 'Đã giao hàng'
-                                                            : 'Đã xác nhận'}
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <span className="font-semibold">Ngày order: </span>
-                                                    <span>
-                                                        {format(new Date(item.orderDate), 'dd/MM/yyyy HH:mm:ss')}
-                                                    </span>
-                                                </div>
-
-                                                {item.deliveryDate && (
-                                                    <div>
-                                                        <span className="font-semibold">Ngày nhận hàng: </span>
-                                                        <span>
-                                                            {format(new Date(item.deliveryDate), 'dd/MM/yyyy HH:mm:ss')}
-                                                        </span>
-                                                    </div>
-                                                )}
-                                            </div>
-
-                                            <Button
-                                                onClick={() => handleOrderDetail(item.orderId)}
-                                                variant="contained"
-                                                color="error"
-                                            >
-                                                Xem chi tiết
-                                            </Button>
-                                        </Grid>
-                                    </Grid>
+                    {orders?.map((item) => (
+                        <div
+                            key={item.orderId}
+                            className="flex items-center justify-between mt-4 py-4 px-2"
+                            style={{
+                                boxShadow:
+                                    'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px',
+                            }}
+                        >
+                            <div>
+                                {item.orderItemDto?.map((child) => (
+                                    <div key={child.orderItemId} className="flex items-center">
+                                        <img src={child.bookOrderDto.bookImage} alt="" className="w-[3.5rem]" />
+                                        <span className="ml-3 overflow-hidden text-ellipsis whitespace-nowrap inline-block max-w-[20rem]">
+                                            {child.bookOrderDto.bookTitle}
+                                        </span>
+                                    </div>
                                 ))}
                             </div>
-                        </Grid>
-                    </Grid>
+
+                            <div>
+                                <div className="flex">
+                                    <span className="mr-[5px] font-semibold">Tổng tiền: </span>
+                                    <span>
+                                        {new Intl.NumberFormat('vi-VN', {
+                                            style: 'currency',
+                                            currency: 'VND',
+                                        }).format(item.totalPrice)}
+                                    </span>
+                                </div>
+
+                                <div className="flex">
+                                    <span className="mr-[5px] font-semibold">Tổng số lượng: </span>
+                                    <span>{item.totalItem}</span>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col">
+                                <div>
+                                    <span className="font-semibold">Trạng thái: </span>
+                                    <span>
+                                        {item.orderStatus === 'PENDING'
+                                            ? 'Chờ xác nhận'
+                                            : item.orderStatus === 'CANCELLED'
+                                            ? 'Đã huỷ'
+                                            : item.orderStatus === 'DELIVERED'
+                                            ? 'Đã giao hàng'
+                                            : 'Đã xác nhận'}
+                                    </span>
+                                </div>
+                                <div>
+                                    <span className="font-semibold">Ngày order: </span>
+                                    <span>{format(new Date(item.orderDate), 'dd/MM/yyyy HH:mm:ss')}</span>
+                                </div>
+
+                                {item.deliveryDate && (
+                                    <div>
+                                        <span className="font-semibold">Ngày nhận hàng: </span>
+                                        <span>{format(new Date(item.deliveryDate), 'dd/MM/yyyy HH:mm:ss')}</span>
+                                    </div>
+                                )}
+                            </div>
+
+                            <Button onClick={() => handleOrderDetail(item.orderId)} variant="contained" color="error">
+                                Xem chi tiết
+                            </Button>
+                        </div>
+                    ))}
                 </div>
             </div>
             <Footer />

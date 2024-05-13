@@ -16,6 +16,7 @@ export default function DeliveryForm() {
         cart: store.cart,
     }));
 
+    const jwt = localStorage.getItem('jwt');
     const [fullName, setFullName] = useState('');
     const [streetAddress, setStreetAddress] = useState('');
     const [ward, setWard] = useState('');
@@ -224,7 +225,6 @@ export default function DeliveryForm() {
         }
 
         const reqData = { data, navigate };
-        const jwt = localStorage.getItem('jwt');
 
         if (cartItems.length > 0) {
             dispatch(createOrder(reqData, jwt));
@@ -250,7 +250,7 @@ export default function DeliveryForm() {
         const reqData = { data, navigate };
 
         if (cartItems.length > 0) {
-            dispatch(createOrder(reqData));
+            dispatch(createOrder(reqData, jwt));
         }
     };
 
