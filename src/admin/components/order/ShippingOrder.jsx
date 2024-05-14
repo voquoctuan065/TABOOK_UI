@@ -148,7 +148,7 @@ function ShippingOrder() {
     return (
         <>
             <Helmet>
-                <title>Đơn hàng đang xuất kho</title>
+                <title>Đơn hàng đang được giao</title>
             </Helmet>
             <div className="mt-8">
                 <div className="flex justify-between">
