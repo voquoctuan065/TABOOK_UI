@@ -20,6 +20,9 @@ import {
     GET_DELIVERED_ORDER_SUCCESS,
     GET_ORDER_BY_ID_FAILURE,
     GET_ORDER_BY_ID_SUCCESS,
+    GET_PACKED_ORDER_FAILURE,
+    GET_PACKED_ORDER_REQUEST,
+    GET_PACKED_ORDER_SUCCESS,
     GET_PENDING_ORDER_FAILURE,
     GET_PENDING_ORDER_REQUEST,
     GET_PENDING_ORDER_SUCCESS,
@@ -170,6 +173,21 @@ export const getDeliveredOrder = (inputData, jwt) => async (dispatch) => {
     }
 };
 
+export const getPackedOrder = (inputData, jwt) => async (dispatch) => {
+    dispatch({ type: GET_PACKED_ORDER_REQUEST });
+    try {
+        const { data } = await axios.get(`${API_BASE_URL}/admin/order/packed/filter`, {
+            params: inputData,
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+            },
+        });
+        dispatch({ type: GET_PACKED_ORDER_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({ type: GET_PACKED_ORDER_FAILURE, payload: error });
+    }
+};
+
 export const confirmedOrder = (orderId, jwt) => async (dispatch) => {
     dispatch({ type: CONFIRMED_ORDER_REQUEST });
     try {
@@ -213,13 +231,18 @@ export const packedOrder = (orderId, jwt) => async (dispatch) => {
 export const shippingOrder = (orderId, jwt) => async (dispatch) => {
     dispatch({ type: SHIPPING_ORDER_REQUEST });
     try {
-        const { data } = await axios.put(`${API_BASE_URL}/admin/order/shipping/${orderId}`, {
-            headers: {
-                Authorization: `Bearer ${jwt}`,
+        const { data } = await axios.put(
+            `${API_BASE_URL}/admin/order/shipping/${orderId}`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
             },
-        });
+        );
 
         dispatch({ type: SHIPPING_ORDER_SUCCESS, payload: data });
+        toast.info('Đơn hàng đã xuất kho!');
     } catch (error) {
         dispatch({ type: SHIPPING_ORDER_FAILURE, payload: error });
     }

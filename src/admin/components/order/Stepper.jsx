@@ -8,7 +8,7 @@ import WareHouse from './WareHouse';
 import Packed from './Packed';
 import CompleteOrder from './CompleteOrder';
 
-const steps = ['Duyệt đơn', 'Đóng gói', 'Xuất kho', 'Hoàn thành'];
+const steps = ['Duyệt đơn', 'Đóng gói', 'Xuất kho', 'Đang vận chuyển', 'Hoàn thành'];
 
 export default function HorizontalNonLinearStepper() {
     const [activeStep, setActiveStep] = React.useState(0);
