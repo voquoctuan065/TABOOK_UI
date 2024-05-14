@@ -7,6 +7,7 @@ import BrowseOrder from './BrowseOrder';
 import WareHouse from './WareHouse';
 import Packed from './Packed';
 import CompleteOrder from './CompleteOrder';
+import ShippingOrder from './ShippingOrder';
 
 const steps = ['Duyệt đơn', 'Đóng gói', 'Xuất kho', 'Đang vận chuyển', 'Hoàn thành'];
 
@@ -25,6 +26,8 @@ export default function HorizontalNonLinearStepper() {
             case 2:
                 return <WareHouse />;
             case 3:
+                return <ShippingOrder />;
+            case 4:
                 return <CompleteOrder />;
             default:
                 return null;

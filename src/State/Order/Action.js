@@ -149,6 +149,7 @@ export const getShippingOrder = (inputData, jwt) => async (dispatch) => {
     dispatch({ type: GET_SHIPPING_ORDER_REQUEST });
     try {
         const { data } = await axios.get(`${API_BASE_URL}/admin/order/shipping/filter`, {
+            params: inputData,
             headers: {
                 Authorization: `Bearer ${jwt}`,
             },
@@ -251,13 +252,18 @@ export const shippingOrder = (orderId, jwt) => async (dispatch) => {
 export const deliveredOrder = (orderId, jwt) => async (dispatch) => {
     dispatch({ type: DELIVERED_ORDER_REQUEST });
     try {
-        const { data } = await axios.put(`${API_BASE_URL}/admin/order/delivered/${orderId}`, {
-            headers: {
-                Authorization: `Bearer ${jwt}`,
+        const { data } = await axios.put(
+            `${API_BASE_URL}/admin/order/delivered/${orderId}`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
             },
-        });
+        );
 
         dispatch({ type: DELIVERED_ORDER_SUCCESS, payload: data });
+        toast.success('Đơn hàng đã được giao thành công!');
     } catch (error) {
         dispatch({ type: DELIVERED_ORDER_FAILURE, payload: error });
     }

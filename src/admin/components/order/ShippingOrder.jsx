@@ -20,6 +20,8 @@ import {
     TableHead,
     TableRow,
 } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -27,10 +29,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { format } from 'date-fns';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
 import useDebounce from '../../../hooks/useDebounce';
-import { getPackedOrder, shippingOrder } from '../../../State/Order/Action';
+import { deliveredOrder, getShippingOrder } from '../../../State/Order/Action';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -78,12 +78,12 @@ const tableCell = [
     'Hành động',
 ];
 
-function WareHouse() {
+function ShippingOrder() {
     const dispatch = useDispatch();
     const [keyword, setKeyword] = useState('');
     const debounced = useDebounce(keyword);
     const [currentPage, setCurrentPage] = useState(1);
-    const [wareHouseOrderId, setWareHouseOrderId] = useState(null);
+    const [deliveredOrderId, setDeliveredOrderId] = useState(null);
 
     const [startTime, setStartTime] = useState(dayjs());
     const [endTime, setEndTime] = useState(dayjs());
@@ -100,11 +100,11 @@ function WareHouse() {
     };
 
     const handleSearchSubmit = () => {
-        dispatch(getPackedOrder(inputData, jwt));
+        dispatch(getShippingOrder(inputData, jwt));
     };
 
     useEffect(() => {
-        dispatch(getPackedOrder(inputData, jwt));
+        dispatch(getShippingOrder(inputData, jwt));
     }, [jwt, currentPage]);
 
     const handleKeywordChange = (e) => {
@@ -132,23 +132,23 @@ function WareHouse() {
             page: currentPage - 1,
         };
 
-        dispatch(getPackedOrder(inputData, jwt));
+        dispatch(getShippingOrder(inputData, jwt));
     };
 
     const handlePageChange = (event, pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
-    const handleWareHouseOrder = (orderId) => {
-        dispatch(shippingOrder(orderId, jwt)).then(() => {
-            dispatch(getPackedOrder(inputData, jwt));
+    const handleDeliveredOrder = (orderId) => {
+        dispatch(deliveredOrder(orderId, jwt)).then(() => {
+            dispatch(getShippingOrder(inputData, jwt));
         });
-        setWareHouseOrderId(null);
+        setDeliveredOrderId(null);
     };
     return (
         <>
             <Helmet>
-                <title>Xuất kho đơn hàng</title>
+                <title>Đơn hàng đang xuất kho</title>
             </Helmet>
             <div className="mt-8">
                 <div className="flex justify-between">
@@ -207,6 +207,7 @@ function WareHouse() {
                     </LocalizationProvider>
                 </div>
             </div>
+
             <div className="mt-8">
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">
@@ -250,7 +251,9 @@ function WareHouse() {
                                             : 'Đã thanh toán'}
                                     </TableCell>
 
-                                    <TableCell>{item.orderDto.orderStatus === 'PACKED' && 'Đã đóng gói'}</TableCell>
+                                    <TableCell>
+                                        {item.orderDto.orderStatus === 'SHIPPING' && 'Đang giao hàng'}
+                                    </TableCell>
 
                                     <TableCell>
                                         <span className="text-cyan-500 cursor-pointer hover:text-red-500">
@@ -262,12 +265,12 @@ function WareHouse() {
                                         <Button
                                             variant="contained"
                                             color="warning"
-                                            onClick={() => setWareHouseOrderId(item.orderDto.orderId)}
+                                            onClick={() => setDeliveredOrderId(item.orderDto.orderId)}
                                             sx={{
                                                 marginBottom: '10px',
                                             }}
                                         >
-                                            Xuất kho
+                                            Hoàn thành
                                         </Button>
                                     </TableCell>
                                 </TableRow>
@@ -291,8 +294,8 @@ function WareHouse() {
             </div>
 
             <Dialog
-                open={wareHouseOrderId !== null}
-                onClose={() => setWareHouseOrderId(null)}
+                open={deliveredOrderId !== null}
+                onClose={() => setDeliveredOrderId(null)}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
@@ -303,10 +306,10 @@ function WareHouse() {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setWareHouseOrderId(null)} color="primary">
+                    <Button onClick={() => setDeliveredOrderId(null)} color="primary">
                         Trở lại
                     </Button>
-                    <Button onClick={() => handleWareHouseOrder(wareHouseOrderId)} color="primary" autoFocus>
+                    <Button onClick={() => handleDeliveredOrder(deliveredOrderId)} color="primary" autoFocus>
                         Đồng ý
                     </Button>
                 </DialogActions>
@@ -315,4 +318,4 @@ function WareHouse() {
     );
 }
 
-export default WareHouse;
+export default ShippingOrder;

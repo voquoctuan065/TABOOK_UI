@@ -303,10 +303,10 @@ function Packed() {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle id="alert-dialog-title">Xác nhận duyệt đơn hàng</DialogTitle>
+                <DialogTitle id="alert-dialog-title">Đóng gói đơn hàng</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Bạn chắc chắn muốn duyệt đơn hàng này?
+                        Bạn chắc chắn đơn hàng này đã được đóng gói?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
