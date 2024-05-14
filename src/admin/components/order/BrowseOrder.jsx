@@ -5,12 +5,14 @@ import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import {
+    Box,
     Button,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Modal,
     Pagination,
     Paper,
     Stack,
@@ -32,6 +34,19 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import OrderDetail from './OrderDetail';
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 1000,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -84,6 +99,9 @@ function BrowseOrder() {
     const [keyword, setKeyword] = useState('');
     const debounced = useDebounce(keyword);
     const [currentPage, setCurrentPage] = useState(1);
+    const [selectedOrderId, setSelectedOrderId] = useState(null);
+
+    const [open, setOpen] = useState(false);
 
     const [startTime, setStartTime] = useState(dayjs());
     const [endTime, setEndTime] = useState(dayjs());
@@ -157,6 +175,12 @@ function BrowseOrder() {
     const handlePageChange = (event, pageNumber) => {
         setCurrentPage(pageNumber);
     };
+
+    const handleOpen = (orderId) => {
+        setSelectedOrderId(orderId);
+        setOpen(true);
+    };
+    const handleClose = () => setOpen(false);
 
     return (
         <>
@@ -278,29 +302,28 @@ function BrowseOrder() {
                                         <TableCell>{item.orderDto.orderStatus === 'PENDING' && 'Chờ duyệt'}</TableCell>
 
                                         <TableCell>
-                                            <span className="text-cyan-500 cursor-pointer hover:text-red-500">
+                                            <span
+                                                className="text-cyan-500 cursor-pointer hover:text-red-500"
+                                                onClick={() => handleOpen(item.orderDto.orderId)}
+                                            >
                                                 Xem chi tiết
                                             </span>
                                         </TableCell>
 
                                         <TableCell align="right">
-                                            <Button
-                                                variant="contained"
-                                                color="warning"
-                                                onClick={() => setAcceptOrderId(item.orderDto.orderId)}
-                                                sx={{
-                                                    marginBottom: '10px',
-                                                }}
-                                            >
-                                                Xác nhận
-                                            </Button>
-                                            <Button
-                                                variant="contained"
-                                                color="error"
-                                                onClick={() => setCancelOrderId(item.orderDto.orderId)}
-                                            >
-                                                Huỷ bỏ
-                                            </Button>
+                                            <div className="flex flex-col w-[10rem]">
+                                                <Button
+                                                    onClick={() => setAcceptOrderId(item.orderDto.orderId)}
+                                                    sx={{
+                                                        marginBottom: '10px',
+                                                    }}
+                                                >
+                                                    Xác nhận
+                                                </Button>
+                                                <Button onClick={() => setCancelOrderId(item.orderDto.orderId)}>
+                                                    Huỷ bỏ
+                                                </Button>
+                                            </div>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -370,6 +393,17 @@ function BrowseOrder() {
                 </DialogActions>
             </Dialog>
             {/* End Dialog Confirm */}
+
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <OrderDetail selectedOrderId={selectedOrderId} />
+                </Box>
+            </Modal>
         </>
     );
 }

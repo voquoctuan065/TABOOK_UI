@@ -104,8 +104,6 @@ export default function OrderDetail() {
         toast.success('Bạn đã huỷ đơn hàng thành công!');
         navigate(routes.order);
     };
-    console.log(orderId);
-    console.log('ORder', order);
     return (
         <>
             <Navbar />
