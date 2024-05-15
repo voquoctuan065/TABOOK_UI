@@ -20,7 +20,7 @@ import {
     GET_HOT_BOOK_SUCCESS,
     GET_LATEST_BOOK_FAILURE,
     GET_LATEST_BOOK_REQUEST,
-    GET_LATEST_BOOK_SUCCESS,
+    GET_LATEST_BOOK_SUCCESS
 } from './ActionType';
 import { API_BASE_URL } from '../apiConfig';
 
@@ -107,3 +107,4 @@ export const getFavoriteBook = () => async (dispatch) => {
         dispatch({ type: GET_FAVORITE_BOOK_FAILURE, payload: error });
     }
 };
+

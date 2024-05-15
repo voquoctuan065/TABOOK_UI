@@ -139,7 +139,6 @@ function BrowseOrder() {
     };
 
     const handleCancelOrder = (orderId) => {
-        console.log(orderId);
         dispatch(cancelUserOrder(orderId, jwt)).then(() => {
             dispatch(getPendingOrder(inputData, jwt));
         });

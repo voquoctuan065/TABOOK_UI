@@ -26,8 +26,6 @@ function OrderDetail({ selectedOrderId }) {
         dispatch(getOrderById(selectedOrderId, jwt));
     }, [dispatch, selectedOrderId, jwt]);
 
-    console.log(order);
-
     const initialScale = 0.5;
     const springConfig = { damping: 15, stiffness: 300 };
     const opacity = useSpring(0, springConfig);

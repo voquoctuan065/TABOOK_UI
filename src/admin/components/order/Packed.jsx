@@ -5,12 +5,14 @@ import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import {
+    Box,
     Button,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Modal,
     Pagination,
     Paper,
     Stack,
@@ -32,6 +34,21 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { format } from 'date-fns';
+import OrderDetail from './OrderDetail';
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 1000,
+    height: '80vh',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+    overflow: 'auto',
+};
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -88,6 +105,8 @@ function Packed() {
 
     const [startTime, setStartTime] = useState(dayjs());
     const [endTime, setEndTime] = useState(dayjs());
+    const [selectedOrderId, setSelectedOrderId] = useState(null);
+    const [open, setOpen] = useState(false);
 
     const jwt = localStorage.getItem('adminJwt');
 
@@ -147,6 +166,12 @@ function Packed() {
 
         setPackedOrderId(null);
     };
+
+    const handleOpen = (orderId) => {
+        setSelectedOrderId(orderId);
+        setOpen(true);
+    };
+    const handleClose = () => setOpen(false);
 
     return (
         <>
@@ -259,22 +284,25 @@ function Packed() {
                                         </TableCell>
 
                                         <TableCell>
-                                            <span className="text-cyan-500 cursor-pointer hover:text-red-500">
+                                            <span
+                                                className="text-cyan-500 cursor-pointer hover:text-red-500"
+                                                onClick={() => handleOpen(item.orderDto.orderId)}
+                                            >
                                                 Xem chi tiết
                                             </span>
                                         </TableCell>
 
                                         <TableCell align="right">
-                                            <Button
-                                                variant="contained"
-                                                color="warning"
-                                                onClick={() => setPackedOrderId(item.orderDto.orderId)}
-                                                sx={{
-                                                    marginBottom: '10px',
-                                                }}
-                                            >
-                                                Đóng gói
-                                            </Button>
+                                            <div className="flex flex-col w-[10rem]">
+                                                <Button
+                                                    onClick={() => setPackedOrderId(item.orderDto.orderId)}
+                                                    sx={{
+                                                        marginBottom: '10px',
+                                                    }}
+                                                >
+                                                    Đóng gói
+                                                </Button>
+                                            </div>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -319,6 +347,17 @@ function Packed() {
                 </DialogActions>
             </Dialog>
             {/* End Dialog Confirm */}
+
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <OrderDetail selectedOrderId={selectedOrderId} />
+                </Box>
+            </Modal>
         </>
     );
 }
