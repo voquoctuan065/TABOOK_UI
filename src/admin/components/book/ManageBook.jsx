@@ -120,6 +120,24 @@ export default function ManageBook() {
     };
     //-------------------------------- End page book with size 10 -------------------------//
 
+    //-------------------------------- Filter Out Of Stock Book -------------------------//
+    const handleGetOutOfStock = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8686/admin/book/oos?page=${currentPage - 1}&size=10`, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
+            if (response.status === 200) {
+                setBook(response.data.booksDtoList);
+                setTotalPages(response.data.totalPage);
+            }
+        } catch (error) {
+            console.error('Error fetching data', error);
+        }
+    };
+    //-------------------------------- End Filter Out Of Stock Book -------------------------//
+
     React.useEffect(() => {
         fetchBook();
     }, [currentPage]);
@@ -163,7 +181,7 @@ export default function ManageBook() {
                     headers: {
                         Authorization: `Bearer ${jwt}`,
                     },
-                }
+                },
             );
             if (response.status === 200) {
                 const data = response.data;
@@ -203,24 +221,27 @@ export default function ManageBook() {
 
     return (
         <>
-<Helmet>
+            <Helmet>
                 <title>Quản lý sách</title>
             </Helmet>
 
             <div className="flex justify-between mb-5">
-                <form>
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Tìm kiếm tên sách..."
-                            inputProps={{ 'aria-label': 'search' }}
-                            value={searchKeyword}
-                            onChange={handleSearchChange}
-                        />
-                    </Search>
-                </form>
+                <div className='flex'>
+                    <form className='mr-4'>
+                        <Search>
+                            <SearchIconWrapper>
+                                <SearchIcon />
+                            </SearchIconWrapper>
+                            <StyledInputBase
+                                placeholder="Tìm kiếm tên sách..."
+                                inputProps={{ 'aria-label': 'search' }}
+                                value={searchKeyword}
+                                onChange={handleSearchChange}
+                            />
+                        </Search>
+                    </form>
+                    <Button  variant='contained' color='error' onClick={handleGetOutOfStock}>Lọc sách hết hàng</Button>
+                </div>
                 <Button variant="outlined" className="mr-3" color="error" onClick={handleOpen}>
                     Thêm sách mới
                 </Button>

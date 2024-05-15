@@ -91,8 +91,7 @@ const tableCell = [
     'Phương thức',
     'Thanh toán',
     'Trạng thái',
-    'Xem chi tiết',
-    'Hành động',
+    'Xem chi tiết'
 ];
 
 function ShippingOrder() {
@@ -100,7 +99,7 @@ function ShippingOrder() {
     const [keyword, setKeyword] = useState('');
     const debounced = useDebounce(keyword);
     const [currentPage, setCurrentPage] = useState(1);
-    const [deliveredOrderId, setDeliveredOrderId] = useState(null);
+    // const [deliveredOrderId, setDeliveredOrderId] = useState(null);
 
     const [selectedOrderId, setSelectedOrderId] = useState(null);
     const [open, setOpen] = useState(false);
@@ -159,12 +158,12 @@ function ShippingOrder() {
         setCurrentPage(pageNumber);
     };
 
-    const handleDeliveredOrder = (orderId) => {
-        dispatch(deliveredOrder(orderId, jwt)).then(() => {
-            dispatch(getShippingOrder(inputData, jwt));
-        });
-        setDeliveredOrderId(null);
-    };
+    // const handleDeliveredOrder = (orderId) => {
+    //     dispatch(deliveredOrder(orderId, jwt)).then(() => {
+    //         dispatch(getShippingOrder(inputData, jwt));
+    //     });
+    //     setDeliveredOrderId(null);
+    // };
 
     const handleOpen = (orderId) => {
         setSelectedOrderId(orderId);
@@ -291,7 +290,7 @@ function ShippingOrder() {
                                         </span>
                                     </TableCell>
 
-                                    <TableCell align="right">
+                                    {/* <TableCell align="right">
                                         <div className="flex flex-col w-[10rem]">
                                             <Button
                                                 onClick={() => setDeliveredOrderId(item.orderDto.orderId)}
@@ -302,7 +301,7 @@ function ShippingOrder() {
                                                 Hoàn thành
                                             </Button>
                                         </div>
-                                    </TableCell>
+                                    </TableCell> */}
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -323,7 +322,7 @@ function ShippingOrder() {
                 </Stack>
             </div>
 
-            <Dialog
+            {/* <Dialog
                 open={deliveredOrderId !== null}
                 onClose={() => setDeliveredOrderId(null)}
                 aria-labelledby="alert-dialog-title"
@@ -343,7 +342,7 @@ function ShippingOrder() {
                         Đồng ý
                     </Button>
                 </DialogActions>
-            </Dialog>
+            </Dialog> */}
 
             <Modal
                 open={open}

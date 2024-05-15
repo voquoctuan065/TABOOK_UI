@@ -78,7 +78,7 @@ const tableCell = [
     'Thanh toán',
     'Trạng thái',
     'Xem chi tiết',
-    'Hành động',
+    '',
 ];
 
 function CompleteOrder() {

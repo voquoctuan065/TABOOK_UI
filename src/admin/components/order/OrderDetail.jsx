@@ -59,7 +59,7 @@ function OrderDetail({ selectedOrderId }) {
                 <div className="grid grid-cols-3 gap-4">
                     <div className="bg-white rounded-md p-5 border shadow-xl">
                         <div className="font-semibold text-lg text-center mb-4">Địa chỉ giao hàng</div>
-                        <AddressCard address={order.shippingAddress} />
+                        <AddressCard address={order?.shippingAddress} />
                     </div>
                     <div className="col-span-2">
                         {order?.orderItemDto?.map((item) => (
@@ -136,7 +136,7 @@ function OrderDetail({ selectedOrderId }) {
                         <div className="mt-3 px-2 flex justify-end">
                             <div className="mr-4">
                                 <span className="font-semibold">Tổng số sản phẩm: </span>
-                                <span className="text-red-500 font-semibold">{order.totalItem}</span>
+                                <span className="text-red-500 font-semibold">{order?.totalItem}</span>
                             </div>
                             <div className="mr-2">
                                 <span className="font-semibold mr-2">Tổng đơn giá:</span>
@@ -144,7 +144,7 @@ function OrderDetail({ selectedOrderId }) {
                                     {new Intl.NumberFormat('vi-VN', {
                                         style: 'currency',
                                         currency: 'VND',
-                                    }).format(order.totalPrice)}
+                                    }).format(order?.totalPrice)}
                                 </span>
                             </div>
                         </div>
