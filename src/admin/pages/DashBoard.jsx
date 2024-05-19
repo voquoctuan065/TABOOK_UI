@@ -14,6 +14,7 @@ import Order from '../components/order/Order';
 import { Menu, MenuItem } from '@mui/material';
 import axios from 'axios';
 import routes from '../../config/routes';
+import Overview from '../components/overview/Overview';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -269,8 +270,10 @@ function DashBoard() {
                     </div>
                 </div>
             </div>
-            <Box sx={{ width: '100%', margin: '0 auto' }} className="container">
-                <CustomTabPanel value={value} index={0}></CustomTabPanel>
+            <Box sx={{ width: '100%', margin: '0 auto' }}>
+                <CustomTabPanel value={value} index={0}>
+                    <Overview />
+                </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
                     <ManageBook />
                 </CustomTabPanel>

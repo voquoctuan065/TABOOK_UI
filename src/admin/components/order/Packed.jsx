@@ -253,55 +253,69 @@ function Packed() {
                                         key={item.orderDto.orderId}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
-                                        <TableCell component="th" scope="row">
+                                        <TableCell component="th" scope="row" sx={{ width: '10%' }}>
                                             {item.orderDto.orderId}
                                         </TableCell>
-                                        <TableCell align="left">{item.orderDto.userDto.fullName}</TableCell>
-                                        <TableCell>
+                                        <TableCell sx={{ width: '10%' }} align="left">
+                                            {item.orderDto.userDto.fullName}
+                                        </TableCell>
+                                        <TableCell sx={{ width: '10%' }}>
                                             {item.orderDto.shippingAddress.streetAddress},{' '}
                                             {item.orderDto.shippingAddress.ward},{' '}
                                             {item.orderDto.shippingAddress.district},{' '}
                                             {item.orderDto.shippingAddress.province}
                                         </TableCell>
-                                        <TableCell>{item.orderDto.shippingAddress.phoneNumber}</TableCell>
-                                        <TableCell>
+                                        <TableCell sx={{ width: '10%' }}>
+                                            {item.orderDto.shippingAddress.phoneNumber}
+                                        </TableCell>
+                                        <TableCell sx={{ width: '10%' }}>
                                             {format(new Date(item.orderDto.orderDate), 'dd/MM/yyyy HH:mm:ss')}
                                         </TableCell>
-                                        <TableCell>
-                                            {item.paymentInfoDto.paymentStatus === 'Chờ thanh toán'
-                                                ? 'COD'
-                                                : 'STRIPE PAYMENT'}
+                                        <TableCell sx={{ width: '10%' }}>
+                                            {item.paymentInfoDto.paymentStatus === 'Chờ thanh toán' ? (
+                                                <span>COD</span>
+                                            ) : (
+                                                <span className="text-red-600">STRIPE</span>
+                                            )}
                                         </TableCell>
 
-                                        <TableCell>
-                                            {item.paymentInfoDto.paymentStatus === 'Chờ thanh toán'
-                                                ? 'Chờ thanh toán'
-                                                : 'Đã thanh toán'}
+                                        <TableCell sx={{ width: '10%' }}>
+                                            {item.paymentInfoDto.paymentStatus === 'Chờ thanh toán' ? (
+                                                <span className="bg-slate-400 text-white px-[5px] py-[2px] rounded-sm">
+                                                    Chờ thanh toán
+                                                </span>
+                                            ) : (
+                                                <span className="bg-slate-400 text-white px-[5px] py-[2px] rounded-sm">
+                                                    Đã thanh toán
+                                                </span>
+                                            )}
                                         </TableCell>
 
-                                        <TableCell>
-                                            {item.orderDto.orderStatus === 'CONFIRMED' && 'Đã xác nhận'}
+                                        <TableCell sx={{ width: '10%' }}>
+                                            {item.orderDto.orderStatus === 'CONFIRMED' && (
+                                                <span className="bg-green-400 text-white px-[5px] py-[2px] rounded-sm">
+                                                    Đã xác nhận
+                                                </span>
+                                            )}
                                         </TableCell>
 
-                                        <TableCell>
-                                            <span
-                                                className="text-cyan-500 cursor-pointer hover:text-red-500"
+                                        <TableCell sx={{ width: '10%' }}>
+                                            <button
+                                                className="text-white bg-cyan-400 px-2 rounded-sm cursor-pointer hover:text-red-600"
                                                 onClick={() => handleOpen(item.orderDto.orderId)}
                                             >
                                                 Xem chi tiết
-                                            </span>
+                                            </button>
                                         </TableCell>
 
                                         <TableCell align="right">
-                                            <div className="flex flex-col w-[10rem]">
-                                                <Button
+                                            <div className="flex flex-col w-[5rem]">
+                                                <button
+                                                    className="text-white bg-cyan-400 px-2 rounded-sm cursor-pointer hover:text-red-600"
                                                     onClick={() => setPackedOrderId(item.orderDto.orderId)}
-                                                    sx={{
-                                                        marginBottom: '10px',
-                                                    }}
                                                 >
                                                     Đóng gói
-                                                </Button>
+                                                </button>
                                             </div>
                                         </TableCell>
                                     </TableRow>

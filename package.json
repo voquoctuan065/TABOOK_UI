@@ -16,6 +16,7 @@
     "@heroicons/react": "^2.1.1",
     "@mui/icons-material": "^5.15.11",
     "@mui/material": "^5.15.15",
+    "@mui/x-charts": "^7.4.0",
     "@mui/x-date-pickers": "^7.4.0",
     "@reduxjs/toolkit": "^2.2.3",
     "@tippyjs/react": "^4.2.6",

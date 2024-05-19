@@ -89,10 +89,8 @@ const tableCell = [
     'SĐT',
     'Ngày tạo',
     'Phương thức',
-    'Thanh toán',
-    'Trạng thái',
-    'Xem chi tiết',
-    'Hành động',
+    'Giao hàng',
+    // 'Hành động',
 ];
 
 function WareHouse() {
@@ -264,39 +262,27 @@ function WareHouse() {
                                     <TableCell>
                                         {format(new Date(item.orderDto.orderDate), 'dd/MM/yyyy HH:mm:ss')}
                                     </TableCell>
-                                    <TableCell>
-                                        {item.paymentInfoDto.paymentStatus === 'Chờ thanh toán'
-                                            ? 'COD'
-                                            : 'STRIPE PAYMENT'}
-                                    </TableCell>
 
                                     <TableCell>
-                                        {item.paymentInfoDto.paymentStatus === 'Chờ thanh toán'
-                                            ? 'Chờ thanh toán'
-                                            : 'Đã thanh toán'}
-                                    </TableCell>
-
-                                    <TableCell>{item.orderDto.orderStatus === 'PACKED' && 'Đã đóng gói'}</TableCell>
-
-                                    <TableCell>
-                                        <span
-                                            className="text-cyan-500 cursor-pointer hover:text-red-500"
-                                            onClick={() => handleOpen(item.orderDto.orderId)}
-                                        >
-                                            Xem chi tiết
-                                        </span>
+                                        {item.orderDto.orderStatus === 'PACKED' && (
+                                            <span
+                                                className="bg-cyan-400
+                                    text-white px-[5px] py-[2px] rounded-sm
+                                    "
+                                            >
+                                                Chờ xuất kho
+                                            </span>
+                                        )}
                                     </TableCell>
 
                                     <TableCell align="right">
-                                        <div className="flex flex-col w-[10rem]">
-                                            <Button
+                                        <div className="flex flex-col w-[5rem]">
+                                            <button
                                                 onClick={() => setWareHouseOrderId(item.orderDto.orderId)}
-                                                sx={{
-                                                    marginBottom: '10px',
-                                                }}
+                                                className="bg-yellow-400 text-white rounded-sm"
                                             >
                                                 Xuất kho
-                                            </Button>
+                                            </button>
                                         </div>
                                     </TableCell>
                                 </TableRow>
