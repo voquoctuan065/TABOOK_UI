@@ -2,6 +2,8 @@ const routes = {
     home: '/',
     signIn: '/sign-in',
     signUp: '/sign-up',
+    sendmail: '/forgot-password',
+    resetPassword: '/reset_password',
     categoryLevel: '/:category/:subcategory/:item',
     bookDetail: '/book/:bookRequestId',
     searchBook: '/book/search/:searchValue',

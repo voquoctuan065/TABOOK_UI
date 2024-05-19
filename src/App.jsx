@@ -18,6 +18,8 @@ import Order from './user/components/Orders/Order';
 import OrderDetail from './user/components/Orders/OrderDetail';
 import KommunicateChat from './user/components/ChatBot/chat';
 import { useSelector } from 'react-redux';
+import SendForgotMessage from './user/pages/SendForgotMessage';
+import ForgotPassword from './user/pages/ForgotPassword';
 
 const router = createBrowserRouter([
     {
@@ -67,6 +69,14 @@ const router = createBrowserRouter([
     {
         path: routes.bookDetail,
         element: <ProductDetail />,
+    },
+    {
+        path: routes.sendmail,
+        element: <SendForgotMessage />,
+    },
+    {
+        path: routes.resetPassword,
+        element: <ForgotPassword />,
     },
     { path: routes.adminSighIn, element: <AdminSignIn /> },
     { path: routes.admin, element: <DashBoard /> },

@@ -71,12 +71,10 @@ function SignIn() {
         const inputData = {
             email: email,
             password: password,
-            
         };
 
         try {
             dispatch(login(inputData, navigate));
-           
         } catch (error) {
             setSuccessDialogOpen(true);
         }
@@ -175,15 +173,24 @@ function SignIn() {
                             </Grid>
                         </form>
 
-                        <p className="mt-10 text-center text-sm text-gray-500">
-                            Chưa có tài khoản?
-                            <span
-                                onClick={() => navigate(routes.signUp)}
-                                className="cursor-pointer font-semibold leading-6 text-indigo-600 hover:text-indigo-500 ml-2"
-                            >
-                                Tạo tài khoản
-                            </span>
-                        </p>
+                        <div className="flex mt-10 justify-between">
+                            <div className=" text-sm text-gray-500">
+                                Chưa có tài khoản?{' '}
+                                <button
+                                    onClick={() => navigate(routes.signUp)}
+                                    className="cursor-pointer font-semibold leading-6 text-indigo-600 hover:text-indigo-500 ml-2"
+                                >
+                                    Tạo tài khoản
+                                </button>
+                            </div>
+                            <div>
+                                <button 
+                                onClick={() => navigate(routes.sendmail)}
+                                className="cursor-pointer leading-6 hover:text-red-500 ml-2">
+                                    Quên mật khẩu?
+                                </button>
+                            </div>
+                        </div>
 
                         <div className="mt-2 text-center">
                             <p className="border-t-2 border-neutral-300 text-center text-red-500 p-2">Hoặc</p>
