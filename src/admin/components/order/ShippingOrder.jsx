@@ -6,11 +6,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import {
     Box,
     Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
     Modal,
     Pagination,
     Paper,
@@ -32,7 +27,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { format } from 'date-fns';
 import useDebounce from '../../../hooks/useDebounce';
-import { deliveredOrder, getShippingOrder } from '../../../State/Order/Action';
+import {  getShippingOrder } from '../../../State/Order/Action';
 import OrderDetail from './OrderDetail';
 
 const style = {
@@ -321,28 +316,6 @@ function ShippingOrder() {
                     />
                 </Stack>
             </div>
-
-            {/* <Dialog
-                open={deliveredOrderId !== null}
-                onClose={() => setDeliveredOrderId(null)}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">Xuất kho đơn hàng</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Bạn chắc chắn đơn hàng đã rời khỏi kho hàng?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setDeliveredOrderId(null)} color="primary">
-                        Trở lại
-                    </Button>
-                    <Button onClick={() => handleDeliveredOrder(deliveredOrderId)} color="primary" autoFocus>
-                        Đồng ý
-                    </Button>
-                </DialogActions>
-            </Dialog> */}
 
             <Modal
                 open={open}

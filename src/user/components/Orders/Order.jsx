@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Button } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
@@ -8,7 +7,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import routes from '../../../config/routes';
-import { getUserOrderHistory } from '../../../State/Order/Action';
+import { deliveredOrder, getUserOrderHistory } from '../../../State/Order/Action';
 
 export default function Order() {
     const navigate = useNavigate();
@@ -31,7 +30,11 @@ export default function Order() {
         navigate(`/orderDetail/${orderId}`);
     };
 
-    console.log(orders);
+    const handleOrderComplete = (orderId) => {
+        dispatch(deliveredOrder(orderId, jwt)).then(() => {
+            dispatch(getUserOrderHistory(jwt));
+        });
+    };
 
     return (
         <>
@@ -88,6 +91,8 @@ export default function Order() {
                                             ? 'Đã huỷ'
                                             : item.orderStatus === 'DELIVERED'
                                             ? 'Đã giao hàng'
+                                            : item.orderStatus === 'SHIPPING'
+                                            ? 'Đang giao hàng'
                                             : 'Đã xác nhận'}
                                     </span>
                                 </div>
@@ -104,9 +109,20 @@ export default function Order() {
                                 )}
                             </div>
 
-                            <Button onClick={() => handleOrderDetail(item.orderId)} variant="contained" color="error">
+                            <button
+                                className="bg-slate-400 text-white px-[8px] py-[2px] rounded-sm"
+                                onClick={() => handleOrderDetail(item.orderId)}
+                            >
                                 Xem chi tiết
-                            </Button>
+                            </button>
+                            {item.orderStatus === 'SHIPPING' && (
+                                <button
+                                    className="bg-cyan-400 text-white px-[8px] py-[2px] rounded-sm"
+                                    onClick={() => handleOrderComplete(item.orderId)}
+                                >
+                                    Đã nhận được đơn hàng
+                                </button>
+                            )}
                         </div>
                     ))}
                 </div>
