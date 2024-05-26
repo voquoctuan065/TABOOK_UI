@@ -272,7 +272,7 @@ function Packed() {
                                             {format(new Date(item.orderDto.orderDate), 'dd/MM/yyyy HH:mm:ss')}
                                         </TableCell>
                                         <TableCell sx={{ width: '10%' }}>
-                                            {item.paymentInfoDto.paymentStatus === 'Chờ thanh toán' ? (
+                                            {item.paymentInfoDto?.paymentStatus === 'Chờ thanh toán' ? (
                                                 <span>COD</span>
                                             ) : (
                                                 <span className="text-red-600">STRIPE</span>
@@ -280,7 +280,7 @@ function Packed() {
                                         </TableCell>
 
                                         <TableCell sx={{ width: '10%' }}>
-                                            {item.paymentInfoDto.paymentStatus === 'Chờ thanh toán' ? (
+                                            {item.paymentInfoDto?.paymentStatus === 'Chờ thanh toán' ? (
                                                 <span className="bg-slate-400 text-white px-[5px] py-[2px] rounded-sm">
                                                     Chờ thanh toán
                                                 </span>

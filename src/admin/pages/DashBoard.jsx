@@ -121,7 +121,7 @@ function DashBoard() {
                         <Box sx={{ fontSize: '1.4rem' }}>
                             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                                 <Tab
-                                    label="Item One"
+                                    label="Tổng quan"
                                     {...a11yProps(0)}
                                     sx={{
                                         '&.Mui-selected': {

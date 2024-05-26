@@ -20,7 +20,7 @@ import {
     GET_HOT_BOOK_SUCCESS,
     GET_LATEST_BOOK_FAILURE,
     GET_LATEST_BOOK_REQUEST,
-    GET_LATEST_BOOK_SUCCESS
+    GET_LATEST_BOOK_SUCCESS,
 } from './ActionType';
 import { API_BASE_URL } from '../apiConfig';
 
@@ -39,10 +39,10 @@ export const getBookByCategory = (reqData) => async (dispatch) => {
 
 export const filterBook = (reqData) => async (dispatch) => {
     dispatch({ type: FILTER_BOOK_REQUEST });
-    const { pathName, minPrice, maxPrice, nxbId, sort, page, size } = reqData;
+    const { minPrice, maxPrice, nxbId, sort, page, size } = reqData;
     try {
         const { data } = await axios.get(
-            `http://localhost:8686/public/book/filter?pathName=${pathName}&minPrice=${minPrice}&maxPrice=${maxPrice}&nxbId=${nxbId}&sort=${sort}&page=${page}&size=${size}`,
+            `http://localhost:8686/public/book/filter?minPrice=${minPrice}&maxPrice=${maxPrice}&nxbId=${nxbId}&sort=${sort}&page=${page}&size=${size}`,
         );
         dispatch({ type: FILTER_BOOK_SUCCESS, payload: data });
     } catch (error) {
@@ -107,4 +107,3 @@ export const getFavoriteBook = () => async (dispatch) => {
         dispatch({ type: GET_FAVORITE_BOOK_FAILURE, payload: error });
     }
 };
-

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
@@ -23,8 +24,8 @@ import ProductCard from './ProductCard';
 import { Helmet } from 'react-helmet-async';
 
 const sortOptions = [
-    { name: 'Price: Low to High', value: 'price_low' },
-    { name: 'Price: High to Low', value: 'price_high' },
+    { name: 'Giá: Thấp đến cao', value: 'price_low' },
+    { name: 'Giá: Cao đến thấp', value: 'price_high' },
 ];
 
 function classNames(...classes) {
@@ -160,8 +161,7 @@ export default function Product() {
     useEffect(() => {
         const [minPrice, maxPrice] = priceValue === null ? [0, 150000] : priceValue.split('-').map(Number);
 
-        const data = {
-            pathName: cleanItem,
+        const data = {    
             minPrice,
             maxPrice,
             nxbId: nxbValue || [],
@@ -172,7 +172,7 @@ export default function Product() {
         if (priceValue || nxbValue || sortValue) {
             dispatch(filterBook(data));
         }
-    }, [cleanItem, priceValue, nxbValue, sortValue, currentPage]);
+    }, [priceValue, nxbValue, sortValue, currentPage]);
     // 2 -------------------------------- End Handle Filter ---------------------------------------- 2 //
 
     return (
@@ -286,13 +286,13 @@ export default function Product() {
                         </Dialog>
                     </Transition.Root>
                     <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
-                            <h1 className="text-4xl font-bold tracking-tight text-gray-900">New Arrivals</h1>
+                        <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-12">
+                            <h1 className="text-4xl font-bold tracking-tight text-gray-900">Sản phẩm</h1>
                             <div className="flex items-center">
                                 <Menu as="div" className="relative inline-block text-left">
                                     <div>
                                         <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                                            Sort
+                                            Sắp xếp
                                             <ChevronDownIcon
                                                 className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                                                 aria-hidden="true"

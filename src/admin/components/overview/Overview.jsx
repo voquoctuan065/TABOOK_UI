@@ -6,6 +6,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../../../State/apiConfig';
+import { Helmet } from 'react-helmet-async';
 
 function Overview() {
     const [totalOrder, setTotalOrder] = useState(null);
@@ -133,34 +134,38 @@ function Overview() {
         ));
     };
     return (
-        <Card sx={{ bgcolor: '#242B2E', color: 'white' }}>
-            
-            <CardHeader
-                title="Tổng quan"
-                action={
-                    <IconButton size="small">
-                        <MoreVertIcon sx={{ color: 'white' }} />
-                    </IconButton>
-                }
-                titleTypographyProps={{
-                    sx: {
-                        mb: 2.5,
-                        lineHeight: '2rem !important',
-                        letterSpacing: '.15px !important',
-                    },
-                }}
-            />
+        <>
+            <Helmet>
+                <title>Trang tổng quan</title>
+            </Helmet>
+            <Card sx={{ bgcolor: '#242B2E', color: 'white' }}>
+                <CardHeader
+                    title="Tổng quan"
+                    action={
+                        <IconButton size="small">
+                            <MoreVertIcon sx={{ color: 'white' }} />
+                        </IconButton>
+                    }
+                    titleTypographyProps={{
+                        sx: {
+                            mb: 2.5,
+                            lineHeight: '2rem !important',
+                            letterSpacing: '.15px !important',
+                        },
+                    }}
+                />
 
-            <CardContent
-                sx={{
-                    pt: (theme) => `${theme.spacing(3)} !important`,
-                }}
-            >
-                <Grid container spacing={[5, 0]}>
-                    {renderStats()}
-                </Grid>
-            </CardContent>
-        </Card>
+                <CardContent
+                    sx={{
+                        pt: (theme) => `${theme.spacing(3)} !important`,
+                    }}
+                >
+                    <Grid container spacing={[5, 0]}>
+                        {renderStats()}
+                    </Grid>
+                </CardContent>
+            </Card>
+        </>
     );
 }
 
