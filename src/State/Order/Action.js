@@ -12,6 +12,9 @@ import {
     DELIVERED_ORDER_FAILURE,
     DELIVERED_ORDER_REQUEST,
     DELIVERED_ORDER_SUCCESS,
+    GET_ALL_DELIVERED_ORDER_FAILURE,
+    GET_ALL_DELIVERED_ORDER_REQUEST,
+    GET_ALL_DELIVERED_ORDER_SUCCESS,
     GET_CONFIRMED_ORDER_FAILURE,
     GET_CONFIRMED_ORDER_REQUEST,
     GET_CONFIRMED_ORDER_SUCCESS,
@@ -266,5 +269,19 @@ export const deliveredOrder = (orderId, jwt) => async (dispatch) => {
         toast.success('Đơn hàng đã được giao thành công!');
     } catch (error) {
         dispatch({ type: DELIVERED_ORDER_FAILURE, payload: error });
+    }
+};
+
+export const getAllDeliveredOrder = (jwt) => async (dispatch) => {
+    dispatch({ type: GET_ALL_DELIVERED_ORDER_REQUEST });
+    try {
+        const { data } = await axios.get(`${API_BASE_URL}/admin/order/delivered`, {
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+            },
+        });
+        dispatch({ type: GET_ALL_DELIVERED_ORDER_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({ type: GET_ALL_DELIVERED_ORDER_FAILURE, payload: error.message });
     }
 };

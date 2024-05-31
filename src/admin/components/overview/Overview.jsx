@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../../../State/apiConfig';
 import { Helmet } from 'react-helmet-async';
+import BasicLineChart from '../chart/BasicLineChart';
 
 function Overview() {
     const [totalOrder, setTotalOrder] = useState(null);
@@ -165,6 +166,8 @@ function Overview() {
                     </Grid>
                 </CardContent>
             </Card>
+
+            <BasicLineChart />
         </>
     );
 }

@@ -190,20 +190,6 @@ function DashBoard() {
                                         },
                                     }}
                                 />
-                                <Tab
-                                    label="Thanh toán"
-                                    {...a11yProps(5)}
-                                    sx={{
-                                        '&.Mui-selected': {
-                                            color: 'white',
-                                            fontWeight: 600,
-                                        },
-                                        '&:not(.Mui-selected)': {
-                                            color: 'black',
-                                            fontWeight: 500,
-                                        },
-                                    }}
-                                />
                             </Tabs>
                         </Box>
                     </div>
@@ -285,9 +271,6 @@ function DashBoard() {
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={4}>
                     <Order />
-                </CustomTabPanel>
-                <CustomTabPanel value={value} index={5}>
-                    Item Three
                 </CustomTabPanel>
             </Box>
         </>

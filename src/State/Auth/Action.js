@@ -38,14 +38,15 @@ export const register = (userData) => async (dispatch) => {
 
         if (user.jwt) {
             localStorage.setItem('jwt', user.jwt);
+
+            const expirationTime = new Date().getTime() + (24 * 60 * 60 * 1000); // Thời điểm hết hạn sau 1 ngày
+            localStorage.setItem('expirationTime', expirationTime);
+            setTimeout(() => {
+                localStorage.removeItem('jwt');
+                localStorage.removeItem('expirationTime');
+                dispatch({ type: LOGOUT, payload: null });
+            }, expirationTime - new Date().getTime());
         }
-
-        const expirationTime = 24 * 60 * 60 * 1000;
-
-        setTimeout(() => {
-            localStorage.removeItem('jwt');
-            dispatch({ type: LOGOUT, payload: null });
-        }, expirationTime);
 
         dispatch(registerSuccess(user.jwt));
     } catch (error) {
@@ -74,14 +75,15 @@ export const login = (userData, navigate) => async (dispatch) => {
 
         if (user.jwt) {
             localStorage.setItem('jwt', user.jwt);
+
+            const expirationTime = new Date().getTime() + (24 * 60 * 60 * 1000); // Thời điểm hết hạn sau 1 ngày
+            localStorage.setItem('expirationTime', expirationTime);
+            setTimeout(() => {
+                localStorage.removeItem('jwt');
+                localStorage.removeItem('expirationTime');
+                dispatch({ type: LOGOUT, payload: null });
+            }, expirationTime - new Date().getTime());
         }
-
-        const expirationTime = 24 * 60 * 60 * 1000;
-
-        setTimeout(() => {
-            localStorage.removeItem('jwt');
-            dispatch({ type: LOGOUT, payload: null });
-        }, expirationTime);
 
         dispatch(loginSuccess(user.jwt));
         toast.success('Đăng nhập thành công!');
@@ -108,18 +110,23 @@ const getUserFailure = (error) => ({
 });
 
 export const getUser = (jwt) => async (dispatch) => {
-    dispatch(getUserRequest());
-    try {
-        const response = await axios.get(`${API_BASE_URL}/api/user/profile`, {
-            headers: {
-                Authorization: `Bearer ${jwt}`,
-            },
-        });
-        const user = response.data;
-        dispatch(getUserSuccess(user));
-    } catch (error) {
-        dispatch(getUserFailure(error.message));
+    if(jwt) {
+        dispatch(getUserRequest());
+        try {
+            const response = await axios.get(`${API_BASE_URL}/api/user/profile`, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
+            const user = response.data;
+            dispatch(getUserSuccess(user));
+        } catch (error) {
+            dispatch(getUserFailure(error.message));
+        }
+    }else {
+        dispatch(getUserFailure("Invalid jwt!"));
     }
+    
 };
 
 export const logout = () => (dispatch) => {

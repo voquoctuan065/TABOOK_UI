@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// Hàm này sẽ gọi sau 20 phút để xóa cartState khỏi localStorage
 const clearCartState = () => {
     localStorage.removeItem('cartState');
 };
@@ -88,9 +87,12 @@ const cartSlice = createSlice({
                     state.cartItems[existingItemIndex].quantity -= quantity;
                     state.cartItems[existingItemIndex].total -=
                         state.cartItems[existingItemIndex].discountedPrice * quantity;
+                    state.cartTotalQuantity -= quantity;
+                    state.cartTotalAmount -= state.cartItems[existingItemIndex].discountedPrice * quantity;
                 } else {
-                    state.cartTotalQuantity -= state.cartItems[existingItemIndex].quantity;
-                    state.cartTotalAmount -= state.cartItems[existingItemIndex].total;
+                    const removedQuantity = state.cartItems[existingItemIndex].quantity;
+                    state.cartTotalQuantity -= removedQuantity;
+                    state.cartTotalAmount -= state.cartItems[existingItemIndex].discountedPrice * removedQuantity;
                     state.cartItems.splice(existingItemIndex, 1);
                 }
             }

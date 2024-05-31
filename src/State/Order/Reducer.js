@@ -8,6 +8,9 @@ import {
     DELIVERED_ORDER_FAILURE,
     DELIVERED_ORDER_REQUEST,
     DELIVERED_ORDER_SUCCESS,
+    GET_ALL_DELIVERED_ORDER_FAILURE,
+    GET_ALL_DELIVERED_ORDER_REQUEST,
+    GET_ALL_DELIVERED_ORDER_SUCCESS,
     GET_CONFIRMED_ORDER_FAILURE,
     GET_CONFIRMED_ORDER_REQUEST,
     GET_CONFIRMED_ORDER_SUCCESS,
@@ -55,6 +58,7 @@ export const orderReducer = (state = initialState, action) => {
         case SHIPPING_ORDER_REQUEST:
         case DELIVERED_ORDER_REQUEST:
         case GET_PACKED_ORDER_REQUEST:
+        case GET_ALL_DELIVERED_ORDER_REQUEST:
             return {
                 ...state,
                 loading: true,
@@ -85,6 +89,7 @@ export const orderReducer = (state = initialState, action) => {
         case GET_SHIPPING_ORDER_SUCCESS:
         case GET_DELIVERED_ORDER_SUCCESS:
         case GET_PACKED_ORDER_SUCCESS:
+        case GET_ALL_DELIVERED_ORDER_SUCCESS:
             return {
                 ...state,
                 loading: false,
@@ -102,6 +107,7 @@ export const orderReducer = (state = initialState, action) => {
         case SHIPPING_ORDER_FAILURE:
         case DELIVERED_ORDER_FAILURE:
         case GET_PACKED_ORDER_FAILURE:
+        case GET_ALL_DELIVERED_ORDER_FAILURE:
             return {
                 ...state,
                 loading: false,
