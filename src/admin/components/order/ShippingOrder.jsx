@@ -27,7 +27,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { format } from 'date-fns';
 import useDebounce from '../../../hooks/useDebounce';
-import {  getShippingOrder } from '../../../State/Order/Action';
+import { getShippingOrder } from '../../../State/Order/Action';
 import OrderDetail from './OrderDetail';
 
 const style = {
@@ -86,7 +86,7 @@ const tableCell = [
     'Phương thức',
     'Thanh toán',
     'Trạng thái',
-    'Xem chi tiết'
+    'Xem chi tiết',
 ];
 
 function ShippingOrder() {
@@ -261,15 +261,23 @@ function ShippingOrder() {
                                         {format(new Date(item.orderDto.orderDate), 'dd/MM/yyyy HH:mm:ss')}
                                     </TableCell>
                                     <TableCell>
-                                        {item.paymentInfoDto.paymentStatus === 'Chờ thanh toán'
-                                            ? 'COD'
-                                            : 'STRIPE PAYMENT'}
+                                        {item.paymentInfoDto?.paymentStatus === 'Chờ thanh toán' ? (
+                                            <span>COD</span>
+                                        ) : (
+                                            <span className="text-red-600">STRIPE</span>
+                                        )}
                                     </TableCell>
 
                                     <TableCell>
-                                        {item.paymentInfoDto.paymentStatus === 'Chờ thanh toán'
-                                            ? 'Chờ thanh toán'
-                                            : 'Đã thanh toán'}
+                                        {item.paymentInfoDto?.paymentStatus === 'Chờ thanh toán' ? (
+                                            <span className="bg-slate-400 text-white px-[5px] py-[2px] rounded-sm">
+                                                Chờ thanh toán
+                                            </span>
+                                        ) : (
+                                            <span className="bg-slate-400 text-white px-[5px] py-[2px] rounded-sm">
+                                                Đã thanh toán
+                                            </span>
+                                        )}
                                     </TableCell>
 
                                     <TableCell>

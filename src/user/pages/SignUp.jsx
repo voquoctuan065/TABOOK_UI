@@ -282,7 +282,7 @@ function SignUp() {
                             </span>
                         </p>
 
-                        <div className="mt-2 text-center">
+                        {/* <div className="mt-2 text-center">
                             <p className="border-t-2 border-neutral-300 text-center text-red-500 p-2">Hoặc</p>
                             <Button
                                 variant="outlined"
@@ -318,7 +318,7 @@ function SignUp() {
                                 <span>Đăng nhập với Google</span>
                                 <img src="/google-logo.png" alt="" />
                             </Button>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

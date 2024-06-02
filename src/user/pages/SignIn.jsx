@@ -178,21 +178,22 @@ function SignIn() {
                                 Chưa có tài khoản?{' '}
                                 <button
                                     onClick={() => navigate(routes.signUp)}
-                                    className="cursor-pointer font-semibold leading-6 text-indigo-600 hover:text-indigo-500 ml-2"
+                                    className="cursor-pointer font-semibold leading-6 text-indigo-600 hover:text-indigo-500 ml-[2px]"
                                 >
                                     Tạo tài khoản
                                 </button>
                             </div>
                             <div>
-                                <button 
-                                onClick={() => navigate(routes.sendmail)}
-                                className="cursor-pointer leading-6 hover:text-red-500 ml-2">
+                                <button
+                                    onClick={() => navigate(routes.sendmail)}
+                                    className="cursor-pointer leading-6 hover:text-red-500 ml-2"
+                                >
                                     Quên mật khẩu?
                                 </button>
                             </div>
                         </div>
 
-                        <div className="mt-2 text-center">
+                        {/* <div className="mt-2 text-center">
                             <p className="border-t-2 border-neutral-300 text-center text-red-500 p-2">Hoặc</p>
                             <Button
                                 variant="outlined"
@@ -228,7 +229,7 @@ function SignIn() {
                                 <span>Đăng nhập với Google</span>
                                 <img src="/google-logo.png" alt="" />
                             </Button>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

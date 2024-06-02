@@ -17,7 +17,6 @@ import CheckoutFailure from './sections/CheckoutFailure';
 import Order from './user/components/Orders/Order';
 import OrderDetail from './user/components/Orders/OrderDetail';
 import KommunicateChat from './user/components/ChatBot/chat';
-import { useSelector } from 'react-redux';
 import SendForgotMessage from './user/pages/SendForgotMessage';
 import ForgotPassword from './user/pages/ForgotPassword';
 
@@ -86,14 +85,10 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-    const { user } = useSelector((store) => ({
-        user: store.auth.user,
-    }));
-
     return (
         <>
             <RouterProvider router={router} />
-            <KommunicateChat user={user} />
+            <KommunicateChat />
         </>
     );
 }

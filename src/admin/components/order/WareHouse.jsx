@@ -88,8 +88,8 @@ const tableCell = [
     'Địa chỉ nhận',
     'SĐT',
     'Ngày tạo',
-    'Phương thức',
-    'Giao hàng',
+    'Trạng thái',
+    'Hành động',
     // 'Hành động',
 ];
 

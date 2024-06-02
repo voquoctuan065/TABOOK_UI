@@ -230,34 +230,48 @@ function CompleteOrder() {
                                     key={item.orderDto.orderId}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
-                                    <TableCell component="th" scope="row">
+                                    <TableCell component="th" scope="row" sx={{ width: '10%' }}>
                                         {item.orderDto.orderId}
                                     </TableCell>
-                                    <TableCell align="left">{item.orderDto.userDto.fullName}</TableCell>
-                                    <TableCell>
+                                    <TableCell align="left" sx={{ width: '10%' }}>
+                                        {item.orderDto.userDto.fullName}
+                                    </TableCell>
+                                    <TableCell sx={{ width: '10%' }}>
                                         {item.orderDto.shippingAddress.streetAddress},{' '}
                                         {item.orderDto.shippingAddress.ward}, {item.orderDto.shippingAddress.district},{' '}
                                         {item.orderDto.shippingAddress.province}
                                     </TableCell>
-                                    <TableCell>{item.orderDto.shippingAddress.phoneNumber}</TableCell>
-                                    <TableCell>
+                                    <TableCell sx={{ width: '10%' }}>
+                                        {item.orderDto.shippingAddress.phoneNumber}
+                                    </TableCell>
+                                    <TableCell sx={{ width: '10%' }}>
                                         {format(new Date(item.orderDto.orderDate), 'dd/MM/yyyy HH:mm:ss')}
                                     </TableCell>
-                                    <TableCell>
-                                        {item.paymentInfoDto.paymentStatus === 'Chờ thanh toán'
-                                            ? 'COD'
-                                            : 'STRIPE PAYMENT'}
+                                    <TableCell sx={{ width: '10%' }}>
+                                        {item.paymentInfoDto?.paymentStatus === 'Chờ thanh toán' ? (
+                                            <span>COD</span>
+                                        ) : (
+                                            <span className="text-red-600">STRIPE</span>
+                                        )}
                                     </TableCell>
 
-                                    <TableCell>
-                                        {item.paymentInfoDto.paymentStatus === 'Chờ thanh toán'
-                                            ? 'Chờ thanh toán'
-                                            : 'Đã thanh toán'}
+                                    <TableCell sx={{ width: '10%' }}>
+                                        {item.paymentInfoDto?.paymentStatus === 'Chờ thanh toán' ? (
+                                            <span className="bg-slate-400 text-white px-[5px] py-[2px] rounded-sm">
+                                                Chờ thanh toán
+                                            </span>
+                                        ) : (
+                                            <span className="bg-slate-400 text-white px-[5px] py-[2px] rounded-sm">
+                                                Đã thanh toán
+                                            </span>
+                                        )}
                                     </TableCell>
 
-                                    <TableCell>{item.orderDto.orderStatus === 'DELIVERED' && 'Đã giao hàng'}</TableCell>
+                                    <TableCell sx={{ width: '10%' }}>
+                                        {item.orderDto.orderStatus === 'DELIVERED' && 'Đã giao hàng'}
+                                    </TableCell>
 
-                                    <TableCell>
+                                    <TableCell sx={{ width: '10%' }}>
                                         <span
                                             className="text-cyan-500 cursor-pointer hover:text-red-500"
                                             onClick={() => handleOpen(item.orderDto.orderId)}

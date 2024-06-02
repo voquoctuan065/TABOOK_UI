@@ -41,6 +41,7 @@ function UpdateBook({ selectedBookId, handleUpdateClose, handleAddBookSuccess })
     const [discountPercent, setDiscountPercent] = useState(null);
     const [discountedPrice, setDiscountedPrice] = useState(null);
     const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+
     const jwt = localStorage.getItem('adminJwt');
     useEffect(() => {
         const fetchBookById = async () => {
@@ -61,8 +62,8 @@ function UpdateBook({ selectedBookId, handleUpdateClose, handleAddBookSuccess })
 
     useEffect(() => {
         if (bookById) {
-            setNxbs(bookById.nxb.nxbId || ''); // Set giá trị ban đầu cho state nxb từ dữ liệu sách
-            setCategory(bookById.category.categoryId || ''); // Set giá trị ban đầu cho state category từ dữ liệu sách
+            setNxbs(bookById.nxb.nxbId || '');
+            setCategory(bookById.category.categoryId || '');
             setBookTitle(bookById.bookTitle || '');
             setBookPrice(bookById.bookPrice || '');
             setAuthorName(bookById.authorName || '');
@@ -236,7 +237,11 @@ function UpdateBook({ selectedBookId, handleUpdateClose, handleAddBookSuccess })
     // ----------------------------------- Get Category & NXBs ---------------------------------------//
     useEffect(() => {
         axios
-            .get('http://localhost:8686/admin/category/list-category')
+            .get('http://localhost:8686/admin/category/list-category', {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            })
             .then((response) => {
                 setListCategory(response.data);
             })
@@ -245,7 +250,11 @@ function UpdateBook({ selectedBookId, handleUpdateClose, handleAddBookSuccess })
             });
 
         axios
-            .get('http://localhost:8686/admin/nxb/list-nxb')
+            .get('http://localhost:8686/admin/nxb/list-nxb', {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            })
             .then((response) => {
                 setListNXBs(response.data);
             })
